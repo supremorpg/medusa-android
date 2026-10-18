@@ -1,0 +1,3589 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/hud"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/hud_game_touch_passthrough"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:focusable="false"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/hud_money_row"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/hud_classic_money_bg"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="9dp"
+        android:paddingEnd="9dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/moneySymbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_alternates_bold"
+            android:text="$"
+            android:textColor="#4CD964"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/money_hidden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:fontFamily="@font/montserrat_alternates_bold"
+            android:gravity="center_vertical"
+            android:text="100.000"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/hud_top_right_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="12dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="end"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/hud_top_info_row"
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/hud_city_pill"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/hud_top_pill_bg"
+                android:clickable="false"
+                android:focusable="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingEnd="6dp">
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerInside"
+                    android:tint="#F2FFFFFF"
+                    app:srcCompat="@drawable/ic_hud_location_pin" />
+
+                <TextView
+                    android:id="@+id/hud_city_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:maxWidth="64dp"
+                    android:singleLine="true"
+                    android:text="Los Santos"
+                    android:textColor="#F2FFFFFF"
+                    android:textSize="6.6sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/hud_clock_pill"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/hud_top_pill_bg"
+                android:clickable="false"
+                android:focusable="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingEnd="6dp">
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerInside"
+                    android:tint="#F2FFFFFF"
+                    app:srcCompat="@drawable/ic_hud_clock_small" />
+
+                <TextView
+                    android:id="@+id/hud_clock_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:singleLine="true"
+                    android:text="00:00"
+                    android:textColor="#F2FFFFFF"
+                    android:textSize="6.6sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/hud_coin_pill"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/hud_top_pill_bg"
+                android:clickable="false"
+                android:focusable="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingEnd="6dp">
+
+                <ImageView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerInside"
+                    android:tint="#F2FFFFFF"
+                    app:srcCompat="@drawable/ic_hud_coin_small" />
+
+                <TextView
+                    android:id="@+id/hud_coin_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:minWidth="8dp"
+                    android:singleLine="true"
+                    android:text="0"
+                    android:textColor="#F2FFFFFF"
+                    android:textSize="6.6sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hud_top_money_row"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/hud_top_money_bg"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="7dp"
+            android:paddingEnd="7dp">
+
+            <ImageView
+                android:layout_width="9dp"
+                android:layout_height="9dp"
+                android:layout_gravity="center_vertical"
+                android:scaleType="centerInside"
+                android:tint="#F2FFFFFF"
+                app:srcCompat="@drawable/ic_hud_wallet" />
+
+            <TextView
+                android:id="@+id/hud_top_money_value"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:minWidth="42dp"
+                android:singleLine="true"
+                android:text="$ 0"
+                android:textColor="#F2FFFFFF"
+                android:textSize="7sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/hud_left_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="92dp"
+        android:layout_marginBottom="12dp"
+        android:background="@android:color/transparent"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="0dp"
+        android:paddingTop="0dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <LinearLayout
+            android:id="@+id/hud_status_row_primary"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/hud_status_box_health"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/hud_status_box_hp"
+                android:padding="0dp">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:tint="#FFFFFFFF"
+                    app:srcCompat="@drawable/ic_hud_health_graphic" />
+
+                <ProgressBar
+                    android:id="@+id/progressBarHeart"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="100"
+                    android:progressDrawable="@drawable/hud_classic_bar_hp"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/hud_status_box_armour"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/hud_status_box_armour"
+                android:padding="0dp">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:tint="#FFFFFFFF"
+                    app:srcCompat="@drawable/ic_hud_armor_vest" />
+
+                <ProgressBar
+                    android:id="@+id/progressBarArmour"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="100"
+                    android:progressDrawable="@drawable/hud_classic_bar_armour"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/hud_money_inline_row"
+                android:layout_width="68dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/hud_status_tile_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp">
+
+                <ImageView
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerInside"
+                    android:tint="#FFFFFFFF"
+                    app:srcCompat="@drawable/ic_hud_wallet" />
+
+                <TextView
+                    android:id="@+id/money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="3dp"
+                    android:fontFamily="@font/montserrat_alternates_bold"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:singleLine="true"
+                    android:text="100.000"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="7.5sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/hpText"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/Armourtext"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/hud_needs_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/hud_status_box_food"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/hud_status_box_food"
+                android:clickable="false"
+                android:focusable="false">
+
+                <com.xyron.game.main.HudCircleProgressView
+                    android:id="@+id/hud_food_ring"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:tint="#FFFFFFFF"
+                    app:srcCompat="@drawable/ic_hud_food_graphic" />
+
+                <ProgressBar
+                    android:id="@+id/progressBarEat"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="100"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/hud_food_percent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/hud_need_percent_bg"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:shadowColor="#D9000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:text="100%"
+                android:textColor="#FFFFF3C4"
+                android:textSize="7.5sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/hud_status_box_thirst"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/hud_status_box_water"
+                android:clickable="false"
+                android:focusable="false">
+
+                <com.xyron.game.main.HudCircleProgressView
+                    android:id="@+id/hud_thirst_ring"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:tint="#FFFFFFFF"
+                    app:srcCompat="@drawable/ic_hud_water_graphic" />
+
+                <ProgressBar
+                    android:id="@+id/progressBarSede"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="90"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/hud_thirst_percent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/hud_need_percent_bg"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:shadowColor="#D9000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:text="90%"
+                android:textColor="#FFCFFAFE"
+                android:textSize="7.5sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/hud_status_box_sleep"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/hud_status_box_sleep"
+                android:clickable="false"
+                android:focusable="false">
+
+                <com.xyron.game.main.HudCircleProgressView
+                    android:id="@+id/hud_sleep_ring"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:tint="#FFFFFFFF"
+                    app:srcCompat="@drawable/ic_hud_sleep_graphic" />
+
+                <ProgressBar
+                    android:id="@+id/progressBarSono"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="88"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/hud_sleep_percent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/hud_need_percent_bg"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:shadowColor="#D9000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:text="88%"
+                android:textColor="#FFE9D5FF"
+                android:textSize="7.5sp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/backgroundmainHud"
+        android:layout_width="172dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="1dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/fistButton"
+        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.07999998"
+        app:srcCompat="@drawable/backgroundhud" />
+
+
+    <ImageButton
+        android:id="@+id/fistButton"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="94dp"
+        android:layout_marginTop="62dp"
+        android:background="@null"
+        android:clickable="false"
+        android:focusable="false"
+        android:scaleType="fitCenter"
+        android:src="@drawable/fistbutton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/btn_hud_settings_gear"
+        android:layout_width="36dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.86"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/hud_option_button_bg" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:tint="#FFFFFFFF"
+            app:srcCompat="@drawable/ic_settings_on" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_game_settings"
+        android:layout_width="@dimen/_33sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="140dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/btn_status_toggle"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/hud_btn_bg" />
+
+        <ImageView
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"
+            android:layout_gravity="center"
+            android:tint="#FFFFFFFF"
+            app:srcCompat="@drawable/ic_settings_on" />
+    </FrameLayout>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/WeaponShowLayout"
+        android:layout_width="56dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/hud_classic_weapon_bg"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <ImageView
+            android:id="@+id/gunImg"
+            android:layout_width="49dp"
+            android:layout_height="39dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toTopOf="@+id/ammo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/deagle" />
+
+        <ImageView
+            android:id="@+id/Fist"
+            android:layout_width="49dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/weapon_0"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/ammo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ammo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_alternates_bold"
+            android:gravity="center"
+            android:text="999"
+            android:textColor="#FFFFFF"
+            android:textSize="7.5sp"
+            android:background="@drawable/hud_ammo_bg"
+            android:minWidth="30dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_classic_radar_ring"
+        android:layout_width="116dp"
+        android:layout_height="116dp"
+        android:layout_marginStart="142dp"
+        android:layout_marginTop="37dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:layout_width="112dp"
+            android:layout_height="112dp"
+            android:layout_gravity="center"
+            android:background="@drawable/hud_classic_radar_ring" />
+
+        <View
+            android:layout_width="82dp"
+            android:layout_height="82dp"
+            android:layout_gravity="center"
+            android:alpha="0.34"
+            android:background="@drawable/hud_classic_radar_inner" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_0"
+        android:layout_width="@dimen/_33sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="140dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/hud_btn_bg" />
+
+        <ImageView
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"
+            android:layout_gravity="center"
+            android:tint="#FFFFFFFF"
+            app:srcCompat="@drawable/ic_hud_quick_actions" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_1"
+        android:layout_width="@dimen/_33sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="140dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@+id/btn_0"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/hud_btn_bg" />
+
+        <ImageView
+            android:layout_width="@dimen/_17sdp"
+            android:layout_height="@dimen/_17sdp"
+            android:layout_gravity="center"
+            android:tint="#FFFFFFFF"
+            app:srcCompat="@drawable/ic_hud_interactions" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_hud_options"
+        android:layout_width="@dimen/_33sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="140dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/btn_1"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/hud_option_button_bg" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:tint="#FFFFFFFF"
+            app:srcCompat="@drawable/ic_hud_action_hub" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_2"
+        android:layout_width="@dimen/_33sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="140dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/btn_hud_options"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/hud_btn_bg" />
+
+        <ImageView
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"
+            android:layout_gravity="center"
+            android:tint="#FFFFFFFF"
+            app:srcCompat="@drawable/ic_hud_motor_car" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_weapon_wheel"
+        android:layout_width="48dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:visibility="visible"
+            app:srcCompat="@drawable/hud_weapon_button_bg" />
+
+        <ImageView
+            android:id="@+id/hud_weapon_button_icon"
+            android:layout_width="36dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/weapon_0" />
+
+        <TextView
+            android:id="@+id/hud_weapon_button_ammo"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/hud_ammo_bg"
+            android:fontFamily="@font/montserrat_alternates_bold"
+            android:gravity="center"
+            android:minWidth="26dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:text=""
+            android:textColor="#FFFFFFFF"
+            android:textSize="8sp"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_chat_toggle"
+        android:layout_width="132dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="4dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:contentDescription="Abrir chat"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/hud_chat_area_hint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.74"
+            android:background="@drawable/hud_option_bg"
+            android:fontFamily="@font/montserrat_alternates_bold"
+            android:gravity="center"
+            android:text="AREA CHAT"
+            android:textColor="#FFFFFFFF"
+            android:textSize="8sp"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_status_toggle"
+        android:layout_width="@dimen/_33sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="140dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/btn_chat_toggle"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/hud_btn_bg" />
+
+        <ImageView
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"
+            android:layout_gravity="center"
+            android:tint="#FFFFFFFF"
+            app:srcCompat="@drawable/ic_hud_human" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_fps_counter"
+        android:layout_width="58dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/hud_panel_bg"
+        android:elevation="9dp"
+        android:paddingStart="6dp"
+        android:paddingTop="3dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="3dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/hud_fps_counter_value"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/montserrat_alternates_bold"
+            android:gravity="center_vertical"
+            android:text="--"
+            android:textColor="#7CF6B0"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:fontFamily="@font/montserrat_alternates_bold"
+            android:gravity="center_vertical"
+            android:text="FPS"
+            android:textColor="#D4DEE4"
+            android:textSize="7sp" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/hud_options_panel"
+        android:layout_width="184dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/hud_panel_bg"
+        android:elevation="10dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingStart="9dp"
+        android:paddingTop="9dp"
+        android:paddingEnd="9dp"
+        android:paddingBottom="9dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.46">
+
+        <LinearLayout
+            android:id="@+id/hud_option_voip"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/hud_quick_option_row_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="9dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center_vertical"
+                android:tag="hud_option_label"
+                android:text="VOIP"
+                android:textColor="#FFFFFFFF"
+                android:textSize="11sp" />
+
+            <FrameLayout
+                android:layout_width="42dp"
+                android:layout_height="24dp"
+                android:background="@drawable/hud_switch_track_off"
+                android:tag="hud_option_switch">
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/hud_switch_thumb"
+                    android:tag="hud_option_switch_thumb" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hud_option_chat"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/hud_quick_option_row_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="9dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center_vertical"
+                android:tag="hud_option_label"
+                android:text="CHAT"
+                android:textColor="#FFFFFFFF"
+                android:textSize="11sp" />
+
+            <FrameLayout
+                android:layout_width="42dp"
+                android:layout_height="24dp"
+                android:background="@drawable/hud_switch_track_off"
+                android:tag="hud_option_switch">
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/hud_switch_thumb"
+                    android:tag="hud_option_switch_thumb" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hud_option_weapons"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/hud_quick_option_row_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="9dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center_vertical"
+                android:tag="hud_option_label"
+                android:text="ARMAS"
+                android:textColor="#FFFFFFFF"
+                android:textSize="11sp" />
+
+            <FrameLayout
+                android:layout_width="42dp"
+                android:layout_height="24dp"
+                android:background="@drawable/hud_switch_track_off"
+                android:tag="hud_option_switch">
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/hud_switch_thumb"
+                    android:tag="hud_option_switch_thumb" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hud_option_settings"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/hud_quick_option_row_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="9dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center_vertical"
+                android:tag="hud_option_label"
+                android:text="CONFIG"
+                android:textColor="#FFFFFFFF"
+                android:textSize="11sp" />
+
+            <FrameLayout
+                android:layout_width="42dp"
+                android:layout_height="24dp"
+                android:background="@drawable/hud_switch_track_off"
+                android:tag="hud_option_switch">
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/hud_switch_thumb"
+                    android:tag="hud_option_switch_thumb" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hud_option_fps"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="7dp"
+            android:background="@drawable/hud_quick_option_row_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="9dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center_vertical"
+                android:tag="hud_option_label"
+                android:text="FPS"
+                android:textColor="#FFFFFFFF"
+                android:textSize="11sp" />
+
+            <FrameLayout
+                android:layout_width="42dp"
+                android:layout_height="24dp"
+                android:background="@drawable/hud_switch_track_off"
+                android:tag="hud_option_switch">
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/hud_switch_thumb"
+                    android:tag="hud_option_switch_thumb" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/hud_option_close"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:background="@drawable/hud_quick_option_row_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/montserrat_alternates_bold"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="FECHAR MENU"
+            android:textColor="#FFFFFFFF"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/hud_y"
+        android:layout_width="@dimen/_33sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="140dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/btn_game_settings"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imagey"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/hud_btn_bg"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/hud_f"
+        android:layout_width="@dimen/_33sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="2dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/hud_y"
+        app:layout_constraintTop_toTopOf="@+id/hud_y">
+
+        <ImageView
+            android:id="@+id/imagef"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/hud_btn_bg" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/enter_passenger"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:alpha="0"
+        android:clickable="false"
+        android:enabled="false"
+        android:focusable="false"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/enter_passanger"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.311" />
+
+    <ImageView
+        android:id="@+id/vehicle_lock_butt"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="8dp"
+        android:alpha="0"
+        android:clickable="false"
+        android:enabled="false"
+        android:focusable="false"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/vehicle_lock_butt"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/enter_passenger"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.311" />
+
+    <FrameLayout
+        android:id="@+id/hud_source_vehicle_button"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="154dp"
+        android:background="@drawable/hud_source_control_button_bg"
+        android:clickable="true"
+        android:contentDescription="Entrar ou sair do veiculo"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="29dp"
+            android:layout_height="29dp"
+            android:layout_gravity="center"
+            android:tint="#FFFFFFFF"
+            app:srcCompat="@drawable/ic_hud_car" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_source_lock_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="82dp"
+        android:layout_marginBottom="157dp"
+        android:background="@drawable/hud_source_control_button_bg"
+        android:clickable="true"
+        android:contentDescription="Trancar veiculo"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_hud_lock" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_source_camera_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="218dp"
+        android:background="@drawable/hud_source_control_button_bg"
+        android:clickable="true"
+        android:contentDescription="Centralizar camera"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_hud_camera" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_source_attack_button"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="92dp"
+        android:background="@drawable/hud_source_control_button_bg"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_hud_fist" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_source_analog"
+        android:layout_width="118dp"
+        android:layout_height="118dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/hud_source_analog_ring"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <View
+            android:id="@+id/hud_source_analog_knob"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_gravity="center"
+            android:background="@drawable/hud_source_analog_knob" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_source_accelerate_button"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="22dp"
+        android:background="@drawable/hud_source_control_button_bg"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_hud_accelerate" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_source_brake_button"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="84dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/hud_source_control_button_bg"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_hud_brake" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_source_handbrake_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="146dp"
+        android:layout_marginBottom="27dp"
+        android:background="@drawable/hud_source_control_button_bg"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_hud_handbrake" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_source_horn_button"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginEnd="202dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/hud_source_control_button_bg"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_hud_horn" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_source_sprint_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="82dp"
+        android:layout_marginBottom="92dp"
+        android:background="@drawable/hud_source_control_button_bg"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_hud_run" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_source_jump_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="140dp"
+        android:layout_marginBottom="92dp"
+        android:background="@drawable/hud_source_control_button_bg"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_hud_jump" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/hide_chat"
+        android:layout_width="@dimen/_15sdp"
+        android:layout_height="@dimen/_15sdp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/chat_hide"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/hud_money_row"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <View
+        android:id="@+id/overlay_blur_scrim"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0"
+        android:background="#66060A12"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/hud_chat_panel"
+        android:layout_width="380dp"
+        android:layout_height="156dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="18dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:elevation="14dp"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="10dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:text="Chat"
+                android:textColor="#FFFFFFFF"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/hud_chat_close"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/launcher_field_surface_dark"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="X"
+                android:textColor="#FFFFFFFF"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/hud_chat_input"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/launcher_field_surface_dark"
+                android:hint="Digite no chat"
+                android:imeOptions="flagNoExtractUi|actionSend"
+                android:inputType="textCapSentences|textVisiblePassword"
+                android:maxLines="1"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:singleLine="true"
+                android:textColor="#FFFFFFFF"
+                android:textColorHint="#8FA1AE"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/hud_chat_send"
+                android:layout_width="76dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/home_server_select_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center"
+                android:text="Enviar"
+                android:textColor="#FFFFFFFF"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/hud_chat_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:fillViewport="false"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/hud_chat_messages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/hud_status_panel"
+        android:layout_width="282dp"
+        android:layout_height="164dp"
+        android:layout_marginEnd="170dp"
+        android:layout_marginBottom="52dp"
+        android:background="@drawable/hud_panel_bg"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/hud_status_character"
+            android:layout_width="72dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/personagem" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hud_status_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:text="Personagem"
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/hud_status_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="Status do CJ"
+                android:textColor="#B8C6D1"
+                android:textSize="9sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:layout_marginTop="7dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="46dp"
+                    android:layout_height="wrap_content"
+                    android:text="Vida"
+                    android:textColor="#D4DEE4"
+                    android:textSize="9sp" />
+
+                <ProgressBar
+                    android:id="@+id/hud_status_health_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_weight="1"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="100"
+                    android:progressDrawable="@drawable/hud_bar_hp" />
+
+                <TextView
+                    android:id="@+id/hud_status_health_text"
+                    android:layout_width="34dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="100%"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="9sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="46dp"
+                    android:layout_height="wrap_content"
+                    android:text="Colete"
+                    android:textColor="#D4DEE4"
+                    android:textSize="9sp" />
+
+                <ProgressBar
+                    android:id="@+id/hud_status_armour_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_weight="1"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="100"
+                    android:progressDrawable="@drawable/hud_bar_armour" />
+
+                <TextView
+                    android:id="@+id/hud_status_armour_text"
+                    android:layout_width="34dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="100%"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="9sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="46dp"
+                    android:layout_height="wrap_content"
+                    android:text="Fome"
+                    android:textColor="#D4DEE4"
+                    android:textSize="9sp" />
+
+                <ProgressBar
+                    android:id="@+id/hud_status_food_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_weight="1"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="100"
+                    android:progressDrawable="@drawable/hud_bar_eat" />
+
+                <TextView
+                    android:id="@+id/hud_status_food_text"
+                    android:layout_width="34dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="100%"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="9sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="46dp"
+                    android:layout_height="wrap_content"
+                    android:text="Sede"
+                    android:textColor="#D4DEE4"
+                    android:textSize="9sp" />
+
+                <ProgressBar
+                    android:id="@+id/hud_status_thirst_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_weight="1"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="90"
+                    android:progressDrawable="@drawable/hud_bar_eat" />
+
+                <TextView
+                    android:id="@+id/hud_status_thirst_text"
+                    android:layout_width="34dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="90%"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="9sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="46dp"
+                    android:layout_height="wrap_content"
+                    android:text="Sono"
+                    android:textColor="#D4DEE4"
+                    android:textSize="9sp" />
+
+                <ProgressBar
+                    android:id="@+id/hud_status_sleep_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="6dp"
+                    android:layout_weight="1"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="88"
+                    android:progressDrawable="@drawable/hud_bar_armour" />
+
+                <TextView
+                    android:id="@+id/hud_status_sleep_text"
+                    android:layout_width="34dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="88%"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="9sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_hd_map_hotspot"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginBottom="16dp"
+        android:background="#00000000"
+        android:clickable="true"
+        android:focusable="false"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/hud_settings_panel"
+        android:layout_width="700dp"
+        android:layout_height="334dp"
+        android:background="@drawable/hud_config_panel_bg"
+        android:clickable="true"
+        android:elevation="12dp"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="31dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start|center_vertical"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="14dp">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:tint="#DCEEFF"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_hud_quick_actions" />
+
+                    <TextView
+                        android:id="@+id/hud_settings_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:text="Daddy Scripter"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:text="Online"
+                        android:textColor="#DCEEFF"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/hud_settings_close"
+                    android:layout_width="72dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="@drawable/hud_config_close_bg"
+                    android:fontFamily="@font/montserrat_alternates_bold"
+                    android:gravity="center"
+                    android:text="SAIR"
+                    android:textColor="#DDE5EE"
+                    android:textSize="8sp" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#1C222C" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#AA050708"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="MAPA"
+                        android:textColor="#D4D8DD"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:id="@+id/hud_config_tab_controls"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="1dp"
+                        android:layout_weight="1"
+                        android:background="#AA050708"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="CONTROLES"
+                        android:textColor="#D4D8DD"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:id="@+id/hud_config_tab_communication"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="MAPA"
+                        android:textColor="#D4D8DD"
+                        android:textSize="9.5sp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/hud_config_tab_gameplay"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="1dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="JOGO"
+                        android:textColor="#D4D8DD"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="1dp"
+                        android:layout_weight="1"
+                        android:background="#AA050708"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="AUDIO"
+                        android:textColor="#D4D8DD"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:id="@+id/hud_config_tab_graphics"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="1dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/hud_config_sidebar_selected"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="CONFIGURACOES"
+                        android:textColor="#111418"
+                        android:textSize="8sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#384049" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="152dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:paddingTop="7dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="24dp"
+                            android:background="@drawable/hud_config_sidebar_selected"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:singleLine="true"
+                            android:text="Graficos"
+                            android:textColor="#111418"
+                            android:textSize="8.5sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="24dp"
+                            android:layout_marginTop="1dp"
+                            android:background="#66000000"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:singleLine="true"
+                            android:text="Tela"
+                            android:textColor="#D4D8DD"
+                            android:textSize="8.5sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="24dp"
+                            android:layout_marginTop="1dp"
+                            android:background="#66000000"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:singleLine="true"
+                            android:text="Bate-papo"
+                            android:textColor="#D4D8DD"
+                            android:textSize="8.5sp" />
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1">
+
+                <ScrollView
+                    android:id="@+id/hud_config_graphics_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fadeScrollbars="false"
+                    android:fillViewport="false"
+                    android:overScrollMode="ifContentScrolls"
+                    android:paddingEnd="2dp"
+                    android:scrollbarThumbVertical="@drawable/ic_dialog_scrollbar_thumb"
+                    android:scrollbarTrackVertical="@drawable/ic_dialog_scrollbar_track"
+                    android:scrollbars="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="0dp"
+                        android:paddingTop="7dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="9dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@drawable/hud_config_row_bg">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_settings_on" />
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_switch_track_off"
+                            android:tag="hud_config_switch">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical|start"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/hud_switch_thumb"
+                                android:tag="hud_config_switch_thumb" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/hud_shadows_toggle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="56dp"
+                            android:singleLine="true"
+                            android:tag="label:Sombras Dinamicas"
+                            android:text="Sombras Dinamicas"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="7dp"
+                        android:background="@drawable/hud_config_row_bg">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_voip" />
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_switch_track_off"
+                            android:tag="hud_config_switch">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical|start"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/hud_switch_thumb"
+                                android:tag="hud_config_switch_thumb" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/hud_effects_toggle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="56dp"
+                            android:singleLine="true"
+                            android:tag="label:Efeitos Visuais"
+                            android:text="Efeitos Visuais"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="7dp"
+                        android:background="@drawable/hud_config_row_bg"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_settings_on" />
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_switch_track_on"
+                            android:tag="hud_config_switch">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical|end"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/hud_switch_thumb"
+                                android:tag="hud_config_switch_thumb" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/hud_smart_optimizer_toggle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="56dp"
+                            android:singleLine="true"
+                            android:tag="label:Controle automatico removido"
+                            android:text="Controle automatico removido"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/hud_smart_optimizer_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:lineSpacingExtra="1dp"
+                        android:minHeight="25dp"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp"
+                        android:text="Estavel | aguardando telemetria"
+                        android:textColor="#8F98A8"
+                        android:textSize="8sp"
+                        android:visibility="gone" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="7dp"
+                        android:background="@drawable/hud_config_row_bg">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_action_hub" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="82dp"
+                            android:singleLine="true"
+                            android:text="Limite de FPS"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/hud_fps_limit_value"
+                            android:layout_width="64dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_value_bg"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="60 FPS"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="9sp" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="41dp"
+                        android:layout_marginTop="6dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="17dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/montserrat_alternates_bold"
+                                android:gravity="center_vertical"
+                                android:text="Distancia de renderizacao"
+                                android:textColor="#8F98A8"
+                                android:textSize="8.5sp" />
+
+                            <TextView
+                                android:id="@+id/hud_render_distance_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:fontFamily="@font/montserrat_alternates_bold"
+                                android:gravity="center_vertical"
+                                android:text="70m"
+                                android:textColor="#FFFFFFFF"
+                                android:textSize="9sp" />
+                        </LinearLayout>
+
+                        <SeekBar
+                            android:id="@+id/hud_render_distance_seek"
+                            android:layout_width="match_parent"
+                            android:layout_height="24dp"
+                            android:max="130"
+                            android:progress="40"
+                            android:progressTint="#168ED1"
+                            android:thumbTint="#FFFFFFFF" />
+                    </LinearLayout>
+
+                    <SeekBar
+                        android:id="@+id/hud_fps_limit_seek"
+                        android:layout_width="1dp"
+                        android:layout_height="1dp"
+                        android:visibility="gone" />
+                    </LinearLayout>
+                </ScrollView>
+
+                <ScrollView
+                    android:id="@+id/hud_config_gameplay_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fadeScrollbars="false"
+                    android:fillViewport="false"
+                    android:overScrollMode="ifContentScrolls"
+                    android:paddingEnd="2dp"
+                    android:scrollbarThumbVertical="@drawable/ic_dialog_scrollbar_thumb"
+                    android:scrollbarTrackVertical="@drawable/ic_dialog_scrollbar_track"
+                    android:scrollbars="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="0dp"
+                        android:paddingTop="7dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="9dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center_vertical"
+                        android:text="CONFIGURACOES RAPIDAS"
+                        android:textColor="#8F98A8"
+                        android:textSize="9sp" />
+
+                    <FrameLayout
+                        android:id="@+id/hud_config_quick_voip"
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/hud_config_row_bg"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_voip" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="56dp"
+                            android:singleLine="true"
+                            android:tag="hud_config_quick_label"
+                            android:text="VOIP"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_switch_track_off"
+                            android:tag="hud_config_switch">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical|start"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/hud_switch_thumb"
+                                android:tag="hud_config_switch_thumb" />
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/hud_config_quick_chat"
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_chat_active" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="56dp"
+                            android:singleLine="true"
+                            android:tag="hud_config_quick_label"
+                            android:text="Chat"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_switch_track_off"
+                            android:tag="hud_config_switch">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical|start"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/hud_switch_thumb"
+                                android:tag="hud_config_switch_thumb" />
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/hud_config_quick_weapons"
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_weapon_wheel" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="56dp"
+                            android:singleLine="true"
+                            android:tag="hud_config_quick_label"
+                            android:text="Armas"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_switch_track_off"
+                            android:tag="hud_config_switch">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical|start"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/hud_switch_thumb"
+                                android:tag="hud_config_switch_thumb" />
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/hud_config_quick_money"
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <TextView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center"
+                            android:text="$"
+                            android:textColor="#DCEEFF"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="56dp"
+                            android:singleLine="true"
+                            android:tag="hud_config_quick_label"
+                            android:text="Dinheiro"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_switch_track_off"
+                            android:tag="hud_config_switch">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical|start"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/hud_switch_thumb"
+                                android:tag="hud_config_switch_thumb" />
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/hud_config_quick_vitals"
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/heart" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="56dp"
+                            android:singleLine="true"
+                            android:tag="hud_config_quick_label"
+                            android:text="Vida e colete"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_switch_track_off"
+                            android:tag="hud_config_switch">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical|start"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/hud_switch_thumb"
+                                android:tag="hud_config_switch_thumb" />
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/hud_config_quick_needs"
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="5dp"
+                            app:srcCompat="@drawable/status_sandwich" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="56dp"
+                            android:singleLine="true"
+                            android:tag="hud_config_quick_label"
+                            android:text="Fome, sede e sono"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_switch_track_off"
+                            android:tag="hud_config_switch">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical|start"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/hud_switch_thumb"
+                                android:tag="hud_config_switch_thumb" />
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/hud_config_quick_fps"
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_action_hub" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="56dp"
+                            android:singleLine="true"
+                            android:tag="hud_config_quick_label"
+                            android:text="Contador FPS"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_switch_track_off"
+                            android:tag="hud_config_switch">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical|start"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/hud_switch_thumb"
+                                android:tag="hud_config_switch_thumb" />
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_radial_gps" />
+
+                        <TextView
+                            android:id="@+id/hud_hd_map_open"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Abrir mapa HD"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_radial_gps" />
+
+                        <TextView
+                            android:id="@+id/hud_map_toggle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="56dp"
+                            android:singleLine="true"
+                            android:tag="label:Mini mapa"
+                            android:text="Mini mapa"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:background="@drawable/hud_config_switch_track_off"
+                            android:tag="hud_config_switch">
+
+                            <View
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical|start"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:background="@drawable/hud_switch_thumb"
+                                android:tag="hud_config_switch_thumb" />
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_quick_actions" />
+
+                        <TextView
+                            android:id="@+id/hud_control_alpha_cycle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Botoes: 80%"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_chat_active" />
+
+                        <TextView
+                            android:id="@+id/hud_chat_area_map"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Mapear area do chat"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_close" />
+
+                        <TextView
+                            android:id="@+id/hud_chat_area_reset"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Resetar area do chat"
+                            android:textColor="#D4DEE4"
+                            android:textSize="10sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_human" />
+
+                        <TextView
+                            android:id="@+id/hud_cj_outfit_cycle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Trocar roupa"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_hud_human" />
+
+                        <TextView
+                            android:id="@+id/hud_cj_outfit_reset"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Resetar roupa"
+                            android:textColor="#D4DEE4"
+                            android:textSize="10sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_tools_on" />
+
+                        <TextView
+                            android:id="@+id/hud_edit_mode"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Editar HUD"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/hud_config_row_bg">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="start|center_vertical"
+                            android:background="@drawable/hud_config_icon_box"
+                            android:visibility="gone"
+                            android:padding="6dp"
+                            android:tint="#DCEEFF"
+                            app:srcCompat="@drawable/ic_close" />
+
+                        <TextView
+                            android:id="@+id/hud_reset_hud"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Resetar HUD"
+                            android:textColor="#D4DEE4"
+                            android:textSize="10sp" />
+                    </FrameLayout>
+                    </LinearLayout>
+                </ScrollView>
+
+                <ScrollView
+                    android:id="@+id/hud_config_controls_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fadeScrollbars="false"
+                    android:fillViewport="false"
+                    android:overScrollMode="ifContentScrolls"
+                    android:paddingEnd="2dp"
+                    android:scrollbarThumbVertical="@drawable/ic_dialog_scrollbar_thumb"
+                    android:scrollbarTrackVertical="@drawable/ic_dialog_scrollbar_track"
+                    android:scrollbars="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="0dp"
+                        android:paddingTop="7dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="9dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="23dp"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:text="EDITOR DE HUD"
+                            android:textColor="#8F98A8"
+                            android:textSize="8.5sp" />
+
+                        <TextView
+                            android:id="@+id/hud_controls_edit_hud"
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_marginTop="2dp"
+                            android:background="@drawable/hud_config_row_bg"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Editar HUD, botoes, chat, minimapa e status"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/hud_controls_map_chat"
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_marginTop="6dp"
+                            android:background="@drawable/hud_config_row_bg"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Mapear area do chat"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/hud_controls_reset_chat"
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_marginTop="6dp"
+                            android:background="@drawable/hud_config_row_bg"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Resetar area do chat"
+                            android:textColor="#D4DEE4"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/hud_controls_reset_hud"
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_marginTop="6dp"
+                            android:background="@drawable/hud_config_row_bg"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:fontFamily="@font/montserrat_alternates_bold"
+                            android:gravity="center_vertical"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="10dp"
+                            android:singleLine="true"
+                            android:text="Resetar posicao do HUD"
+                            android:textColor="#D4DEE4"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                </ScrollView>
+                    </FrameLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:background="#AA050708">
+
+                <TextView
+                    android:id="@+id/hud_settings_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/montserrat_alternates_bold"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="AS ALTERACOES SAO APLICADAS INSTANTANEAMENTE NO SERVIDOR"
+                    android:textColor="#5F6570"
+                    android:textSize="6sp" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView android:id="@+id/hud_quality_low" android:layout_width="1dp" android:layout_height="1dp" />
+                <TextView android:id="@+id/hud_quality_balanced" android:layout_width="1dp" android:layout_height="1dp" />
+                <TextView android:id="@+id/hud_quality_high" android:layout_width="1dp" android:layout_height="1dp" />
+                <TextView android:id="@+id/hud_android_keyboard_toggle" android:layout_width="1dp" android:layout_height="1dp" />
+                <TextView android:id="@+id/hud_voice_chat_toggle" android:layout_width="1dp" android:layout_height="1dp" />
+                <TextView android:id="@+id/hud_chat_lines_cycle" android:layout_width="1dp" android:layout_height="1dp" />
+                <TextView android:id="@+id/hud_native_resume" android:layout_width="1dp" android:layout_height="1dp" />
+                <TextView android:id="@+id/hud_native_exit" android:layout_width="1dp" android:layout_height="1dp" />
+                <TextView android:id="@+id/hud_settings_apply" android:layout_width="1dp" android:layout_height="1dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_hd_map_layer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#33000000"
+        android:clickable="true"
+        android:elevation="18dp"
+        android:focusable="true"
+        android:paddingStart="18dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="118dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/launcher_field_surface_dark"
+                    android:fontFamily="@font/montserrat_alternates_bold"
+                    android:gravity="center_vertical"
+                    android:paddingStart="14dp"
+                    android:text="MAPA GPS"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/hud_hd_map_clear_route"
+                    android:layout_width="82dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/launcher_field_surface_dark"
+                    android:fontFamily="@font/montserrat_alternates_bold"
+                    android:gravity="center"
+                    android:text="Limpar"
+                    android:textColor="#D4DEE4"
+                    android:textSize="9sp" />
+
+                <TextView
+                    android:id="@+id/hud_hd_map_reset"
+                    android:layout_width="76dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/launcher_field_surface_dark"
+                    android:fontFamily="@font/montserrat_alternates_bold"
+                    android:gravity="center"
+                    android:text="Centro"
+                    android:textColor="#D4DEE4"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/hud_hd_map_zoom_out"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/launcher_field_surface_dark"
+                    android:fontFamily="@font/montserrat_alternates_bold"
+                    android:gravity="center"
+                    android:text="-"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/hud_hd_map_zoom_in"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/home_server_select_button"
+                    android:fontFamily="@font/montserrat_alternates_bold"
+                    android:gravity="center"
+                    android:text="+"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/hud_hd_map_close"
+                    android:layout_width="76dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/hud_config_close_bg"
+                    android:fontFamily="@font/montserrat_alternates_bold"
+                    android:gravity="center"
+                    android:text="Fechar"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <com.xyron.game.main.ui.HdMapView
+                    android:id="@+id/hud_hd_map_view"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="#00000000" />
+
+                <LinearLayout
+                    android:layout_width="176dp"
+                    android:layout_height="match_parent"
+                    android:gravity="top"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:background="@drawable/home_server_select_button"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center"
+                        android:text="ROTAS"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/hud_hd_map_poi_prefeitura"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/launcher_field_surface_dark"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="Prefeitura"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:id="@+id/hud_hd_map_poi_departamento"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/launcher_field_surface_dark"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="Departamento"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:id="@+id/hud_hd_map_poi_aeroporto"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/launcher_field_surface_dark"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="Aeroporto"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:id="@+id/hud_hd_map_poi_policia"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/launcher_field_surface_dark"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="Policia"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:id="@+id/hud_hd_map_poi_hospital"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/launcher_field_surface_dark"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="Hospital"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:id="@+id/hud_hd_map_poi_mecanica"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/launcher_field_surface_dark"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="Mecanica"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:id="@+id/hud_hd_map_poi_armas"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/launcher_field_surface_dark"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="Loja de armas"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="9sp" />
+
+                    <TextView
+                        android:id="@+id/hud_hd_map_poi_hotel"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/launcher_field_surface_dark"
+                        android:fontFamily="@font/montserrat_alternates_bold"
+                        android:gravity="center_vertical"
+                        android:paddingStart="10dp"
+                        android:text="Hotel"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="9sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_chat_map_layer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#33000000"
+        android:clickable="true"
+        android:elevation="15dp"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:id="@+id/hud_chat_area_preview"
+            android:layout_width="132dp"
+            android:layout_height="24dp"
+            android:alpha="0.86"
+            android:background="@drawable/hud_option_bg"
+            android:clickable="false">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center"
+                android:text="AREA CHAT"
+                android:textColor="#FFFFFFFF"
+                android:textSize="8sp" />
+
+            <View
+                android:id="@+id/hud_chat_area_resize_handle"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="bottom|end"
+                android:alpha="0.92"
+                android:background="@drawable/home_server_select_button" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="18dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/hud_chat_area_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/launcher_field_surface_dark"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center"
+                android:text="Cancelar"
+                android:textColor="#D4DEE4"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/hud_chat_area_save"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/home_server_select_button"
+                android:fontFamily="@font/montserrat_alternates_bold"
+                android:gravity="center"
+                android:text="Salvar area"
+                android:textColor="#FFFFFFFF"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/hud_edit_layer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:elevation="14dp"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/hud_edit_done"
+        android:layout_width="138dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/home_server_select_button"
+        android:elevation="16dp"
+        android:fontFamily="@font/montserrat_alternates_bold"
+        android:gravity="center"
+        android:text="Salvar HUD"
+        android:textColor="#FFFFFFFF"
+        android:textSize="10sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" /></androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,72 @@
+name: Controlled Android Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      user_id:
+        required: true
+        type: string
+      worker_url:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-build-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out approved source
+        uses: actions/checkout@v4
+
+      - name: Configure JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Configure Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Restore authorized private build inputs
+        env:
+          GOOGLE_SERVICES_JSON_B64: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
+          GAME_JNILIBS_B64: ${{ secrets.GAME_JNILIBS_B64 }}
+        run: |
+          test -n "$GOOGLE_SERVICES_JSON_B64" || { echo 'Missing GOOGLE_SERVICES_JSON_B64 secret'; exit 1; }
+          test -n "$GAME_JNILIBS_B64" || { echo 'Missing GAME_JNILIBS_B64 secret'; exit 1; }
+          printf '%s' "$GOOGLE_SERVICES_JSON_B64" | base64 --decode > app/google-services.json
+          mkdir -p app/src/game/jniLibs
+          printf '%s' "$GAME_JNILIBS_B64" | base64 --decode | tar -xz -C app/src/game/jniLibs
+
+      - name: Build debug APK
+        run: ./gradlew --no-daemon assembleDebug
+
+      - name: Upload APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: medusa-debug-apk
+          path: app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Notify Worker
+        if: always()
+        env:
+          BUILD_CALLBACK_SECRET: ${{ secrets.BUILD_CALLBACK_SECRET }}
+        run: |
+          status="${{ job.status }}"
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl --fail --silent --show-error --request POST \
+            --header 'Content-Type: application/json' \
+            --header "Authorization: Bearer $BUILD_CALLBACK_SECRET" \
+            --data "{\"user_id\":\"${{ inputs.user_id }}\",\"status\":\"$status\",\"run_url\":\"$run_url\"}" \
+            "${{ inputs.worker_url }}/build-callback"
