@@ -6,9 +6,6 @@ on:
       user_id:
         required: true
         type: string
-      worker_url:
-        required: true
-        type: string
 
 permissions:
   contents: read
@@ -58,15 +55,4 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Notify Worker
-        if: always()
-        env:
-          BUILD_CALLBACK_SECRET: ${{ secrets.BUILD_CALLBACK_SECRET }}
-        run: |
-          status="${{ job.status }}"
-          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          curl --fail --silent --show-error --request POST \
-            --header 'Content-Type: application/json' \
-            --header "Authorization: Bearer $BUILD_CALLBACK_SECRET" \
-            --data "{\"user_id\":\"${{ inputs.user_id }}\",\"status\":\"$status\",\"run_url\":\"$run_url\"}" \
-            "${{ inputs.worker_url }}/build-callback"
+# Add an authenticated Worker callback only after the Worker has a fixed HTTPS URL.
