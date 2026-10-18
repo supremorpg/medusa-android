@@ -27,7 +27,6 @@ local.properties
 *.p12
 *.pem
 *.key
-app/src/game/jniLibs/
 app/libs/*.aar
 app/libs/*.jar
 migration_backups/
@@ -35,6 +34,3 @@ migration_backups/
 # Python cache
 __pycache__/
 *.py[cod]
-
-# Prebuilt native vendor libraries
-app/src/main/cpp/samp/vendor/bass/libs/
