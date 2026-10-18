@@ -28,7 +28,8 @@
         "repo_type": "dataset",
         "revision": "main",
         "client_config_path": "client_config.json",
-        "files_path_prefix": "data-full/files"
+        "files_path_prefix": "data-full/files",
+        "supplemental_files_path_prefix": "data-lite/files"
       }
     }
   ]

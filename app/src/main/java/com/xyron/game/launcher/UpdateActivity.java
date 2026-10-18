@@ -73,7 +73,9 @@ public class UpdateActivity extends SampActivity {
         CheckFiles,
         DownloadGame,
         DownloadGameData,
-        SourceUnavailable
+        SourceUnavailable,
+        DataDownloadFailed,
+        DataValidationFailed
     }
 
     public enum eGPUType {
@@ -144,6 +146,24 @@ public class UpdateActivity extends SampActivity {
                     Toast.makeText(UpdateActivity.this, "Nao consegui acessar a fonte dos arquivos.", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(UpdateActivity.this, SplashActivity.class));
                     finish();
+                } else if (valueOf == UpdateStatus.DataDownloadFailed) {
+                    ((TextView)findViewById(R.id.installation_text)).setText("Download da data incompleto");
+                    ((TextView)findViewById(R.id.fileName)).setText(msg.getData().getString("reason", "Um ou mais arquivos nao puderam ser baixados."));
+                    ((TextView)findViewById(R.id.fileCount)).setText("Toque em voltar e tente baixar novamente.");
+                    ((TextView)findViewById(R.id.fileProgressPercent)).setText("");
+                    ProgressBar progressBar = (ProgressBar) UpdateActivity.this.findViewById(R.id.download_progress);
+                    progressBar.setIndeterminate(false);
+                    progressBar.setProgress(0);
+                    Toast.makeText(UpdateActivity.this, "O download nao terminou. Nenhuma data incompleta sera iniciada.", Toast.LENGTH_LONG).show();
+                } else if (valueOf == UpdateStatus.DataValidationFailed) {
+                    ((TextView)findViewById(R.id.installation_text)).setText("Data incompleta");
+                    ((TextView)findViewById(R.id.fileName)).setText(msg.getData().getString("reason", "Faltam arquivos obrigatorios do jogo."));
+                    ((TextView)findViewById(R.id.fileCount)).setText("A fonte desta variante nao contem todos os arquivos exigidos pelo jogo.");
+                    ((TextView)findViewById(R.id.fileProgressPercent)).setText("");
+                    ProgressBar progressBar = (ProgressBar) UpdateActivity.this.findViewById(R.id.download_progress);
+                    progressBar.setIndeterminate(false);
+                    progressBar.setProgress(0);
+                    Toast.makeText(UpdateActivity.this, "A data baixada nao atende aos requisitos do jogo.", Toast.LENGTH_LONG).show();
                 }else if (!mIsStartingUpdate) {
                     Message obtain2 = Message.obtain((Handler) null, 1);
                     obtain2.replyTo = UpdateActivity.this.mMessenger;
@@ -161,20 +181,22 @@ public class UpdateActivity extends SampActivity {
                 Log.d("x1y2z", "UpdateService.UPDATE_GAME_DATA");
                 //resetProgress(true, 100, 100);
                 if (msg.getData().getBoolean("status", false)) {
+                    if (msg.getData().getBoolean("dataReady", false)) {
+                        intent = new Intent(UpdateActivity.this, SplashActivity.class);
+                        startActivity(intent);
+                        finish();
+                        return;
+                    }
                     String string3 = msg.getData().getString("apkPath", "");
                     if (string3.length() > 0) {
                         mGameApk = new File(string3);
                     }
-                    if (mGameApk == null || !mGameApk.exists()) {
-                        intent = new Intent(UpdateActivity.this, SplashActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
+                    if (mGameApk != null && mGameApk.exists()) {
                         requestInstallGame();
                         return;
                     }
                 }
-                Log.d("x1y2z", "Error update game data");
+                Log.e("UpdateActivity", "APK update completed without an installable APK.");
             }
             else if (msg.what == 1) {
                 Log.i("UpdateActivity", "UpdateService.UPDATE_GAME");

@@ -194,7 +194,7 @@ public class SplashActivity extends SampActivity {
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
             } else {
-                showSourceUnavailableDialog();
+                showDataUnavailableDialog();
             }
         }
     }
@@ -264,16 +264,25 @@ public class SplashActivity extends SampActivity {
         finish();
     }
 
-    private void showSourceUnavailableDialog() {
+    private void showDataUnavailableDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_update_prompt, null, false);
         TextView titleView = dialogView.findViewById(R.id.update_prompt_title);
         TextView bodyView = dialogView.findViewById(R.id.update_prompt_body);
         TextView primaryButton = dialogView.findViewById(R.id.update_prompt_primary);
         TextView secondaryButton = dialogView.findViewById(R.id.update_prompt_secondary);
 
-        titleView.setText("Download indisponivel");
-        bodyView.setText("Os arquivos do jogo ainda nao estao no aparelho e a fonte de download nao respondeu. Tente novamente ou configure o update_sources.json com sua URL do Hugging Face.");
-        primaryButton.setText("Tentar de novo");
+        String missingRequirement = GameDataVerifier.getMissingRequirement(
+                this,
+                DataVariantPreferences.getSelectedVariantIdOrDefault(this)
+        );
+        titleView.setText("Data do jogo indisponivel");
+        if (missingRequirement.isEmpty()) {
+            bodyView.setText("Nao foi possivel verificar a data do jogo agora. Tente novamente.");
+        } else {
+            bodyView.setText("A data instalada esta incompleta: " + missingRequirement
+                    + ". Tente baixar a variante novamente.");
+        }
+        primaryButton.setText("Baixar data");
         secondaryButton.setText("Fechar");
 
         AlertDialog dialog = new AlertDialog.Builder(this)

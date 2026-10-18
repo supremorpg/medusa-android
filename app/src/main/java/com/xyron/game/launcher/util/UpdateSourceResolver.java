@@ -35,6 +35,7 @@ public final class UpdateSourceResolver {
         String huggingFaceTreeApiUrl = "";
         String huggingFaceResolveBaseUrl = "";
         String huggingFaceFilesPathPrefix = "";
+        String huggingFaceSupplementalFilesPathPrefix = "";
         boolean hasCustomSource = false;
         boolean selectedExplicitVariant = false;
         String normalizedVariantId = normalizeVariantId(dataVariantId);
@@ -55,6 +56,7 @@ public final class UpdateSourceResolver {
             huggingFaceTreeApiUrl = parsedConfig.huggingFaceTreeApiUrl;
             huggingFaceResolveBaseUrl = parsedConfig.huggingFaceResolveBaseUrl;
             huggingFaceFilesPathPrefix = parsedConfig.huggingFaceFilesPathPrefix;
+            huggingFaceSupplementalFilesPathPrefix = parsedConfig.huggingFaceSupplementalFilesPathPrefix;
         }
 
         boolean allowDefaultFallback = !selectedExplicitVariant
@@ -69,7 +71,8 @@ public final class UpdateSourceResolver {
                 new ArrayList<>(fallbackFileBaseUrls),
                 huggingFaceTreeApiUrl,
                 huggingFaceResolveBaseUrl,
-                huggingFaceFilesPathPrefix
+                huggingFaceFilesPathPrefix,
+                huggingFaceSupplementalFilesPathPrefix
         );
     }
 
@@ -99,6 +102,9 @@ public final class UpdateSourceResolver {
 
                 parsedConfig.hasCustomSource = true;
                 parsedConfig.huggingFaceFilesPathPrefix = trimSlashes(filesPathPrefix);
+                parsedConfig.huggingFaceSupplementalFilesPathPrefix = trimSlashes(
+                        huggingFace.optString("supplemental_files_path_prefix")
+                );
                 parsedConfig.huggingFaceTreeApiUrl = buildHuggingFaceTreeApiUrl(repoId, repoType, revision);
                 parsedConfig.huggingFaceResolveBaseUrl = buildHuggingFaceResolveBaseUrl(repoId, repoType, revision);
                 parsedConfig.clientConfigUrls.add(buildHuggingFaceUrl(repoId, repoType, revision, clientConfigPath));
@@ -260,19 +266,22 @@ public final class UpdateSourceResolver {
         public final String huggingFaceTreeApiUrl;
         public final String huggingFaceResolveBaseUrl;
         public final String huggingFaceFilesPathPrefix;
+        public final String huggingFaceSupplementalFilesPathPrefix;
 
         public UpdateSourceConfig(
                 List<String> clientConfigUrls,
                 List<String> fallbackFileBaseUrls,
                 String huggingFaceTreeApiUrl,
                 String huggingFaceResolveBaseUrl,
-                String huggingFaceFilesPathPrefix
+                String huggingFaceFilesPathPrefix,
+                String huggingFaceSupplementalFilesPathPrefix
         ) {
             this.clientConfigUrls = clientConfigUrls;
             this.fallbackFileBaseUrls = fallbackFileBaseUrls;
             this.huggingFaceTreeApiUrl = huggingFaceTreeApiUrl;
             this.huggingFaceResolveBaseUrl = huggingFaceResolveBaseUrl;
             this.huggingFaceFilesPathPrefix = huggingFaceFilesPathPrefix;
+            this.huggingFaceSupplementalFilesPathPrefix = huggingFaceSupplementalFilesPathPrefix;
         }
     }
 
@@ -282,6 +291,7 @@ public final class UpdateSourceResolver {
         String huggingFaceTreeApiUrl = "";
         String huggingFaceResolveBaseUrl = "";
         String huggingFaceFilesPathPrefix = "";
+        String huggingFaceSupplementalFilesPathPrefix = "";
         boolean hasCustomSource = false;
     }
 }

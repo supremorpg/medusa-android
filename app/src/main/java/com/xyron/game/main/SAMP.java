@@ -43,6 +43,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.xyron.game.BuildConfig;
 import com.xyron.game.R;
 import com.xyron.game.launcher.MainActivity;
+import com.xyron.game.launcher.UpdateActivity;
 import com.xyron.game.main.ui.AttachEdit;
 import com.xyron.game.main.ui.CustomKeyboard;
 import com.xyron.game.main.ui.HdMapView;
@@ -95,6 +96,7 @@ import java.util.Scanner;
 import java.lang.reflect.Method;
 
 import com.xyron.game.launcher.util.ConfigValidator;
+import com.xyron.game.launcher.util.GameDataVerifier;
 import com.xyron.game.launcher.util.HostShellEngine;
 import com.xyron.game.launcher.util.PickupStudioManager;
 import com.xyron.game.launcher.util.ServerConfigManager;
@@ -691,9 +693,19 @@ public class SAMP extends com.raiferoleplay.game.game.SAMP implements CustomKeyb
         Log.i(TAG, "**** onCreate");
 
         ConfigValidator.validateConfigFiles(this);
-        ensureSampNativeLibraryLoaded();
-
         super.onCreate(savedInstanceState);
+        if (!GameDataVerifier.hasRequiredGameData(this)) {
+            Log.e(TAG, "Game data is incomplete; redirecting to the data updater.");
+            Intent updateIntent = new Intent(this, UpdateActivity.class);
+            updateIntent.putExtra("mode", UpdateActivity.UpdateMode.GameDataUpdate.name());
+            startActivity(updateIntent);
+            finish();
+            return;
+        }
+        if (!ensureSampNativeLibraryLoaded()) {
+            finish();
+            return;
+        }
 
         handler = new Handler(Looper.getMainLooper());
         runtimeLowRamMode = detectLowRamMode();

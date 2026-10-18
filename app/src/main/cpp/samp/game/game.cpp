@@ -75,6 +75,38 @@ static int NormalizeNetworkPedSkin64(int skin)
 }
 #endif
 
+#if !VER_x32
+static bool HasRequiredDxtTextureBanks()
+{
+    if (!g_pszStorage || !g_pszStorage[0]) {
+        FLog("[TEX_INIT64] storage root is unavailable");
+        return false;
+    }
+
+    constexpr const char* kDatabases[] = {"txd", "gta3", "gta_int", "mobile"};
+    constexpr const char* kExtensions[] = {"dat", "tmb", "toc"};
+    char path[1024];
+
+    for (const char* database : kDatabases) {
+        for (const char* extension : kExtensions) {
+            std::snprintf(path, sizeof(path), "%stexdb/%s/%s.dxt.%s", g_pszStorage, database, database, extension);
+            FILE* file = std::fopen(path, "rb");
+            if (!file) {
+                FLog("[TEX_INIT64] missing required DXT bank: %s", path);
+                return false;
+            }
+            const int readResult = std::fgetc(file);
+            std::fclose(file);
+            if (readResult == EOF) {
+                FLog("[TEX_INIT64] empty required DXT bank: %s", path);
+                return false;
+            }
+        }
+    }
+    return true;
+}
+#endif
+
 static TextureDatabaseRuntime* LoadRuntimeTextureDatabase(const char* name,
                                                           bool fullyLoad,
                                                           TextureDatabaseFormat format)
@@ -717,6 +749,13 @@ bool CGame::InitialiseRenderWare() {
     constexpr TextureDatabaseFormat gta3TexFormat = TextureDatabaseFormat::DF_DXT;
     constexpr TextureDatabaseFormat gtaIntTexFormat = TextureDatabaseFormat::DF_DXT;
     constexpr TextureDatabaseFormat mobileTexFormat = TextureDatabaseFormat::DF_DXT;
+#endif
+
+#if !VER_x32
+    if (!HasRequiredDxtTextureBanks()) {
+        FLog("[TEX_INIT64] refusing RenderWare initialization with incomplete game data");
+        return false;
+    }
 #endif
 
 #if VER_SAMP

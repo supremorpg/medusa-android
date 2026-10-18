@@ -43,6 +43,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public class UpdateService extends Service {
@@ -71,8 +72,10 @@ public class UpdateService extends Service {
     public String mHuggingFaceTreeApiUrl = "";
     public String mHuggingFaceResolveBaseUrl = "";
     public String mHuggingFaceFilesPathPrefix = "";
+    public String mHuggingFaceSupplementalFilesPathPrefix = "";
     public String mDataVariantId = DEFAULT_DATA_VARIANT_ID;
     public boolean mForceReinstallData = false;
+    private String mLastDataDownloadFailure = "";
 
     public int mGpuType = 0;
 
@@ -164,6 +167,7 @@ public class UpdateService extends Service {
         mHuggingFaceTreeApiUrl = sourceConfig.huggingFaceTreeApiUrl;
         mHuggingFaceResolveBaseUrl = sourceConfig.huggingFaceResolveBaseUrl;
         mHuggingFaceFilesPathPrefix = sourceConfig.huggingFaceFilesPathPrefix;
+        mHuggingFaceSupplementalFilesPathPrefix = sourceConfig.huggingFaceSupplementalFilesPathPrefix;
     }
 
     private void updateDataVariantFromMessage(Message msg) {
@@ -256,6 +260,23 @@ public class UpdateService extends Service {
                 : UpdateActivity.GameStatus.Unknown;
         setUpdateStatus(UpdateActivity.UpdateStatus.SourceUnavailable);
         notifyGameStatus();
+    }
+
+    private void setDataDownloadFailed(String reason) {
+        mUpdateStatus = UpdateActivity.UpdateStatus.DataDownloadFailed;
+        Message obtain = Message.obtain(mInHandler, 4);
+        obtain.getData().putString("status", mUpdateStatus.name());
+        obtain.getData().putString("reason", sanitize(reason).isEmpty()
+                ? "Um ou mais arquivos obrigatorios nao puderam ser baixados."
+                : sanitize(reason));
+        obtain.replyTo = mMessenger;
+        if (mActivityMessenger != null) {
+            try {
+                mActivityMessenger.send(obtain);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private boolean canUseHuggingFaceTreeFallback() {
@@ -478,21 +499,22 @@ public class UpdateService extends Service {
     }
 
     private String resolveHuggingFaceLocalPath(String remotePath, Set<String> remotePaths) {
-        String normalizedPrefix = sanitize(mHuggingFaceFilesPathPrefix);
-        if (!normalizedPrefix.isEmpty()) {
-            if (remotePath.equals(normalizedPrefix)) {
-                return "";
-            }
-
-            String expectedPrefix = normalizedPrefix + "/";
-            if (!remotePath.startsWith(expectedPrefix)) {
-                return "";
-            }
-
-            return remotePath.substring(expectedPrefix.length());
+        String selectedPrefix = trimTrailingSlash(sanitize(mHuggingFaceFilesPathPrefix));
+        String selectedLocalPath = stripHuggingFacePrefix(remotePath, selectedPrefix);
+        if (!selectedLocalPath.isEmpty()) {
+            return selectedLocalPath;
         }
 
-        if (remotePath.startsWith("files/")) {
+        String supplementalPrefix = trimTrailingSlash(sanitize(mHuggingFaceSupplementalFilesPathPrefix));
+        String supplementalLocalPath = stripHuggingFacePrefix(remotePath, supplementalPrefix);
+        if (!supplementalLocalPath.isEmpty()) {
+            String selectedRemotePath = selectedPrefix.isEmpty()
+                    ? supplementalLocalPath
+                    : selectedPrefix + "/" + supplementalLocalPath;
+            return remotePaths.contains(selectedRemotePath) ? "" : supplementalLocalPath;
+        }
+
+        if (selectedPrefix.isEmpty() && remotePath.startsWith("files/")) {
             String strippedPath = remotePath.substring("files/".length());
             if (remotePaths.contains(strippedPath)) {
                 return "";
@@ -500,7 +522,25 @@ public class UpdateService extends Service {
             return strippedPath;
         }
 
-        return remotePath;
+        return "";
+    }
+
+    private String stripHuggingFacePrefix(String remotePath, String prefix) {
+        if (prefix.isEmpty() || remotePath.equals(prefix)) {
+            return "";
+        }
+        String expectedPrefix = prefix + "/";
+        return remotePath.startsWith(expectedPrefix)
+                ? remotePath.substring(expectedPrefix.length())
+                : "";
+    }
+
+    private String trimTrailingSlash(String value) {
+        String result = value;
+        while (result.endsWith("/")) {
+            result = result.substring(0, result.length() - 1);
+        }
+        return result;
     }
 
     private String parseNextLink(String linkHeader) {
@@ -527,29 +567,103 @@ public class UpdateService extends Service {
     }
 
     private void enqueueMissingFile(FilesData fileData, String manifestBaseUrl) {
-        if (fileData == null || shouldIgnoreFile(fileData)) {
+        if (fileData == null) {
             return;
         }
 
-        String rootPath = getExternalFilesDir(null) + "/";
-        File file = new File(rootPath + fileData.getPath());
+        String localPath = normalizeLocalDataPath(fileData.getPath());
+        if (shouldIgnoreFile(localPath)) {
+            return;
+        }
+        File file = resolveSafeDataFile(localPath);
+        if (file == null) {
+            Log.w("UpdateService", "Ignoring unsafe data manifest path: " + fileData.getPath());
+            return;
+        }
         if (!mForceReinstallData && isCompleteFile(file, fileData.getSize())) {
             return;
         }
 
-        if (!shouldDownloadForCurrentGpu(fileData.getPath())) {
+        if (!shouldDownloadForCurrentGpu(localPath)) {
             return;
         }
 
-        mUpdateFiles.add(fileData.getPath());
-        Log.d("x1y2z", "File name: " + fileData.getName());
-        mUpdateFilesName.add(fileData.getName());
-        Log.d("x1y2z", "File path: " + fileData.getPath());
+        String downloadUrl = resolveDownloadUrl(manifestBaseUrl, fileData);
+        if (downloadUrl.isEmpty()) {
+            Log.w("UpdateService", "Missing download URL for: " + localPath);
+            return;
+        }
+
+        mUpdateFiles.add(localPath);
+        String fileName = file.getName();
+        Log.d("x1y2z", "File name: " + fileName);
+        mUpdateFilesName.add(fileName);
+        Log.d("x1y2z", "File path: " + localPath);
         mUpdateFilesSize.add(fileData.getSize());
-        mUpdateFilesUrl.add(resolveDownloadUrl(manifestBaseUrl, fileData));
+        mUpdateFilesUrl.add(downloadUrl);
         mUpdateGameDataSize = mUpdateGameDataSize + fileData.getSize();
         Log.d("x1y2z", "File size: " + fileData.getSize());
         Log.d("x1y2z", "Data size: " + mUpdateGameDataSize);
+    }
+
+    private String normalizeLocalDataPath(String remotePath) {
+        String normalizedPath = sanitize(remotePath).replace('\\', '/');
+        if (normalizedPath.isEmpty() || normalizedPath.startsWith("/") || normalizedPath.matches("^[A-Za-z]:.*")) {
+            return "";
+        }
+
+        String configuredPrefix = sanitize(mHuggingFaceFilesPathPrefix).replace('\\', '/');
+        while (configuredPrefix.startsWith("/")) {
+            configuredPrefix = configuredPrefix.substring(1);
+        }
+        while (configuredPrefix.endsWith("/")) {
+            configuredPrefix = configuredPrefix.substring(0, configuredPrefix.length() - 1);
+        }
+        if (!configuredPrefix.isEmpty() && normalizedPath.startsWith(configuredPrefix + "/")) {
+            normalizedPath = normalizedPath.substring(configuredPrefix.length() + 1);
+        }
+
+        if (normalizedPath.isEmpty()) {
+            return "";
+        }
+
+        String[] segments = normalizedPath.split("/", -1);
+        StringBuilder result = new StringBuilder();
+        for (String segment : segments) {
+            if (segment.isEmpty() || ".".equals(segment) || "..".equals(segment) || segment.indexOf(':') >= 0) {
+                return "";
+            }
+            if (result.length() > 0) {
+                result.append('/');
+            }
+            result.append(segment);
+        }
+        return result.toString();
+    }
+
+    private File resolveSafeDataFile(String relativePath) {
+        if (relativePath == null || relativePath.isEmpty()) {
+            return null;
+        }
+
+        File root = getExternalFilesDir(null);
+        if (root == null) {
+            return null;
+        }
+
+        try {
+            File canonicalRoot = root.getCanonicalFile();
+            File canonicalFile = new File(canonicalRoot, relativePath).getCanonicalFile();
+            String rootPath = canonicalRoot.getPath();
+            String filePath = canonicalFile.getPath();
+            if (!filePath.startsWith(rootPath + File.separator)) {
+                return null;
+            }
+            return canonicalFile;
+        } catch (IOException e) {
+            Log.e("UpdateService", "Unable to resolve data file path", e);
+            return null;
+        }
     }
 
     private boolean isCompleteFile(File file, long expectedSize) {
@@ -559,30 +673,47 @@ public class UpdateService extends Service {
         return expectedSize <= 0L || file.length() == expectedSize;
     }
 
-    private boolean shouldIgnoreFile(FilesData fileData) {
-        return fileData.getName().equals("samp_log.txt")
-                || fileData.getName().equals("svlog.txt")
-                || fileData.getName().equals("gtasatelem.set")
-                || fileData.getName().equals("GTASAMP10.b")
-                || fileData.getName().equals("gta_sa.set")
-                || fileData.getName().equals("settings.ini");
+    private boolean shouldIgnoreFile(String localPath) {
+        String fileName = new File(localPath == null ? "" : localPath).getName();
+        return fileName.equals("samp_log.txt")
+                || fileName.equals("svlog.txt")
+                || fileName.equals("gtasatelem.set")
+                || fileName.equals("GTASAMP10.b")
+                || fileName.equals("gta_sa.set")
+                || fileName.equals("settings.ini");
     }
 
     private boolean shouldDownloadForCurrentGpu(String filePath) {
-        if (filePath.contains("player")
-                || filePath.contains("playerhi")
-                || filePath.contains("menu")
-                || filePath.contains("samp")) {
+        String normalizedPath = filePath == null ? "" : filePath.toLowerCase(Locale.US);
+        if (isMandatoryArm64DxtTexture(normalizedPath)) {
+            return true;
+        }
+        if (normalizedPath.contains("player")
+                || normalizedPath.contains("playerhi")
+                || normalizedPath.contains("menu")
+                || normalizedPath.contains("samp")) {
             return true;
         }
 
-        if (filePath.contains(".dxt.") && mGpuType != 1) {
+        if (normalizedPath.contains(".dxt.") && mGpuType != 1) {
             return false;
         }
-        if (filePath.contains(".etc.") && mGpuType != 2) {
+        if (normalizedPath.contains(".etc.") && mGpuType != 2) {
             return false;
         }
-        return !filePath.contains(".pvr.") || mGpuType == 3;
+        return !normalizedPath.contains(".pvr.") || mGpuType == 3;
+    }
+
+    private boolean isMandatoryArm64DxtTexture(String normalizedPath) {
+        if (!GameDataVerifier.isArm64Runtime() || !normalizedPath.endsWith(".dxt.dat")
+                && !normalizedPath.endsWith(".dxt.tmb")
+                && !normalizedPath.endsWith(".dxt.toc")) {
+            return false;
+        }
+        return normalizedPath.startsWith("texdb/txd/txd.dxt.")
+                || normalizedPath.startsWith("texdb/gta3/gta3.dxt.")
+                || normalizedPath.startsWith("texdb/gta_int/gta_int.dxt.")
+                || normalizedPath.startsWith("texdb/mobile/mobile.dxt.");
     }
 
     private String resolveDownloadUrl(String filesManifestUrl, FilesData fileData) {
@@ -592,6 +723,12 @@ public class UpdateService extends Service {
         }
 
         String relativePath = trimLeadingSlash(fileData.getPath());
+        if (!sanitize(mHuggingFaceFilesPathPrefix).isEmpty()) {
+            relativePath = normalizeLocalDataPath(fileData.getPath());
+        }
+        if (relativePath.isEmpty()) {
+            return "";
+        }
         for (String baseUrl : mFallbackFileBaseUrls) {
             String resolved = joinUrl(baseUrl, relativePath);
             if (!resolved.isEmpty()) {
@@ -687,10 +824,21 @@ public class UpdateService extends Service {
             return;
         }
 
-        Log.d("UpdateService", "updateGameData()");
+        completeGameDataInstall();
+    }
+
+    private void completeGameDataInstall() {
+        String missingRequirement = GameDataVerifier.getMissingRequirement(this, mDataVariantId);
+        if (!missingRequirement.isEmpty()) {
+            Log.e("UpdateService", "Data validation failed for " + mDataVariantId + ": " + missingRequirement);
+            setDataValidationFailed(missingRequirement);
+            return;
+        }
+
         DataVariantPreferences.saveInstalledVariantId(this, mDataVariantId);
-        Message obtain = Message.obtain(this.mInHandler, 1);
+        Message obtain = Message.obtain(this.mInHandler, 2);
         obtain.getData().putBoolean("status", true);
+        obtain.getData().putBoolean("dataReady", true);
         obtain.replyTo = mMessenger;
         if (mActivityMessenger != null) {
             try {
@@ -699,7 +847,21 @@ public class UpdateService extends Service {
                 e5.printStackTrace();
             }
         }
+    }
 
+    private void setDataValidationFailed(String reason) {
+        mUpdateStatus = UpdateActivity.UpdateStatus.DataValidationFailed;
+        Message obtain = Message.obtain(mInHandler, 4);
+        obtain.getData().putString("status", mUpdateStatus.name());
+        obtain.getData().putString("reason", reason);
+        obtain.replyTo = mMessenger;
+        if (mActivityMessenger != null) {
+            try {
+                mActivityMessenger.send(obtain);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void setUpdateStatus(UpdateActivity.UpdateStatus updateStatus) {
@@ -735,19 +897,40 @@ public class UpdateService extends Service {
         Ref.LongRef longRef1 = new Ref.LongRef();
         longRef1.element = 0;
         while(intRef.element<arrayList.size()) {
-            mDownloadingStatus = true;
-
-            String string = getExternalFilesDir(null) + "/" + arrayList.get(intRef.element);
-
-            //Log.d("x1y2z", "Update file path: " + string.replace((CharSequence) arrayList1.get(intRef.element), "") + ", Name:" + arrayList1.get(intRef.element));
-
-            File file = new File(string);
-            File parentFile = file.getParentFile();
-            if (parentFile != null) {
-                parentFile.mkdirs();
+            String localPath = arrayList.get(intRef.element);
+            File file = resolveSafeDataFile(localPath);
+            File parentFile = file == null ? null : file.getParentFile();
+            String downloadUrl = arrayList3.get(intRef.element);
+            if (file == null || parentFile == null || downloadUrl == null || downloadUrl.trim().isEmpty()) {
+                mDownloadingStatus = false;
+                mUpdateFiles.add(localPath);
+                mUpdateFilesName.add(arrayList1.get(intRef.element));
+                mUpdateFilesSize.add(arrayList2.get(intRef.element));
+                mUpdateFilesUrl.add(downloadUrl == null ? "" : downloadUrl);
+                Log.e("UpdateService", "Invalid queued data download: " + localPath);
+                intRef.element++;
+                continue;
             }
-            if (file.exists()) {
-                file.delete();
+
+            if (!parentFile.exists() && !parentFile.mkdirs()) {
+                mDownloadingStatus = false;
+                mUpdateFiles.add(localPath);
+                mUpdateFilesName.add(arrayList1.get(intRef.element));
+                mUpdateFilesSize.add(arrayList2.get(intRef.element));
+                mUpdateFilesUrl.add(downloadUrl);
+                Log.e("UpdateService", "Unable to create data directory: " + parentFile);
+                intRef.element++;
+                continue;
+            }
+            if (file.exists() && !file.delete()) {
+                mDownloadingStatus = false;
+                mUpdateFiles.add(localPath);
+                mUpdateFilesName.add(arrayList1.get(intRef.element));
+                mUpdateFilesSize.add(arrayList2.get(intRef.element));
+                mUpdateFilesUrl.add(downloadUrl);
+                Log.e("UpdateService", "Unable to replace data file: " + file);
+                intRef.element++;
+                continue;
             }
 
             Ref.LongRef longRef = new Ref.LongRef();
@@ -755,19 +938,8 @@ public class UpdateService extends Service {
 
             Log.d("x1y2z", "startDataUpdating " + mUpdateGameDataSize + " " + mUpdateGameDataSizeUpdated);
 
-            String downloadUrl = arrayList3.get(intRef.element);
-            if (downloadUrl == null || downloadUrl.trim().isEmpty()) {
-                mDownloadingStatus = false;
-                mUpdateFiles.add(arrayList.get(intRef.element));
-                mUpdateFilesName.add(arrayList1.get(intRef.element));
-                mUpdateFilesSize.add(arrayList2.get(intRef.element));
-                mUpdateFilesUrl.add("");
-                intRef.element++;
-                continue;
-            }
-
             mDownloadingStatus = true;
-            PRDownloader.download(downloadUrl, string.replace(arrayList1.get(intRef.element), ""), arrayList1.get(intRef.element)).build().setOnStartOrResumeListener(null).setOnPauseListener(null).setOnCancelListener(null).setOnProgressListener(new OnProgressListener() {
+            PRDownloader.download(downloadUrl, parentFile.getAbsolutePath(), file.getName()).build().setOnStartOrResumeListener(null).setOnPauseListener(null).setOnCancelListener(null).setOnProgressListener(new OnProgressListener() {
                 @Override
                 public void onProgress(Progress progress) {
                     mDownloadingStatus = true;
@@ -802,11 +974,14 @@ public class UpdateService extends Service {
                 @Override
                 public void onError(Error error) {
                     mDownloadingStatus = false;
-                    mUpdateFiles.add(arrayList.get(intRef.element));
+                    String failedPath = arrayList.get(intRef.element);
+                    mUpdateFiles.add(failedPath);
                     mUpdateFilesName.add(arrayList1.get(intRef.element));
                     mUpdateFilesSize.add(arrayList2.get(intRef.element));
                     mUpdateFilesUrl.add(arrayList3.get(intRef.element));
-                    Log.d("x1y2z", "error downloadgamedata: " + error);
+                    mLastDataDownloadFailure = "Falha ao baixar " + failedPath + ": "
+                            + (error == null ? "erro desconhecido" : error.toString());
+                    Log.e("UpdateService", mLastDataDownloadFailure);
                 }
             });
 
@@ -825,12 +1000,15 @@ public class UpdateService extends Service {
 
         mDownloadingStatus = false;
         if (!mUpdateFiles.isEmpty()) {
-            Log.d("x1y2z", "download incomplete, pending files: " + mUpdateFiles.size());
-            setUpdateStatus(UpdateActivity.UpdateStatus.SourceUnavailable);
+            String reason = mLastDataDownloadFailure;
+            if (reason.isEmpty()) {
+                reason = "Faltam " + mUpdateFiles.size() + " arquivo(s) na instalacao da data.";
+            }
+            Log.e("UpdateService", "Data download incomplete: " + reason);
+            setDataDownloadFailed(reason);
             return;
         }
-        DataVariantPreferences.saveInstalledVariantId(this, mDataVariantId);
-        updateGame();
+        completeGameDataInstall();
     }
 
     public void downloadGame()
@@ -957,6 +1135,7 @@ public class UpdateService extends Service {
         mUpdateGameDataSizeUpdated = 0;
         mUpdateGameURL = "";
         mUpdateVersion = 0;
+        mLastDataDownloadFailure = "";
         mUpdateFiles = new ArrayList<>();
         mUpdateFilesName = new ArrayList<>();
         mUpdateFilesSize = new ArrayList<>();
