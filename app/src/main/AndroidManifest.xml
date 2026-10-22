@@ -34,7 +34,7 @@
     <uses-feature android:name="android.hardware.microphone" android:required="false"/>
 
     <application
-        android:name="com.xyron.game.launcher.sistemas.MainApp"
+        android:name="com.supremo.launcher.launcher.sistemas.MainApp"
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:banner="@mipmap/ic_launcher"

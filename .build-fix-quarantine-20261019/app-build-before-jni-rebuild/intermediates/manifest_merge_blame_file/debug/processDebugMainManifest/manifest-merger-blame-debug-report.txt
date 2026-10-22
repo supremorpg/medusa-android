@@ -1,0 +1,453 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.supremo.launcher"
+4    android:installLocation="auto"
+5    android:versionCode="1"
+6    android:versionName="0.0.1" >
+7
+8    <uses-sdk
+9        android:minSdkVersion="21"
+10        android:targetSdkVersion="28" />
+11
+12    <!-- PermissÃµes -->
+13    <uses-permission android:name="INSTALL_PACKAGES" />
+13-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:6:5-55
+13-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:6:22-53
+14    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+14-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:7:5-75
+14-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:7:22-73
+15    <uses-permission android:name="android.permission.WAKE_LOCK" />
+15-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:8:5-67
+15-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:8:22-65
+16    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+16-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:9:5-79
+16-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:9:22-77
+17    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+17-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:10:5-80
+17-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:10:22-78
+18    <uses-permission android:name="android.permission.INTERNET" />
+18-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:11:5-66
+18-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:11:22-64
+19    <uses-permission android:name="android.permission.VIBRATE" />
+19-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:12:5-65
+19-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:12:22-63
+20    <uses-permission android:name="android.permission.ACCESS_ALL_DOWNLOADS" />
+20-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:13:5-78
+20-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:13:22-76
+21    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+21-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:14:5-78
+21-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:14:22-76
+22    <uses-permission android:name="com.android.vending.CHECK_LICENSE" />
+22-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:15:5-72
+22-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:15:22-70
+23    <uses-permission android:name="android.permission.BLUETOOTH" />
+23-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:16:5-67
+23-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:16:22-65
+24    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+24-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:17:5-75
+24-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:17:22-73
+25    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+25-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:18:5-80
+25-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:18:22-78
+26    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+26-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:19:5-76
+26-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:19:22-74
+27    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+27-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:20:5-82
+27-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:20:22-80
+28    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+28-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:21:5-81
+28-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:21:22-79
+29    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+29-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:22:5-70
+29-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:22:22-68
+30    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+30-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:23:5-109
+30-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:23:22-107
+31    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+31-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:24:5-78
+31-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:24:22-76
+32    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+32-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:25:5-76
+32-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:25:22-74
+33    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+33-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:26:5-81
+33-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:26:22-79
+34    <uses-permission android:name="android.permission.Ad_ID" />
+34-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:27:5-63
+34-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:27:22-61
+35
+36    <!-- Features -->
+37    <uses-feature android:glEsVersion="0x00020000" />
+37-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:30:5-53
+37-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:30:19-51
+38    <uses-feature
+38-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:31:5-89
+39        android:name="android.hardware.touchscreen"
+39-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:31:19-62
+40        android:required="false" />
+40-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:31:63-87
+41    <uses-feature
+41-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:32:5-86
+42        android:name="android.software.leanback"
+42-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:32:19-59
+43        android:required="false" />
+43-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:32:60-84
+44    <uses-feature
+44-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:33:5-87
+45        android:name="android.hardware.bluetooth"
+45-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:33:19-60
+46        android:required="false" />
+46-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:33:61-85
+47    <uses-feature
+47-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:34:5-88
+48        android:name="android.hardware.microphone"
+48-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:34:19-61
+49        android:required="false" />
+49-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:34:62-86
+50
+51    <application
+52        android:name="com.supremo.launcher.launcher.sistemas.MainApp"
+52-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:37:9-70
+53        android:allowBackup="true"
+53-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:38:9-35
+54        android:appCategory="game"
+54-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:43:9-35
+55        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+55-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:39:9-77
+56        android:banner="@mipmap/ic_launcher"
+56-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:40:9-45
+57        android:debuggable="true"
+58        android:extractNativeLibs="true"
+59        android:hardwareAccelerated="true"
+59-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:41:9-43
+60        android:icon="@mipmap/ic_launcher"
+60-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:42:9-43
+61        android:isGame="true"
+61-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:44:9-30
+62        android:label="Supremo Launcher"
+62-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:45:9-36
+63        android:networkSecurityConfig="@xml/network_security_config"
+63-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:46:9-69
+64        android:requestLegacyExternalStorage="true"
+64-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:47:9-52
+65        android:roundIcon="@mipmap/ic_launcher_round"
+65-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:48:9-54
+66        android:supportsRtl="true"
+66-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:49:9-35
+67        android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+67-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:50:9-76
+68        android:usesCleartextTraffic="true" >
+68-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:51:9-44
+69
+70        <!-- Atividades -->
+71        <activity
+71-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:55:9-64:20
+72            android:name="com.supremo.launcher.launcher.EntryActivity"
+72-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:56:13-51
+73            android:exported="true"
+73-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:59:13-36
+74            android:screenOrientation="landscape"
+74-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:57:13-50
+75            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" >
+75-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:58:13-80
+76            <intent-filter>
+76-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:60:13-63:29
+77                <action android:name="android.intent.action.MAIN" />
+77-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:61:17-68
+77-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:61:25-66
+78
+79                <category android:name="android.intent.category.LAUNCHER" />
+79-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:62:17-76
+79-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:62:27-74
+80            </intent-filter>
+81        </activity>
+82        <activity
+82-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:66:9-73:38
+83            android:name="com.supremo.launcher.main.SAMP"
+83-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:67:13-38
+84            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+84-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:70:13-90
+85            android:exported="true"
+85-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:73:13-36
+86            android:launchMode="singleTask"
+86-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:71:13-44
+87            android:screenOrientation="landscape"
+87-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:68:13-50
+88            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+88-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:69:13-80
+89            android:windowSoftInputMode="stateHidden|adjustNothing" />
+89-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:72:13-68
+90        <activity
+90-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:75:9-79:66
+91            android:name="com.supremo.launcher.launcher.MainActivity"
+91-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:76:13-50
+92            android:screenOrientation="landscape"
+92-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:77:13-50
+93            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+93-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:78:13-80
+94            android:windowSoftInputMode="stateHidden|adjustPan" />
+94-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:79:13-64
+95        <activity
+95-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:81:9-85:38
+96            android:name="com.supremo.launcher.launcher.SplashActivity"
+96-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:82:13-52
+97            android:exported="true"
+97-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:85:13-36
+98            android:screenOrientation="landscape"
+98-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:83:13-50
+99            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+99-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:84:13-80
+100        <activity
+100-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:87:9-90:82
+101            android:name="com.supremo.launcher.launcher.UpdateActivity"
+101-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:88:13-52
+102            android:screenOrientation="landscape"
+102-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:89:13-50
+103            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+103-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:90:13-80
+104
+105        <!-- ServiÃ§os -->
+106        <service
+106-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:93:9-96:39
+107            android:name="com.supremo.launcher.launcher.UpdateService"
+107-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:94:13-51
+108            android:enabled="true"
+108-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:95:13-35
+109            android:exported="false" />
+109-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:96:13-37
+110        <service
+110-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:98:9-104:19
+111            android:name="com.supremo.launcher.launcher.util.FirebaseMessageReceiver"
+111-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:99:13-66
+112            android:exported="false" >
+112-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:100:13-37
+113            <intent-filter>
+113-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:101:13-103:29
+114                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+114-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:102:17-77
+114-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:102:25-75
+115            </intent-filter>
+116        </service>
+117
+118        <!-- File Provider -->
+119        <provider
+120            android:name="androidx.core.content.FileProvider"
+120-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:108:13-62
+121            android:authorities="com.supremo.launcher.provider"
+121-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:109:13-60
+122            android:exported="false"
+122-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:110:13-37
+123            android:grantUriPermissions="true" >
+123-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:111:13-47
+124            <meta-data
+124-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:112:13-114:57
+125                android:name="android.support.FILE_PROVIDER_PATHS"
+125-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:113:17-67
+126                android:resource="@xml/provider_paths" />
+126-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:114:17-55
+127        </provider>
+128
+129        <meta-data
+129-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:121:9-123:35
+130            android:name="firebase_analytics_collection_deactivated"
+130-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:122:13-69
+131            android:value="true" />
+131-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:123:13-33
+132        <meta-data
+132-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:124:9-126:36
+133            android:name="firebase_messaging_auto_init_enabled"
+133-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:125:13-64
+134            android:value="false" />
+134-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:126:13-34
+135        <meta-data
+135-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:127:9-129:36
+136            android:name="firebase_crashlytics_collection_enabled"
+136-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:128:13-67
+137            android:value="false" />
+137-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:129:13-34
+138
+139        <!-- Firebase Config -->
+140        <meta-data
+140-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:132:9-134:72
+141            android:name="com.google.firebase.messaging.default_notification_icon"
+141-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:133:13-83
+142            android:resource="@drawable/ic_baseline_notifications_24" />
+142-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:134:13-70
+143        <meta-data
+143-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:135:9-137:74
+144            android:name="com.google.firebase.messaging.default_notification_color"
+144-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:136:13-84
+145            android:resource="@color/wallet_highlighted_text_holo_dark" />
+145-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:137:13-72
+146        <meta-data
+146-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:138:9-140:45
+147            android:name="com.google.firebase.messaging.default_notification_channel_id"
+147-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:139:13-89
+148            android:value="SA-MP Launcher" />
+148-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:140:13-43
+149
+150        <!-- StartApp SDK -->
+151        <meta-data
+151-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:143:9-145:40
+152            android:name="com.startapp.sdk.APPLICATION_ID"
+152-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:144:13-59
+153            android:value="201583115" />
+153-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:145:13-38
+154
+155        <service
+155-->[com.google.firebase:firebase-crashlytics-ndk:18.3.5] /Users/manoel/.gradle/caches/transforms-4/77d6e09ea314037834a310dbc6c22f35/transformed/jetified-firebase-crashlytics-ndk-18.3.5/AndroidManifest.xml:31:9-37:19
+156            android:name="com.google.firebase.components.ComponentDiscoveryService"
+156-->[com.google.firebase:firebase-crashlytics-ndk:18.3.5] /Users/manoel/.gradle/caches/transforms-4/77d6e09ea314037834a310dbc6c22f35/transformed/jetified-firebase-crashlytics-ndk-18.3.5/AndroidManifest.xml:32:13-84
+157            android:directBootAware="true"
+157-->[com.google.firebase:firebase-common:20.3.0] /Users/manoel/.gradle/caches/transforms-4/ca5e36268cd7dea22000c3593ca3a4fe/transformed/jetified-firebase-common-20.3.0/AndroidManifest.xml:34:13-43
+158            android:exported="false" >
+158-->[com.google.firebase:firebase-crashlytics-ndk:18.3.5] /Users/manoel/.gradle/caches/transforms-4/77d6e09ea314037834a310dbc6c22f35/transformed/jetified-firebase-crashlytics-ndk-18.3.5/AndroidManifest.xml:33:13-37
+159            <meta-data
+159-->[com.google.firebase:firebase-crashlytics-ndk:18.3.5] /Users/manoel/.gradle/caches/transforms-4/77d6e09ea314037834a310dbc6c22f35/transformed/jetified-firebase-crashlytics-ndk-18.3.5/AndroidManifest.xml:34:13-36:85
+160                android:name="com.google.firebase.components:com.google.firebase.crashlytics.ndk.CrashlyticsNdkRegistrar"
+160-->[com.google.firebase:firebase-crashlytics-ndk:18.3.5] /Users/manoel/.gradle/caches/transforms-4/77d6e09ea314037834a310dbc6c22f35/transformed/jetified-firebase-crashlytics-ndk-18.3.5/AndroidManifest.xml:35:17-122
+161                android:value="com.google.firebase.components.ComponentRegistrar" />
+161-->[com.google.firebase:firebase-crashlytics-ndk:18.3.5] /Users/manoel/.gradle/caches/transforms-4/77d6e09ea314037834a310dbc6c22f35/transformed/jetified-firebase-crashlytics-ndk-18.3.5/AndroidManifest.xml:36:17-82
+162            <meta-data
+162-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:55:13-57:85
+163                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+163-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:56:17-119
+164                android:value="com.google.firebase.components.ComponentRegistrar" />
+164-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:57:17-82
+165            <meta-data
+165-->[com.google.firebase:firebase-crashlytics:18.3.5] /Users/manoel/.gradle/caches/transforms-4/3c57be8dd2832bb5794222caefe53048/transformed/jetified-firebase-crashlytics-18.3.5/AndroidManifest.xml:17:13-19:85
+166                android:name="com.google.firebase.components:com.google.firebase.crashlytics.CrashlyticsRegistrar"
+166-->[com.google.firebase:firebase-crashlytics:18.3.5] /Users/manoel/.gradle/caches/transforms-4/3c57be8dd2832bb5794222caefe53048/transformed/jetified-firebase-crashlytics-18.3.5/AndroidManifest.xml:18:17-115
+167                android:value="com.google.firebase.components.ComponentRegistrar" />
+167-->[com.google.firebase:firebase-crashlytics:18.3.5] /Users/manoel/.gradle/caches/transforms-4/3c57be8dd2832bb5794222caefe53048/transformed/jetified-firebase-crashlytics-18.3.5/AndroidManifest.xml:19:17-82
+168            <meta-data
+168-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/manoel/.gradle/caches/transforms-4/8e917a62ab5e24e3ea0f2d9234b8b6c8/transformed/jetified-firebase-datatransport-18.1.7/AndroidManifest.xml:27:13-29:85
+169                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+169-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/manoel/.gradle/caches/transforms-4/8e917a62ab5e24e3ea0f2d9234b8b6c8/transformed/jetified-firebase-datatransport-18.1.7/AndroidManifest.xml:28:17-115
+170                android:value="com.google.firebase.components.ComponentRegistrar" />
+170-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/manoel/.gradle/caches/transforms-4/8e917a62ab5e24e3ea0f2d9234b8b6c8/transformed/jetified-firebase-datatransport-18.1.7/AndroidManifest.xml:29:17-82
+171            <meta-data
+171-->[com.google.android.gms:play-services-measurement-api:21.2.0] /Users/manoel/.gradle/caches/transforms-4/0e006dee918ac1f93674a2df0a57d4cc/transformed/jetified-play-services-measurement-api-21.2.0/AndroidManifest.xml:31:13-33:85
+172                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+172-->[com.google.android.gms:play-services-measurement-api:21.2.0] /Users/manoel/.gradle/caches/transforms-4/0e006dee918ac1f93674a2df0a57d4cc/transformed/jetified-play-services-measurement-api-21.2.0/AndroidManifest.xml:32:17-139
+173                android:value="com.google.firebase.components.ComponentRegistrar" />
+173-->[com.google.android.gms:play-services-measurement-api:21.2.0] /Users/manoel/.gradle/caches/transforms-4/0e006dee918ac1f93674a2df0a57d4cc/transformed/jetified-play-services-measurement-api-21.2.0/AndroidManifest.xml:33:17-82
+174            <meta-data
+174-->[com.google.firebase:firebase-installations:17.1.2] /Users/manoel/.gradle/caches/transforms-4/19b34e1b0f075db7dcc2b409b0715ce2/transformed/jetified-firebase-installations-17.1.2/AndroidManifest.xml:17:13-19:85
+175                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+175-->[com.google.firebase:firebase-installations:17.1.2] /Users/manoel/.gradle/caches/transforms-4/19b34e1b0f075db7dcc2b409b0715ce2/transformed/jetified-firebase-installations-17.1.2/AndroidManifest.xml:18:17-127
+176                android:value="com.google.firebase.components.ComponentRegistrar" />
+176-->[com.google.firebase:firebase-installations:17.1.2] /Users/manoel/.gradle/caches/transforms-4/19b34e1b0f075db7dcc2b409b0715ce2/transformed/jetified-firebase-installations-17.1.2/AndroidManifest.xml:19:17-82
+177        </service>
+178
+179        <receiver
+179-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:31:9-38:20
+180            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+180-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:32:13-78
+181            android:exported="true"
+181-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:33:13-36
+182            android:permission="com.google.android.c2dm.permission.SEND" >
+182-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:34:13-73
+183            <intent-filter>
+183-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:35:13-37:29
+184                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+184-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:36:17-81
+184-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:36:25-78
+185            </intent-filter>
+186        </receiver>
+187        <!--
+188             FirebaseMessagingService performs security checks at runtime,
+189             but set to not exported to explicitly avoid allowing another app to call it.
+190        -->
+191        <service
+191-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:44:9-51:19
+192            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+192-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:45:13-82
+193            android:directBootAware="true"
+193-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:46:13-43
+194            android:exported="false" >
+194-->[com.google.firebase:firebase-messaging:23.1.1] /Users/manoel/.gradle/caches/transforms-4/1593420aa6e6ecd6246a6faf334ff9f3/transformed/jetified-firebase-messaging-23.1.1/AndroidManifest.xml:47:13-37
+195            <intent-filter android:priority="-500" >
+195-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:101:13-103:29
+196                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+196-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:102:17-77
+196-->/Users/manoel/Desktop/supremo-launcher/app/src/main/AndroidManifest.xml:102:25-75
+197            </intent-filter>
+198        </service>
+199        <service
+199-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/manoel/.gradle/caches/transforms-4/c5c17af81f64154ce869accf426cf20d/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:28:9-34:19
+200            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+200-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/manoel/.gradle/caches/transforms-4/c5c17af81f64154ce869accf426cf20d/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:29:13-103
+201            android:exported="false" >
+201-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/manoel/.gradle/caches/transforms-4/c5c17af81f64154ce869accf426cf20d/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:30:13-37
+202            <meta-data
+202-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/manoel/.gradle/caches/transforms-4/c5c17af81f64154ce869accf426cf20d/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:31:13-33:39
+203                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+203-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/manoel/.gradle/caches/transforms-4/c5c17af81f64154ce869accf426cf20d/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:32:17-94
+204                android:value="cct" />
+204-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/manoel/.gradle/caches/transforms-4/c5c17af81f64154ce869accf426cf20d/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:33:17-36
+205        </service>
+206        <service
+206-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/manoel/.gradle/caches/transforms-4/0d37ae35b918c46009d7e30451812279/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:26:9-30:19
+207            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+207-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/manoel/.gradle/caches/transforms-4/0d37ae35b918c46009d7e30451812279/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:27:13-117
+208            android:exported="false"
+208-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/manoel/.gradle/caches/transforms-4/0d37ae35b918c46009d7e30451812279/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:28:13-37
+209            android:permission="android.permission.BIND_JOB_SERVICE" >
+209-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/manoel/.gradle/caches/transforms-4/0d37ae35b918c46009d7e30451812279/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:29:13-69
+210        </service>
+211
+212        <receiver
+212-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/manoel/.gradle/caches/transforms-4/0d37ae35b918c46009d7e30451812279/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:32:9-34:40
+213            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+213-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/manoel/.gradle/caches/transforms-4/0d37ae35b918c46009d7e30451812279/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:33:13-132
+214            android:exported="false" />
+214-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/manoel/.gradle/caches/transforms-4/0d37ae35b918c46009d7e30451812279/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:34:13-37
+215        <receiver
+215-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:29:9-33:20
+216            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+216-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:30:13-85
+217            android:enabled="true"
+217-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:31:13-35
+218            android:exported="false" >
+218-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:32:13-37
+219        </receiver>
+220
+221        <service
+221-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:35:9-38:40
+222            android:name="com.google.android.gms.measurement.AppMeasurementService"
+222-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:36:13-84
+223            android:enabled="true"
+223-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:37:13-35
+224            android:exported="false" />
+224-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:38:13-37
+225        <service
+225-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:39:9-43:72
+226            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+226-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:40:13-87
+227            android:enabled="true"
+227-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:41:13-35
+228            android:exported="false"
+228-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:42:13-37
+229            android:permission="android.permission.BIND_JOB_SERVICE" />
+229-->[com.google.android.gms:play-services-measurement:21.2.0] /Users/manoel/.gradle/caches/transforms-4/f26a02ee19b75a3aae78b0c3e97b4ef2/transformed/jetified-play-services-measurement-21.2.0/AndroidManifest.xml:43:13-69
+230
+231        <activity
+231-->[com.google.android.gms:play-services-base:18.0.1] /Users/manoel/.gradle/caches/transforms-4/48c8de5e16357d09462812e866cc264a/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:20:9-22:45
+232            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+232-->[com.google.android.gms:play-services-base:18.0.1] /Users/manoel/.gradle/caches/transforms-4/48c8de5e16357d09462812e866cc264a/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:20:19-85
+233            android:exported="false"
+233-->[com.google.android.gms:play-services-base:18.0.1] /Users/manoel/.gradle/caches/transforms-4/48c8de5e16357d09462812e866cc264a/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:22:19-43
+234            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+234-->[com.google.android.gms:play-services-base:18.0.1] /Users/manoel/.gradle/caches/transforms-4/48c8de5e16357d09462812e866cc264a/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:21:19-78
+235
+236        <meta-data
+236-->[com.google.android.gms:play-services-basement:18.1.0] /Users/manoel/.gradle/caches/transforms-4/a864b81f423459fb8c317a1e178fb1c5/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:21:9-23:69
+237            android:name="com.google.android.gms.version"
+237-->[com.google.android.gms:play-services-basement:18.1.0] /Users/manoel/.gradle/caches/transforms-4/a864b81f423459fb8c317a1e178fb1c5/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:22:13-58
+238            android:value="@integer/google_play_services_version" />
+238-->[com.google.android.gms:play-services-basement:18.1.0] /Users/manoel/.gradle/caches/transforms-4/a864b81f423459fb8c317a1e178fb1c5/transformed/jetified-play-services-basement-18.1.0/AndroidManifest.xml:23:13-66
+239    </application>
+240
+241</manifest>

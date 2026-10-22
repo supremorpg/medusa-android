@@ -1,11 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="32dp"
-    android:height="32dp"
-    android:viewportWidth="32"
-    android:viewportHeight="32">
+    android:width="28dp"
+    android:height="46dp"
+    android:viewportWidth="80"
+    android:viewportHeight="132">
+
+    <!-- Corpo -->
     <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M9,8H23C24.1,8 25,8.9 25,10V22C25,23.1 24.1,24 23,24H9C7.9,24 7,23.1 7,22V10C7,8.9 7.9,8 9,8ZM11,11V21H21V11H11ZM13,13H19V15H13V13ZM13,17H19V19H13V17ZM4,10H6V22H4V10ZM26,10H28V22H26V10Z"
-        android:fillType="evenOdd" />
+        android:fillColor="#FFFFFF"
+        android:pathData="
+            M22,23
+            C17,23 14,27 14,32
+            L14,106
+            L49,117
+            C53,118 57,118 60,116
+            C63,114 64,111 64,107
+            L64,32
+            C64,27 61,23 56,23
+            Z" />
+
+    <!-- 20 furos -->
+    <path
+        android:fillColor="#443A2F"
+        android:pathData="
+
+            M20,39.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M30,39.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M40,39.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M50,39.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+
+            M20,50.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M30,50.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M40,50.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M50,50.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+
+            M20,61
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M30,61
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M40,61
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M50,61
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+
+            M20,71.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M30,71.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M40,71.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M50,71.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+
+            M20,82.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M30,82.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M40,82.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0
+
+            M50,82.5
+            a3,3 0,1 0,6 0
+            a3,3 0,1 0,-6 0" />
+
 </vector>

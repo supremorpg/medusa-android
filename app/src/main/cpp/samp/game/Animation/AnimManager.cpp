@@ -82,7 +82,7 @@ void CAnimManager::ReadAnimAssociationDefinitions() {
 // 0x4D4130
 void CAnimManager::Shutdown() {
     for (auto i = 0; i < NUM_ANIM_BLOCKS; i++) {
-        Xyron::Streaming::RemoveModel(Xyron::Streaming::IfpModelIdFromBlock(i));
+        Supremo::Streaming::RemoveModel(Supremo::Streaming::IfpModelIdFromBlock(i));
     }
 
     for (auto i = 0; i < ms_numAnimations; i++) {
@@ -394,7 +394,7 @@ void CAnimManager::RemoveAnimBlockRef(int32 index) {
     ms_aAnimBlocks[index].usRefs--;
     /* see RemoveAnimBlockRefWithoutDelete, logically here should be called RemoveModel or something
     if (--ms_aAnimBlocks[index].usRefs == 0) {
-        Xyron::Streaming::RemoveModel(Xyron::Streaming::IfpModelIdFromBlock(index));
+        Supremo::Streaming::RemoveModel(Supremo::Streaming::IfpModelIdFromBlock(index));
     }
     */
 }

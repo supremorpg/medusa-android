@@ -14,8 +14,18 @@
 #include "../voice_new/SpeakerList.h"
 #include "../voice_new/Network.h"
 #include "java/jniutil.h"
+#include "../game/SampInputApi.h"
+#include "../src/ui/SampUiController.h"
 
 #include <cstring>
+
+#if !VER_x32
+extern "C" void ResetTextureWarmupQueue64();
+#endif
+
+#if !VER_x32
+extern "C" void ResetSupremoStreamingRequestState64();
+#endif
 
 //#define AUTH_BS "39FB2DEEDB49ACFB8D4EECE6953D2507988CCCF4410"//main
 #define AUTH_BS "15121F6F18550C00AC4B4F8A167D0379BB0ACA99043"
@@ -134,14 +144,19 @@ CNetGame::CNetGame(const char* szHostOrIp, int iPort, const char *szPlayerName, 
 	m_pNetSet->byteWorldTime_Hour = 12;
 	m_pNetSet->byteWorldTime_Minute = 0;
 	m_pNetSet->byteWeather = 1;
+	m_pNetSet->bReceivedWorldTime = false;
+	m_pNetSet->bReceivedWeather = false;
 	m_pNetSet->fGravity = 0.008f;
+	pGame->SetWorldTime(m_pNetSet->byteWorldTime_Hour, m_pNetSet->byteWorldTime_Minute);
 	m_bNameTagStatus = true;
 
 	m_dwLastConnectAttempt = GetTickCount();
 	SetGameState(GAMESTATE_WAIT_CONNECT);
 	m_bLanMode = false;
 
-    pJavaWrapper->HideLoadingScreen();
+    // Keep the loading screen active until the local player is actually
+    // spawned.  Hiding it here exposes gameplay UI while still waiting for
+    // the connection/join sequence to complete.
 
     const char* sampVer = SAMP_VERSION;
     if(pSettings)
@@ -185,6 +200,10 @@ void CNetGame::InitializePools()
 
 void CNetGame::UninitializePools()
 {
+	if (!m_pPools) {
+		return;
+	}
+
 	if (m_pPools->pPlayerPool) {
 		delete m_pPools->pPlayerPool;
 		m_pPools->pPlayerPool = nullptr;
@@ -249,7 +268,10 @@ void CNetGame::UninitializePools()
 
 void CNetGame::Process()
 {
-	Xyron::Perf::ScopedZone perfNetGame(Xyron::Perf::Zone::NetGame);
+	Supremo::Perf::ScopedZone perfNetGame(Supremo::Perf::Zone::NetGame);
+	if (!m_pNetSet || !m_pPools || !m_pRakClient) {
+		return;
+	}
 	static uint32_t time = GetTickCount();
 	static int s_lastDiagState = 0;
 	static uint32_t s_stateDiagStarted = 0;
@@ -303,7 +325,11 @@ void CNetGame::Process()
 		time = GetTickCount();
 		bProcess = true;
 	}
-	if (m_pNetSet->byteHoldTime) {
+	if (m_pNetSet->byteHoldTime && m_pNetSet->bReceivedWorldTime &&
+		m_pNetSet->byteWorldTime_Hour <= 23 && m_pNetSet->byteWorldTime_Minute <= 59) {
+		// Reassert only the server-authoritative clock; reconnect defaults are not
+		// written after a valid server value has been received.
+		pGame->EnableClock(false);
 		pGame->SetWorldTime(m_pNetSet->byteWorldTime_Hour, m_pNetSet->byteWorldTime_Minute);
 	}
 
@@ -323,7 +349,7 @@ void CNetGame::Process()
 
 void CNetGame::UpdateNetwork()
 {
-	Xyron::Perf::ScopedZone perfNetworkReceive(Xyron::Perf::Zone::NetworkReceive);
+	Supremo::Perf::ScopedZone perfNetworkReceive(Supremo::Perf::Zone::NetworkReceive);
 	bool breakStatus = false;
 	Packet *pkt = nullptr;
 	unsigned char packetIdentifier;
@@ -353,7 +379,6 @@ void CNetGame::UpdateNetwork()
 
             case ID_DISCONNECTION_NOTIFICATION:
                 Packet_DisconnectionNotification(pkt);
-                //SetGameState(GAMESTATE_WAIT_CONNECT);
                 break;
 
             case ID_CONNECTION_LOST:
@@ -642,6 +667,54 @@ void CNetGame::Packet_CustomRPC(Packet *p) {
 }
 
 // 0.3.7
+void CNetGame::ResetSessionState()
+{
+	if (m_pNetSet) {
+		m_pNetSet->bReceivedWorldTime = false;
+		m_pNetSet->bReceivedWeather = false;
+		m_pNetSet->byteHoldTime = true;
+		m_pNetSet->byteWorldTime_Hour = 12;
+		m_pNetSet->byteWorldTime_Minute = 0;
+		m_pNetSet->byteWeather = 1;
+	}
+
+	if (m_pPools && m_pPools->pPlayerPool && m_pPools->pPlayerPool->GetLocalPlayer()) {
+		m_pPools->pPlayerPool->GetLocalPlayer()->ResetAllSyncAttributes();
+	}
+
+	if (pUI && pUI->chat()) {
+		pUI->chat()->clearMessages();
+	}
+	SampUiController::ClearChat();
+	if (pJavaWrapper) {
+		// Re-arm the custom overlay before transport reconnects; Java still
+		// requires native connected + spawn-ready before hiding it.
+		pJavaWrapper->ShowLoadingScreen();
+	}
+	FLog("[NET_SESSION64] reset reconnect state");
+}
+
+void CNetGame::RequestReconnect()
+{
+	ResetSessionState();
+    if (m_pRakClient) {
+        NetTransport::Disconnect(m_pRakClient, 0);
+    }
+
+    Supremo::Input::ResetHudControls();
+    Supremo::Input::ResetSourceCameraLook();
+#if !VER_x32
+    ResetSupremoStreamingRequestState64();
+#endif
+    CCamera::GetGameCamera().Restore();
+#if !VER_x32
+    ResetTextureWarmupQueue64();
+#endif
+    ShutdownForGameModeRestart();
+    SetGameState(GAMESTATE_WAIT_CONNECT);
+    m_dwLastConnectAttempt = 0;
+}
+
 void CNetGame::ShutdownForGameModeRestart()
 {
     ResetRemovedBuildings();
@@ -649,6 +722,12 @@ void CNetGame::ShutdownForGameModeRestart()
 	SpeakerList::Hide();
 	MicroIcon::Hide();
 	Network::OnRaknetDisconnect();
+
+	if (!m_pPools || !m_pPools->pPlayerPool) {
+		FLog("[NET_SESSION64] restart skipped pool reset: null player pool");
+		SetGameState(GAMESTATE_WAIT_CONNECT);
+		return;
+	}
 
 	for (PLAYERID playerId = 0; playerId < MAX_PLAYERS; playerId++)
 	{
@@ -659,8 +738,13 @@ void CNetGame::ShutdownForGameModeRestart()
 		}
 	}
 
-	GetPlayerPool()->GetLocalPlayer()->ResetAllSyncAttributes();
-	GetPlayerPool()->GetLocalPlayer()->ToggleSpectating(false);
+	if (m_pPools && m_pPools->pPlayerPool) {
+		CPlayerPool* playerPool = m_pPools->pPlayerPool;
+		if (playerPool->GetLocalPlayer()) {
+			playerPool->GetLocalPlayer()->ResetAllSyncAttributes();
+			playerPool->GetLocalPlayer()->StopSpectatingWithoutSpawn();
+		}
+	}
 	GameResetStats();
 
 	if (pAudioStream) { //add new
@@ -679,12 +763,26 @@ void CNetGame::ShutdownForGameModeRestart()
 	ResetObjectPool();
 	ResetMenuPool();
 
-	m_pNetSet->bDisableInteriorEnterExits = false;
-	m_pNetSet->fNameTagDrawDistance = 70.0f;
-	m_pNetSet->byteWorldTime_Hour = 12;
-	m_pNetSet->byteWorldTime_Minute = 0;
-	m_pNetSet->byteWeather = 1;
-	m_pNetSet->byteHoldTime = 1;
+	if (!m_pNetSet) {
+		FLog("[NET_SESSION64] restart skipped settings reset: null settings");
+		SetGameState(GAMESTATE_WAIT_CONNECT);
+		return;
+	}
+
+	{
+		m_pNetSet->bDisableInteriorEnterExits = false;
+		m_pNetSet->fNameTagDrawDistance = 70.0f;
+		// Apply defaults only when this session has no authoritative values.
+		if (!m_pNetSet->bReceivedWorldTime) {
+			m_pNetSet->byteWorldTime_Hour = 12;
+			m_pNetSet->byteWorldTime_Minute = 0;
+			pGame->SetWorldTime(m_pNetSet->byteWorldTime_Hour, m_pNetSet->byteWorldTime_Minute);
+		}
+		if (!m_pNetSet->bReceivedWeather) {
+			m_pNetSet->byteWeather = 1;
+		}
+		m_pNetSet->byteHoldTime = 1;
+	}
 	m_pNetSet->bNameTagLOS = true;
 	m_pNetSet->bUseCJWalk = false;
 	pGame->ToggleCJWalk(false);
@@ -716,7 +814,7 @@ void CNetGame::ShutdownForGameModeRestart()
 int iVehiclePoolProcessFlag = 0;
 void CNetGame::ProcessPools()
 {
-	Xyron::Perf::ScopedZone perfPools(Xyron::Perf::Zone::Pools);
+	Supremo::Perf::ScopedZone perfPools(Supremo::Perf::Zone::Pools);
 	if (GetPlayerPool()) {
 		GetPlayerPool()->Process();
 	}
@@ -732,28 +830,12 @@ void CNetGame::ProcessPools()
 // 0.3.7
 void CNetGame::ProcessLoadingScreen()
 {
-	CPlayerPed* pPlayerPed = pGame->FindPlayerPed();
-#if VER_x64
-	static uint32_t s_lastLoadingTeleportTick = 0;
-	const uint32_t now = GetTickCount();
-	const bool shouldRefreshLoadingPose = (now - s_lastLoadingTeleportTick) > 10000;
-	if (shouldRefreshLoadingPose) {
-		s_lastLoadingTeleportTick = now;
-		FLog("[LOAD64] refreshing loading pose while waiting for connection");
-#endif
-	if (pPlayerPed->IsInVehicle()) {
-		pPlayerPed->RemoveFromVehicleAndPutAt(1093.4, -2036.5, 82.710602);
+	// The stock SA-MP observatory used to teleport the local ped and camera on
+	// every loading tick. The Java loading overlay is authoritative now; keep
+	// the native HUD suppressed without moving the player or changing weather.
+	if (!pGame) {
+		return;
 	}
-	else {
-		pPlayerPed->TeleportTo(1133.0504, -2038.4034, 69.099998);
-	}
-#if VER_x64
-	}
-#endif
-
-	CCamera::SetPosition(1093.0, -2036.0, 90.0, 0.0, 0.0, 0.0);
-	CCamera::LookAtPoint(384.0, -1557.0, 20.0, 2);
-	pGame->SetWorldWeather(1);
 	pGame->DisplayHUD(false);
 }
 // 0.3.7
@@ -851,11 +933,7 @@ void CNetGame::Packet_NoFreeIncomingConnections(Packet *pkt)
 void CNetGame::Packet_DisconnectionNotification(Packet *pkt)
 {
 	if (pUI) pUI->chat()->addDebugMessage("Server closed the connection.");
-	if (pAudioStream) {
-		pAudioStream->Stop(true);
-	}
-    ResetRemovedBuildings();
-	NetTransport::Disconnect(m_pRakClient, 2000);
+	RequestReconnect();
 
 	SpeakerList::Hide();
 	MicroIcon::Hide();
@@ -965,27 +1043,8 @@ void CNetGame::Packet_InvalidPassword(Packet *pkt)
 // 0.3.7
 void CNetGame::Packet_ConnectionLost(Packet *pkt)
 {
-	if (m_pRakClient) {
-		NetTransport::Disconnect(m_pRakClient, 0);
-	}
-
 	if (pUI) pUI->chat()->addDebugMessage("Lost connection to the server. Reconnecting..");
-	ShutdownForGameModeRestart();
-
-	CPlayerPool *pPlayerPool = GetPlayerPool();
-	if (pPlayerPool) {
-		for (PLAYERID playerId = 0; playerId < MAX_PLAYERS; playerId++) {
-			if (pPlayerPool->GetSlotState(playerId) == true) {
-				pPlayerPool->Delete(playerId, 0);
-			}
-		}
-	}
-
-	if (pAudioStream) {
-		pAudioStream->Stop(true);
-	}
-
-	SetGameState(GAMESTATE_WAIT_CONNECT);
+	RequestReconnect();
 
 	SpeakerList::Hide();
 	MicroIcon::Hide();

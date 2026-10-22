@@ -32,8 +32,8 @@ void AddSampArchiveStorage()
         }
     }
 
-    if (!archivePath[0] && FileExistsReadable("/storage/emulated/0/Android/data/com.xyron.game/samp.data")) {
-        snprintf(archivePath, sizeof(archivePath), "%s", "/storage/emulated/0/Android/data/com.xyron.game/samp.data");
+    if (!archivePath[0] && FileExistsReadable("/storage/emulated/0/Android/data/com.supremo.launcher/samp.data")) {
+        snprintf(archivePath, sizeof(archivePath), "%s", "/storage/emulated/0/Android/data/com.supremo.launcher/samp.data");
     }
 
     if (!archivePath[0] && FileExistsReadable(SAMP_ARCHIVE_PATH)) {

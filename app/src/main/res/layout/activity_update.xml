@@ -21,89 +21,6 @@
         android:background="@drawable/home_overlay" />
 
     <LinearLayout
-        android:id="@+id/data_variant_panel"
-        android:layout_width="640dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/launcher_hero_panel"
-        android:elevation="12dp"
-        android:orientation="vertical"
-        android:padding="28dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/home_news_badge"
-            android:fontFamily="@font/montserrat_bold"
-            android:paddingStart="12dp"
-            android:paddingTop="6dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="6dp"
-            android:text="Arquivos do jogo"
-            android:textAllCaps="true"
-            android:textColor="@android:color/white"
-            android:textSize="9sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@font/montserrat_black"
-            android:text="Escolha a data"
-            android:textColor="@android:color/white"
-            android:textSize="22sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/montserrat_medium"
-            android:text="Selecione o pacote para baixar antes de entrar no jogo."
-            android:textColor="#D8CCE4"
-            android:textSize="11sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/data_variant_lite"
-                android:layout_width="0dp"
-                android:layout_height="72dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/home_action_text_button"
-                android:fontFamily="@font/montserrat_black"
-                android:gravity="center"
-                android:text="Data Lite"
-                android:textAllCaps="true"
-                android:textColor="@android:color/white"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/data_variant_full"
-                android:layout_width="0dp"
-                android:layout_height="72dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/launcher_cta_gold"
-                android:fontFamily="@font/montserrat_black"
-                android:gravity="center"
-                android:text="Data Full"
-                android:textAllCaps="true"
-                android:textColor="#24120A"
-                android:textSize="15sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/update_progress_panel"
         android:layout_width="620dp"
         android:layout_height="wrap_content"
@@ -241,5 +158,19 @@
             android:text="100%"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/retry_update_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/launcher_cta_gold"
+            android:fontFamily="@font/montserrat_black"
+            android:gravity="center"
+            android:text="Tentar novamente"
+            android:textAllCaps="true"
+            android:textColor="#24120A"
+            android:textSize="13sp"
+            android:visibility="gone" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,13 +3,11 @@
 #include "Camera.h"
 #include "../net/netgame.h"
 #include "../gui/gui.h"
-#include "../vendor/armhook/patch.h"
 #include "GTASAEngineApi.h"
 #include "GTASAEngineNativeHookBindings.h"
 #include "GTASAEnginePedInputBindings.h"
 #include "SampInputApi.h"
 #include "World.h"
-#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -52,8 +50,8 @@ static constexpr int16_t VEHICLE_SELF_TEST_AIRCRAFT_BACK_PITCH = 90;
 static constexpr uint16_t PAD_AXIS_POSITIVE = 0x0080;
 static constexpr uint16_t PAD_AXIS_NEGATIVE = 0xFF80;
 
-namespace InputApi = Xyron::Input;
-using SourceButton = Xyron::Input::SourceButton;
+namespace InputApi = Supremo::Input;
+using SourceButton = Supremo::Input::SourceButton;
 
 static bool IsVehicleSelfTestInputActive();
 
@@ -673,8 +671,8 @@ uint16_t CPad__GetPedWalkLeftRight_hook(uintptr_t thiz)
 	else
 	{
 		// Local player
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return static_cast<uint16_t>(Xyron::Input::SourceAnalogLeftRight());
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return static_cast<uint16_t>(Supremo::Input::SourceAnalogLeftRight());
 		}
 		const uint16_t leftRight = CPad__GetPedWalkLeftRight(thiz);
 		InputApi::SetCompatibilityAnalogLeftRight(leftRight);
@@ -699,8 +697,8 @@ uint16_t CPad__GetPedWalkUpDown_hook(uintptr_t thiz)
 	else
 	{
 		// Local player
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return static_cast<uint16_t>(Xyron::Input::SourceAnalogUpDown());
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return static_cast<uint16_t>(Supremo::Input::SourceAnalogUpDown());
 		}
 		const uint16_t upDown = CPad__GetPedWalkUpDown(thiz);
 		InputApi::SetCompatibilityAnalogUpDown(upDown);
@@ -717,8 +715,8 @@ uint32_t CPad__GetSprint_hook(uintptr_t thiz, uint32_t unk)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			const bool sprint = Xyron::Input::IsSourceSprintPressed() || Xyron::Input::IsSourceAcceleratePressed();
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			const bool sprint = Supremo::Input::IsSourceSprintPressed() || Supremo::Input::IsSourceAcceleratePressed();
 			return sprint ? 1 : 0;
 		}
 		const bool sprint = CPad__GetSprint(thiz, unk) != 0;
@@ -744,8 +742,8 @@ uint32_t CPad__JumpJustDown_hook(uintptr_t thiz)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			const bool jumpJustPressed = Xyron::Input::ConsumeJumpJustPressed();
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			const bool jumpJustPressed = Supremo::Input::ConsumeJumpJustPressed();
 			return jumpJustPressed ? 1 : 0;
 		}
 		const bool jumpJustDown = CPad__JumpJustDown(thiz) != 0;
@@ -764,8 +762,8 @@ uint32_t CPad__GetJump_hook(uintptr_t thiz)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return Xyron::Input::IsSourceJumpPressed() ? 1 : 0;
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return Supremo::Input::IsSourceJumpPressed() ? 1 : 0;
 		}
 		const uint32_t jumpHeld = CPad__GetJump ? CPad__GetJump(thiz) : CPad__JumpJustDown(thiz);
 		InputApi::SetCompatibilityButton(SourceButton::Jump, jumpHeld != 0);
@@ -782,8 +780,8 @@ uint32_t CPad__GetAutoClimb_hook(uintptr_t thiz)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return Xyron::Input::IsSourceJumpPressed() ? 1 : 0;
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return Supremo::Input::IsSourceJumpPressed() ? 1 : 0;
 		}
 		const bool autoClimb = CPad__GetAutoClimb(thiz) != 0;
 		InputApi::SetCompatibilityButton(SourceButton::Jump, autoClimb);
@@ -800,8 +798,8 @@ uint32_t CPad__GetAbortClimb_hook(uintptr_t thiz)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return Xyron::Input::IsSourceSecondaryPressed() ? 1 : 0;
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return Supremo::Input::IsSourceSecondaryPressed() ? 1 : 0;
 		}
 		const bool abortClimb = CPad__GetAutoClimb(thiz) != 0;
 		InputApi::SetCompatibilityButton(SourceButton::SecondaryAttack, abortClimb);
@@ -819,8 +817,8 @@ uint32_t CPad__DiveJustDown_hook()
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return Xyron::Input::IsSourceFirePressed() ? 1 : 0;
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return Supremo::Input::IsSourceFirePressed() ? 1 : 0;
 		}
 		const bool dive = CPad__DiveJustDown() != 0;
 		InputApi::SetCompatibilityButton(SourceButton::Fire, dive);
@@ -837,8 +835,8 @@ uint32_t CPad__SwimJumpJustDown_hook(uintptr_t thiz)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			const bool jumpJustPressed = Xyron::Input::ConsumeJumpJustPressed();
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			const bool jumpJustPressed = Supremo::Input::ConsumeJumpJustPressed();
 			return jumpJustPressed ? 1 : 0;
 		}
 		const bool swimJump = CPad__SwimJumpJustDown(thiz) != 0;
@@ -856,7 +854,7 @@ uint32_t CPad__DuckJustDown_hook(uintptr_t thiz, int unk)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
 			return 0;
 		}
 		return CPad__DuckJustDown(thiz, unk);
@@ -882,16 +880,16 @@ uint32_t CPad__MeleeAttackJustDown_hook(uintptr_t thiz)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			const uint32_t dwResult = Xyron::Input::IsSourceFirePressed() ? (Xyron::Input::IsSourceSecondaryPressed() ? 2 : 1) : 0;
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			const uint32_t dwResult = Supremo::Input::IsSourceFirePressed() ? (Supremo::Input::IsSourceSecondaryPressed() ? 2 : 1) : 0;
 			return dwResult;
 		}
 		uint32_t dwResult = CPad__MeleeAttackJustDown(thiz);
-		if (Xyron::Input::IsSourceFirePressed()) {
-			dwResult = Xyron::Input::IsSourceSecondaryPressed() ? 2 : 1;
+		if (Supremo::Input::IsSourceFirePressed()) {
+			dwResult = Supremo::Input::IsSourceSecondaryPressed() ? 2 : 1;
 		}
 		InputApi::SetCompatibilityButton(SourceButton::Fire, dwResult != 0);
-		InputApi::SetCompatibilityButton(SourceButton::SecondaryAttack, Xyron::Input::IsSourceSecondaryPressed());
+		InputApi::SetCompatibilityButton(SourceButton::SecondaryAttack, Supremo::Input::IsSourceSecondaryPressed());
 
 		return dwResult;
 	}
@@ -910,7 +908,7 @@ uint32_t CPad__GetBlock_hook(uintptr_t thiz)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
 			return 0;
 		}
 		return CPad__GetBlock(thiz);
@@ -938,8 +936,8 @@ int16_t CPad__GetSteeringLeftRight_hook(uintptr_t thiz)
 			ApplyVehicleSelfTestInputKeys();
 			return g_vehicleSelfTestSteering;
 		}
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return Xyron::Input::SourceAnalogLeftRight();
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return Supremo::Input::SourceAnalogLeftRight();
 		}
 		const uint16_t leftRight = CPad__GetSteeringLeftRight(thiz);
 		InputApi::SetCompatibilityAnalogLeftRight(leftRight);
@@ -970,8 +968,8 @@ uint16_t CPad__GetSteeringUpDown_hook(uintptr_t thiz)
 			InputApi::SetCompatibilityAnalogUpDown(upDown);
 			return upDown;
 		}
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return static_cast<uint16_t>(Xyron::Input::SourceAnalogUpDown());
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return static_cast<uint16_t>(Supremo::Input::SourceAnalogUpDown());
 		}
 		const uint16_t upDown = CPad__GetSteeringUpDown(thiz);
 		InputApi::SetCompatibilityAnalogUpDown(upDown);
@@ -1003,9 +1001,9 @@ uint16_t CPad__GetAccelerate_hook(uintptr_t thiz)
 			return g_vehicleSelfTestThrottle;
 		}
 
-		if (Xyron::Input::IsSourceInputOverrideEnabled())
+		if (Supremo::Input::IsSourceInputOverrideEnabled())
 		{
-			uint16_t wAccelerate = Xyron::Input::IsSourceAcceleratePressed() ? 0xFF : 0x00;
+			uint16_t wAccelerate = Supremo::Input::IsSourceAcceleratePressed() ? 0xFF : 0x00;
 			if (wAccelerate != 0 && pPlayerPed)
 			{
 				CVehicleGTA* pGtaVehicle = pPlayerPed->GetGtaVehicle();
@@ -1062,9 +1060,9 @@ uint16_t CPad__GetBrake_hook(uintptr_t thiz)
             return g_vehicleSelfTestBrake;
         }
 
-		if (Xyron::Input::IsSourceInputOverrideEnabled())
+		if (Supremo::Input::IsSourceInputOverrideEnabled())
 		{
-			uint16_t wBrake = Xyron::Input::IsSourceBrakePressed() ? 0xFF : 0x00;
+			uint16_t wBrake = Supremo::Input::IsSourceBrakePressed() ? 0xFF : 0x00;
 			if (wBrake != 0 && pPlayerPed)
 			{
 				CVehicleGTA* pGtaVehicle = pPlayerPed->GetGtaVehicle();
@@ -1118,8 +1116,8 @@ uint32_t CPad__GetHandBrake_hook(uintptr_t thiz)
 			ApplyVehicleSelfTestInputKeys();
 			return 0;
 		}
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			uint32_t handBrake = Xyron::Input::IsSourceHandbrakePressed() ? 0xFF : 0x00;
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			uint32_t handBrake = Supremo::Input::IsSourceHandbrakePressed() ? 0xFF : 0x00;
 			return handBrake;
 		}
 		uint32_t handBrake = CPad__GetHandBrake(thiz);
@@ -1139,8 +1137,8 @@ uint32_t CPad__GetHorn_hook(uintptr_t thiz)
 	else
 	{
 		// local player
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return Xyron::Input::IsSourceHornPressed() ? 1 : 0;
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return Supremo::Input::IsSourceHornPressed() ? 1 : 0;
 		}
 		uint32_t horn = CPad__GetHorn(thiz);
 		//Log("horn: %d", horn);
@@ -1173,7 +1171,7 @@ uint32_t CPad__ExitVehicleJustDown_hook(uintptr_t thiz, int a2, uintptr_t vehicl
 {
 	const uint32_t now = GetTickCount();
 
-	if (!Xyron::Input::CanProcessPassengerVehicleAction(now))
+	if (!Supremo::Input::CanProcessPassengerVehicleAction(now))
 		return 0;
 
 	if (pNetGame)
@@ -1185,7 +1183,7 @@ uint32_t CPad__ExitVehicleJustDown_hook(uintptr_t thiz, int a2, uintptr_t vehicl
 			if (pLocalPlayer) {
 				if (pLocalPlayer->HandlePassengerEntry())
 				{
-					Xyron::Input::MarkPassengerVehicleActionHandled(now);
+					Supremo::Input::MarkPassengerVehicleActionHandled(now);
 					return 0;
 				}
 			}
@@ -1213,8 +1211,8 @@ bool CPad__GetEnterTargeting_hook(uintptr_t thiz)
 	}
     else
     {
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return Xyron::Input::IsSourceFirePressed();
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return Supremo::Input::IsSourceFirePressed();
 		}
         uint8_t old = CWorld::PlayerInFocus;
         CWorld::PlayerInFocus = byteCurPlayer;
@@ -1228,7 +1226,7 @@ bool CPad__GetEnterTargeting_hook(uintptr_t thiz)
 bool bWeaponClicked = false;
 
 extern "C" {
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_changeGun(JNIEnv *pEnv, jobject thiz)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_changeGun(JNIEnv *pEnv, jobject thiz)
 	{
 		if (!pGame || !pGame->FindPlayerPed()) {
 			return;
@@ -1237,29 +1235,35 @@ extern "C" {
 		bWeaponClicked = !bWeaponClicked;
 	}
 
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_selectWeapon(JNIEnv *pEnv, jobject thiz, jint weaponId)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_selectWeapon(JNIEnv *pEnv, jobject thiz, jint weaponId)
 	{
-		if (!pGame) {
-			return;
-		}
-
-		CPlayerPed* pPlayerPed = pGame->FindPlayerPed();
-		if (!pPlayerPed) {
-			return;
-		}
-
-		if (weaponId < 0 || weaponId > 46) {
-			weaponId = 0;
-		}
-
-		if (weaponId != 0) {
-			CWeapon* pSlot = pPlayerPed->FindWeaponSlot(static_cast<uint8_t>(weaponId));
-			if (!pSlot || pSlot->dwType != static_cast<eWeaponType>(weaponId)) {
+		const int safeWeapon = (weaponId >= 0 && weaponId <= 46) ? weaponId : 0;
+		CGame::PostToMainThread([safeWeapon]() {
+			if (!pGame || !pNetGame || pNetGame->GetGameState() != GAMESTATE_CONNECTED) {
+				FLog("[WEAPON_SELECT64] skip weapon=%d reason=not-connected", safeWeapon);
 				return;
 			}
-		}
 
-		pPlayerPed->SetArmedWeapon(static_cast<uint8_t>(weaponId), false);
+			CPlayerPool* playerPool = pNetGame->GetPlayerPool();
+			CLocalPlayer* localPlayer = playerPool ? playerPool->GetLocalPlayer() : nullptr;
+			CPlayerPed* playerPed = localPlayer ? localPlayer->GetPlayerPed() : nullptr;
+			if (!localPlayer || !localPlayer->m_bIsActive || localPlayer->IsSpectating() ||
+				!playerPed || !playerPed->m_pPed || !GamePool_Ped_GetAt(playerPed->m_dwGTAId)) {
+				FLog("[WEAPON_SELECT64] skip weapon=%d reason=invalid-player", safeWeapon);
+				return;
+			}
+
+			if (safeWeapon != 0) {
+				CWeapon* slot = playerPed->FindWeaponSlot(static_cast<uint8_t>(safeWeapon));
+				if (!slot || slot->dwType != static_cast<eWeaponType>(safeWeapon)) {
+					FLog("[WEAPON_SELECT64] skip weapon=%d reason=not-carried", safeWeapon);
+					return;
+				}
+			}
+
+			playerPed->SetArmedWeapon(static_cast<uint8_t>(safeWeapon), false);
+			FLog("[WEAPON_SELECT64] equipped weapon=%d", safeWeapon);
+		});
 	}
 }
 
@@ -1289,7 +1293,7 @@ uint32_t CPad__CycleWeaponLeftJustDown_hook(uintptr_t thiz)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
 			return 0;
 		}
 		return CPad__CycleWeaponLeftJustDown(thiz);
@@ -1305,10 +1309,10 @@ bool CPad__GetWeapon_hook(uintptr_t thiz, CPedGTA* pPed)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return Xyron::Input::IsSourceFirePressed();
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return Supremo::Input::IsSourceFirePressed();
 		}
-		const bool weapon = CPad__GetWeapon(thiz, pPed) || Xyron::Input::IsSourceFirePressed();
+		const bool weapon = CPad__GetWeapon(thiz, pPed) || Supremo::Input::IsSourceFirePressed();
 		InputApi::SetCompatibilityButton(SourceButton::Fire, weapon);
 		return weapon;
 	}
@@ -1358,10 +1362,10 @@ int CPad__GetNitroFired_hook(uintptr_t thiz)
     }
     else
     {
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return Xyron::Input::IsSourceFirePressed();
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return Supremo::Input::IsSourceFirePressed();
 		}
-        const bool nitroFired = CPad__GetNitroFired(thiz) || Xyron::Input::IsSourceFirePressed();
+        const bool nitroFired = CPad__GetNitroFired(thiz) || Supremo::Input::IsSourceFirePressed();
         InputApi::SetCompatibilityButton(SourceButton::Fire, nitroFired);
         return nitroFired;
     }
@@ -1377,7 +1381,7 @@ uint32_t CPad__GetLookLeft_hook(uintptr_t thiz)
     }
     else
     {
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
 			return 0;
 		}
         const bool lookLeft = CPad__GetLookLeft(thiz) != 0;
@@ -1396,7 +1400,7 @@ uint32_t CPad__GetLookRight_hook(uintptr_t thiz)
     }
     else
     {
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
 			return 0;
 		}
         const bool lookRight = CPad__GetLookRight(thiz) != 0;
@@ -1429,8 +1433,8 @@ uint16_t CPad__GetCarGunLeftRight_hook(uintptr_t thiz, bool a2, bool a3)
 			return static_cast<uint16_t>(g_vehicleSelfTestSteering);
 		}
 
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return static_cast<uint16_t>(Xyron::Input::SourceAnalogLeftRight());
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return static_cast<uint16_t>(Supremo::Input::SourceAnalogLeftRight());
 		}
 
 		uint16_t dwResult = CPad__GetCarGunLeftRight(thiz, a2, a3);
@@ -1478,8 +1482,8 @@ uint16_t CPad__GetCarGunUpDown_hook(uintptr_t thiz, bool a2, void *a3, float a4,
 			return static_cast<uint16_t>(GetVehicleSelfTestPitch(pGtaVehicle));
 		}
 
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return static_cast<uint16_t>(Xyron::Input::SourceAnalogUpDown());
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return static_cast<uint16_t>(Supremo::Input::SourceAnalogUpDown());
 		}
 
 		uint16_t dwResult = CPad__GetCarGunUpDown(thiz, a2, a3, a4, a5);
@@ -1521,10 +1525,10 @@ uint32_t CPad__GetCarGunFired_hook(uintptr_t thiz, bool a2, bool a3)
 			return 0;
 		}
 
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
-			return Xyron::Input::IsSourceFirePressed();
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
+			return Supremo::Input::IsSourceFirePressed();
 		}
-		const bool carGunFired = CPad__GetCarGunFired(thiz, a2, a3) || Xyron::Input::IsSourceFirePressed();
+		const bool carGunFired = CPad__GetCarGunFired(thiz, a2, a3) || Supremo::Input::IsSourceFirePressed();
 		InputApi::SetCompatibilityButton(SourceButton::Fire, carGunFired);
 		return carGunFired;
 	}
@@ -1539,7 +1543,7 @@ bool CPad__GetTurretRight_hook(uintptr_t *thiz)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
 			return false;
 		}
 		const bool turretRight = CPad__GetTurretRight(thiz);
@@ -1557,7 +1561,7 @@ bool CPad__GetTurretLeft_hook(uintptr_t *thiz)
 	}
 	else
 	{
-		if (Xyron::Input::IsSourceInputOverrideEnabled()) {
+		if (Supremo::Input::IsSourceInputOverrideEnabled()) {
 			return false;
 		}
 		const bool turretLeft = CPad__GetTurretLeft(thiz);

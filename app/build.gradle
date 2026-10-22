@@ -9,7 +9,7 @@ android {
     ndkVersion "26.2.11394342"
 
     defaultConfig {
-        applicationId "com.xyron.game"
+        applicationId "com.supremo.launcher"
         minSdk 21
         targetSdk 28
         versionCode 1
@@ -17,10 +17,10 @@ android {
 
         multiDexEnabled true
         resConfigs "en", "pt", "pt-rBR"
-        manifestPlaceholders = [appLabel: "News RP"]
-        buildConfigField "String", "XYRON_APK_ROLE", "\"game\""
-        buildConfigField "String", "XYRON_GAME_PACKAGE", "\"com.xyron.game\""
-        buildConfigField "String", "XYRON_TOOLS_PACKAGE", "\"com.xyron.game\""
+        manifestPlaceholders = [appLabel: "Supremo Launcher"]
+        buildConfigField "String", "SUPREMO_APK_ROLE", "\"game\""
+        buildConfigField "String", "SUPREMO_GAME_PACKAGE", "\"com.supremo.launcher\""
+        buildConfigField "String", "SUPREMO_TOOLS_PACKAGE", "\"com.supremo.launcher\""
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
@@ -82,7 +82,7 @@ android {
             jniLibs.srcDirs += ['src/game/jniLibs']
         }
     }
-    namespace 'com.xyron.game'
+    namespace 'com.supremo.launcher'
 }
 
 dependencies {

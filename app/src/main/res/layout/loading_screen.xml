@@ -89,18 +89,13 @@
             android:textColor="#55FFFFFF"
             android:textSize="5.8sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:layout_width="220dp"
+            android:layout_height="70dp"
             android:layout_marginTop="12dp"
-            android:fontFamily="@font/montserrat_black"
-            android:includeFontPadding="false"
-            android:letterSpacing="0.04"
-            android:lineSpacingExtra="-6dp"
-            android:text="VOLTARA\nRP"
-            android:textColor="#F4FFFFFF"
-            android:textSize="34sp"
-            android:textStyle="italic" />
+            android:src="@drawable/logo_supremo"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true" />
 
         <View
             android:layout_width="48dp"

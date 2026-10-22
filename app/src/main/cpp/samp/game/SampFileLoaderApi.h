@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Xyron::FileLoader {
+namespace Supremo::FileLoader {
 
 void InstallHooks();
 

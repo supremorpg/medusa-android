@@ -15,8 +15,8 @@ from pathlib import Path
 from typing import Optional
 
 
-DEFAULT_PACKAGE = "com.xyron.game"
-DEFAULT_REMOTE_MONITOR = "files/SAMP/xyron_monitor"
+DEFAULT_PACKAGE = "com.supremo.launcher"
+DEFAULT_REMOTE_MONITOR = "files/SAMP/supremo_monitor"
 BAD_EVENT_KINDS = {
     "fall_or_missing_floor",
     "floating_invisible_support",
@@ -565,7 +565,7 @@ def recover_player(
 ) -> tuple[bool, Optional[dict]]:
     rx, ry, rz, area = recovery_point
     baseline = read_latest(serial, latest_path)
-    send_runtime_command(serial, package, f"xyron_tp:{rx:.3f},{ry:.3f},{rz:.3f},{area}")
+    send_runtime_command(serial, package, f"supremo_tp:{rx:.3f},{ry:.3f},{rz:.3f},{area}")
     latest = wait_for_command_result(serial, latest_path, rx, ry, timeout, near_radius, latest_wall_time_ms(baseline))
     time.sleep(max(0.0, min(settle, 2.0)))
     latest = refresh_latest_sample(serial, latest_path, latest)
@@ -577,7 +577,7 @@ def recover_player(
     }:
         tap_spawn_button(serial, spawn_tap, respawn_wait)
         baseline = read_latest(serial, latest_path)
-        send_runtime_command(serial, package, f"xyron_tp:{rx:.3f},{ry:.3f},{rz:.3f},{area}")
+        send_runtime_command(serial, package, f"supremo_tp:{rx:.3f},{ry:.3f},{rz:.3f},{area}")
         latest = wait_for_command_result(serial, latest_path, rx, ry, timeout, near_radius, latest_wall_time_ms(baseline))
         time.sleep(max(0.0, min(settle, 2.0)))
         latest = refresh_latest_sample(serial, latest_path, latest)
@@ -588,7 +588,7 @@ def recover_player(
     if bool(native.get("verticalHit")) and -200.0 < snap_z < 2000.0:
         rz = snap_z + ground_offset
         baseline = latest
-        send_runtime_command(serial, package, f"xyron_tp:{rx:.3f},{ry:.3f},{rz:.3f},{area}")
+        send_runtime_command(serial, package, f"supremo_tp:{rx:.3f},{ry:.3f},{rz:.3f},{area}")
         latest = wait_for_command_result(serial, latest_path, rx, ry, timeout, near_radius, latest_wall_time_ms(baseline))
         time.sleep(max(0.0, min(settle, 2.0)))
         latest = refresh_latest_sample(serial, latest_path, latest)
@@ -600,7 +600,7 @@ def recover_player(
         }:
             tap_spawn_button(serial, spawn_tap, respawn_wait)
             baseline = read_latest(serial, latest_path)
-            send_runtime_command(serial, package, f"xyron_tp:{rx:.3f},{ry:.3f},{rz:.3f},{area}")
+            send_runtime_command(serial, package, f"supremo_tp:{rx:.3f},{ry:.3f},{rz:.3f},{area}")
             latest = wait_for_command_result(serial, latest_path, rx, ry, timeout, near_radius, latest_wall_time_ms(baseline))
             time.sleep(max(0.0, min(settle, 2.0)))
             latest = refresh_latest_sample(serial, latest_path, latest)
@@ -813,7 +813,7 @@ def main(argv: Optional[list[str]] = None) -> int:
                 send_runtime_command(
                     serial,
                     args.package,
-                    f"xyron_probe:{probe_id},{target_x:.3f},{target_y:.3f},{target_z:.3f},0",
+                    f"supremo_probe:{probe_id},{target_x:.3f},{target_y:.3f},{target_z:.3f},0",
                 )
                 probe_result = wait_for_probe_result(
                     serial,
@@ -837,7 +837,7 @@ def main(argv: Optional[list[str]] = None) -> int:
                     send_runtime_command(
                         serial,
                         args.package,
-                        f"xyron_probe:{probe_id}_retry,{target_x:.3f},{target_y:.3f},{target_z:.3f},0",
+                        f"supremo_probe:{probe_id}_retry,{target_x:.3f},{target_y:.3f},{target_z:.3f},0",
                     )
                     probe_result = wait_for_probe_result(
                         serial,
@@ -858,7 +858,7 @@ def main(argv: Optional[list[str]] = None) -> int:
                     send_runtime_command(
                         serial,
                         args.package,
-                        f"xyron_probe:{ground_probe_id},{target_x:.3f},{target_y:.3f},{target_z:.3f},0",
+                        f"supremo_probe:{ground_probe_id},{target_x:.3f},{target_y:.3f},{target_z:.3f},0",
                     )
                     ground_probe = wait_for_probe_result(
                         serial,
@@ -878,7 +878,7 @@ def main(argv: Optional[list[str]] = None) -> int:
                 baseline = read_latest(serial, latest_path)
                 command_after_ms = latest_wall_time_ms(baseline)
                 point_command_after_ms = command_after_ms
-                send_runtime_command(serial, args.package, f"xyron_tp:{target_x:.3f},{target_y:.3f},{target_z:.3f},0")
+                send_runtime_command(serial, args.package, f"supremo_tp:{target_x:.3f},{target_y:.3f},{target_z:.3f},0")
                 latest = wait_for_command_result(
                     serial,
                     latest_path,
@@ -918,7 +918,7 @@ def main(argv: Optional[list[str]] = None) -> int:
                     baseline = latest
                     command_after_ms = latest_wall_time_ms(baseline)
                     point_command_after_ms = command_after_ms
-                    send_runtime_command(serial, args.package, f"xyron_tp:{target_x:.3f},{target_y:.3f},{target_z:.3f},0")
+                    send_runtime_command(serial, args.package, f"supremo_tp:{target_x:.3f},{target_y:.3f},{target_z:.3f},0")
                     latest = wait_for_settled_target_sample(
                         serial,
                         latest_path,

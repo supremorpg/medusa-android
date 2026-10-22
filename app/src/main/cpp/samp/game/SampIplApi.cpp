@@ -2,7 +2,7 @@
 
 #include "IplStore.h"
 
-namespace Xyron::Ipl {
+namespace Supremo::Ipl {
 
 void AddNeededAtPosition(const CVector& pos)
 {

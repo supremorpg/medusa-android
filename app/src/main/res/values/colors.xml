@@ -32,4 +32,10 @@
     <color name="launcher_text_muted">#8FA1AE</color>
     <color name="launcher_success">#78D99C</color>
     <color name="launcher_danger">#FF8494</color>
+    <color name="hud_toast_success_surface">#B3143D2A</color>
+    <color name="hud_toast_success_border">#B378D99C</color>
+    <color name="hud_toast_warning_surface">#B35A4214</color>
+    <color name="hud_toast_warning_border">#B3F0C36E</color>
+    <color name="hud_toast_error_surface">#B34D1E2A</color>
+    <color name="hud_toast_error_border">#B3FF8494</color>
 </resources>

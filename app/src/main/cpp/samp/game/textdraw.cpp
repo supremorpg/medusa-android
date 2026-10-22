@@ -1,12 +1,13 @@
+#include "textdraw.h"
 #include "../main.h"
-#include "game.h"
 #include "util.h"
-#include "RW/RenderWare.h"
+#include "snapshothelper.h"
+#include "font.h"
 #include "../gui/gui.h"
-#include "../util/CUtil.h"
 
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 
 extern UI* pUI;
 extern CSnapShotHelper* pSnapShotHelper;
@@ -57,7 +58,7 @@ void ExpandSmallTextDrawRect64(CRect& rect, float minWidth, float minHeight)
 // 0.3.7
 CTextDraw::CTextDraw(TEXT_DRAW_TRANSMIT* pTextDrawTransmit, const char* szText)
 {
-    memset(&m_TextDrawData, 0, sizeof(TEXT_DRAW_DATA));
+    std::memset(&m_TextDrawData, 0, sizeof(m_TextDrawData));
 
     m_TextDrawData.fLetterWidth = pTextDrawTransmit->fLetterWidth;
     m_TextDrawData.fLetterHeight = pTextDrawTransmit->fLetterHeight;
@@ -94,6 +95,8 @@ CTextDraw::CTextDraw(TEXT_DRAW_TRANSMIT* pTextDrawTransmit, const char* szText)
     m_TextDrawData.wColor2 = pTextDrawTransmit->wColor2;
     m_TextDrawData.bHasKeyCode = false;
     m_TextDrawData.iTextureSlot = -1;
+    m_dwNextSnapshotAttemptTick = 0;
+    m_nSnapshotAttempts = 0;
     SetText(szText);
 
     if (m_TextDrawData.dwStyle == 4) {
@@ -113,7 +116,6 @@ CTextDraw::CTextDraw(TEXT_DRAW_TRANSMIT* pTextDrawTransmit, const char* szText)
 // 0.3.7
 CTextDraw::~CTextDraw()
 {
-    if (m_TextDrawData.iTextureSlot != -1 && m_TextDrawData.iTextureSlot != 0x0 && TextDrawTexture[m_TextDrawData.iTextureSlot]) RwTextureDestroy((RwTexture*)TextDrawTexture[m_TextDrawData.iTextureSlot]);
     DestroyTextDrawTexture(m_TextDrawData.iTextureSlot);
 }
 
@@ -125,114 +127,12 @@ uintptr_t LoadFromTxdSlot(const char* szSlot, const char* szTexture)
         return 0;
     }
 
-    // Previni crashes
-    RwTexture* tex = nullptr;
-
-    // Lista padrão de bibliotecas
-    static const char* texdb[] = { 
-        "samp", "mobile", "txd", "menu", "gta3", "gta_int", "player"
-    };
-
-    bool isDefaultLibrary = false;
-    for (int i = 0; i < 7; i++)
+    RwTexture* tex = LoadTextureFromTxd(szSlot, szTexture);
+    if (tex)
     {
-        if (!strcasecmp(texdb[i], szSlot))
-        {
-            isDefaultLibrary = true;
-            break;
-        }
+        return reinterpret_cast<uintptr_t>(tex);
     }
 
-    // Se NÃO é biblioteca padrão -> tenta carregar direto do TXD especificado
-    if (!isDefaultLibrary)
-    {
-        tex = (RwTexture*)LoadTexture(szTexture);
-
-        if (tex)
-        {
-            FLog("[TD] Loaded texture '%s' from default LoadTexture()", szTexture);
-            return (uintptr_t)tex;
-        }
-    }
-
-    // Fallbacks inteligentes:
-    char buffer[128];
-
-    // 1. textura normal
-    if (!tex)
-    {
-        tex = (RwTexture*)LoadTexture(szTexture);
-        if (tex)
-        {
-            FLog("[TD] Loaded '%s' normally", szTexture);
-            return (uintptr_t)tex;
-        }
-    }
-
-    // 2. textura_lowercase
-    std::string lower = szTexture;
-    std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
-
-    if (!tex)
-    {
-        tex = (RwTexture*)LoadTexture(lower.c_str());
-        if (tex)
-        {
-            FLog("[TD] Loaded '%s' lowercase", lower.c_str());
-            return (uintptr_t)tex;
-        }
-    }
-
-    // 3. textura_uppercase
-    std::string upper = szTexture;
-    std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
-
-    if (!tex)
-    {
-        tex = (RwTexture*)LoadTexture(upper.c_str());
-        if (tex)
-        {
-            FLog("[TD] Loaded '%s' uppercase", upper.c_str());
-            return (uintptr_t)tex;
-        }
-    }
-
-    // 4. textura_slot (ex.: radar -> radar_hud)
-    snprintf(buffer, sizeof(buffer), "%s_%s", szTexture, szSlot);
-    if (!tex)
-    {
-        tex = (RwTexture*)LoadTexture(buffer);
-        if (tex)
-        {
-            FLog("[TD] Loaded '%s' as '%s_%s'", szTexture, szTexture, szSlot);
-            return (uintptr_t)tex;
-        }
-    }
-
-    // 5. slot_textura (ex.: hud_radar)
-    snprintf(buffer, sizeof(buffer), "%s_%s", szSlot, szTexture);
-    if (!tex)
-    {
-        tex = (RwTexture*)LoadTexture(buffer);
-        if (tex)
-        {
-            FLog("[TD] Loaded '%s' as '%s_%s'", szTexture, szSlot, szTexture);
-            return (uintptr_t)tex;
-        }
-    }
-
-    // 6. Load direto do DB
-    if (!tex)
-    {
-        tex = (RwTexture*)CUtil::LoadTextureFromDB(szSlot, szTexture);
-        if (tex)
-        {
-            FLog("[TD] Loaded '%s:%s' from DB", szSlot, szTexture);
-            return (uintptr_t)tex;
-        }
-    }
-
-    // NUNCA crasha — apenas dá warning
     FLog("[TD WARNING] Failed to load texture '%s' from '%s'", szTexture, szSlot);
     return 0;
 }
@@ -326,10 +226,10 @@ void CTextDraw::DrawDefault()
     CRect rect;
     if (m_TextDrawData.byteAlignRight)
     {
-        rect.left = fTextSizeX;
+        rect.left = fUseX - std::fabs(fTextSizeX);
         rect.right = fUseX;
         rect.bottom = fUseY;
-        rect.top = fUseY + fTextSizeY;
+        rect.top = fUseY + std::fabs(fTextSizeY);
     }
     else if (m_TextDrawData.byteCentered)
     {
@@ -341,9 +241,9 @@ void CTextDraw::DrawDefault()
     else
     {
         rect.left = fUseX;
-        rect.right = fTextSizeX;
+        rect.right = fUseX + std::fabs(fTextSizeX);
         rect.bottom = fUseY;
-        rect.top = fUseY + fTextSizeY;
+        rect.top = fUseY + std::fabs(fTextSizeY);
     }
 
     const float minClickWidth = std::max(36.0f * fScaleScreenX, std::fabs(fScaleX) * 8.0f);
@@ -450,7 +350,34 @@ void CTextDraw::SnapshotProcess()
         return;
     }
 
+    const uint32_t now = GetTickCount();
+    if (static_cast<int32_t>(now - m_dwNextSnapshotAttemptTick) < 0) {
+        return;
+    }
+
+    // A snapshot can fail transiently while the model or its render object is
+    // still streaming. Retry at most once per bounded interval instead of
+    // permanently latching the first failure or issuing a request every frame.
+    constexpr uint8_t kMaxSnapshotAttemptCount = 6;
+    constexpr uint32_t kMaxSnapshotRetryDelayMs = 1600u;
+    if (m_nSnapshotAttempts >= kMaxSnapshotAttemptCount) {
+        return;
+    }
+    const uint8_t attempt = m_nSnapshotAttempts < kMaxSnapshotAttemptCount
+        ? static_cast<uint8_t>(m_nSnapshotAttempts + 1)
+        : kMaxSnapshotAttemptCount;
+    m_nSnapshotAttempts = attempt;
+    const uint32_t retryDelay = std::min(
+        kMaxSnapshotRetryDelayMs,
+        100u << std::min<uint8_t>(static_cast<uint8_t>(attempt - 1), 4u));
+    m_dwNextSnapshotAttemptTick = now + retryDelay;
+
     uintptr_t snapshot = 0;
+    if (!pSnapShotHelper) {
+        FLog("Warning: Snapshot helper is unavailable for textdraw model %u",
+             static_cast<unsigned>(m_TextDrawData.wModelID));
+        return;
+    }
 
     // PED MODEL
     if (IsValidPedModel(m_TextDrawData.wModelID))
@@ -500,6 +427,7 @@ void CTextDraw::SnapshotProcess()
         else
         {
             FLog("Warning: No free textdraw texture slot available");
+            RwTextureDestroy(reinterpret_cast<RwTexture*>(snapshot));
         }
     }
 }

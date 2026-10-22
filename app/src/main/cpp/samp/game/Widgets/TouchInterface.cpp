@@ -42,5 +42,5 @@ void __fastcall CTouchInterface::LoadFromFile(const char *pszFilename, bool bFul
 }
 
 void CTouchInterface::InjectHooks() {
-    Xyron::Input::BindNativeTouchWidgets(&m_pWidgets);
+    Supremo::Input::BindNativeTouchWidgets(&m_pWidgets);
 }

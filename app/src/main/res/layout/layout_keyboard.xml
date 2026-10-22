@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <com.xyron.game.launcher.util.CustomEditText
+        <com.supremo.launcher.launcher.util.CustomEditText
             android:id="@+id/main_et_input"
             android:layout_width="0dp"
             android:layout_height="42dp"

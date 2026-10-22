@@ -35,8 +35,8 @@ private:
     static constexpr uint32_t kRadarCacheIntervalMs = 125;
     static constexpr float kRadarCullDistance = 260.0f;
 
-    bool m_replaceRadar = true;
-    bool m_replaceCrosshair = true;
+    bool m_replaceRadar = false;
+    bool m_replaceCrosshair = false;
     uint32_t m_lastRadarCacheMs = 0;
     int m_vehicleBlipCount = 0;
     int m_playerBlipCount = 0;

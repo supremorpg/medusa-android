@@ -70,6 +70,7 @@ public:
 	void SetGameState(int iGameState) { m_iGameState = iGameState; }
 
 	void ShutdownForGameModeRestart();
+	void RequestReconnect();
 	void UpdatePlayerScoresAndPings();
 	void InitGameLogic();
 
@@ -106,6 +107,8 @@ public:
 		bool		bShowNameTags;
 		bool		bLimitGlobalChatRadius;
 		float		fWorldBounds[4];
+		bool		bReceivedWorldTime;
+		bool		bReceivedWeather;
 	} *m_pNetSet;
 
 	uint8_t				eatProcent = 0;
@@ -166,6 +169,7 @@ private:
 	void ResetPickupPool();
 	void ResetObjectPool();
 	void ResetMenuPool();
+	void ResetSessionState();
 
 	RakClientInterface *m_pRakClient;
 

@@ -46,4 +46,9 @@ public:
     bool IsReleased(CVector2D *pVecOut);
     bool IsTouched(CVector2D *pVecOut);
 };
+
+// Input suppression for native controls duplicated by the launcher.
+// Sprint drawing is filtered separately so shared jump/swim input stays intact.
+bool ShouldSuppressSourceHudNativeWidget(CWidgetGta* pWidget);
+
 VALIDATE_SIZE(CWidgetGta, (VER_x32 ? 0x90 : 0xA8));

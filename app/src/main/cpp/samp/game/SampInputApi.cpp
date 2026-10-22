@@ -23,7 +23,7 @@
 extern CNetGame* pNetGame;
 extern bool bNeedEnterVehicle;
 
-namespace Xyron::Input {
+namespace Supremo::Input {
 namespace {
 
 static SourceHudState g_sourceHudState{};
@@ -333,7 +333,7 @@ void WarmSourceCameraStreaming(const CVector& source, const CVector& target, int
             sample.z = 18.0f;
         }
 
-        Xyron::Streaming::WorldStreamRequest request{};
+        Supremo::Streaming::WorldStreamRequest request{};
         request.areaCode = areaCode;
         request.streamingFlags = STREAMING_DEFAULT;
         request.addModels = includeModels;
@@ -351,7 +351,7 @@ void WarmSourceCameraStreaming(const CVector& source, const CVector& target, int
         request.refreshGame = refreshGame && refreshStreaming;
         request.reason = reason;
         request.ignorePlayerVehicleCollision = true;
-        Xyron::Streaming::PrepareWorldAtPoint(sample, request);
+        Supremo::Streaming::PrepareWorldAtPoint(sample, request);
     };
 
     const CVector nearForward = target + (forward * SOURCE_CAMERA_PREFETCH_NEAR);
@@ -376,22 +376,22 @@ void WarmSourceCameraStreaming(const CVector& source, const CVector& target, int
     warmPoint(upperNear, "source-camera-frustum-upper", true, true, false, false);
     warmPoint(lowerNear, "source-camera-frustum-lower", true, true, false, false);
 
-    Xyron::Collision::AddCollisionNeededAtPosn(target);
-    Xyron::Collision::RequestCollision(target, areaCode);
-    Xyron::Collision::AddCollisionNeededAtPosn(nearForward);
-    Xyron::Collision::RequestCollision(nearForward, areaCode);
-    Xyron::Ipl::AddNeededAtPosition(target);
-    Xyron::Ipl::AddNeededAtPosition(nearForward);
+    Supremo::Collision::AddCollisionNeededAtPosn(target);
+    Supremo::Collision::RequestCollision(target, areaCode);
+    Supremo::Collision::AddCollisionNeededAtPosn(nearForward);
+    Supremo::Collision::RequestCollision(nearForward, areaCode);
+    Supremo::Ipl::AddNeededAtPosition(target);
+    Supremo::Ipl::AddNeededAtPosition(nearForward);
     if (refreshStreaming) {
-        Xyron::Ipl::LoadAtPosition(target, false);
-        Xyron::Ipl::LoadAtPosition(nearForward, false);
+        Supremo::Ipl::LoadAtPosition(target, false);
+        Supremo::Ipl::LoadAtPosition(nearForward, false);
         s_lastRefreshTick = now;
     }
 
     static uint32_t s_lastLoadTick = 0;
     if ((inputMoved || movedEnough || refreshStreaming) && now - s_lastLoadTick >= 110) {
         s_lastLoadTick = now;
-        Xyron::Streaming::LoadRequestedModels();
+        Supremo::Streaming::LoadRequestedModels();
     }
 
     if (g_sourceCameraStreamingLogCount < 20 && (inputMoved || movedEnough)) {
@@ -409,7 +409,7 @@ void WarmSourceCameraStreaming(const CVector& source, const CVector& target, int
 
 void WriteSourceCameraFrame(CCamera& camera, CCam& cam, const CVector& rawTarget, float distance, bool inputMoved, int32 areaCode)
 {
-    const int32 effectiveAreaCode = Xyron::Streaming::ResolveEffectiveWorldAreaCode(rawTarget, areaCode);
+    const int32 effectiveAreaCode = Supremo::Streaming::ResolveEffectiveWorldAreaCode(rawTarget, areaCode);
 
     // ---------------------------------------------------------------
     // Frame delta time – frame-rate independent smoothing
@@ -1200,7 +1200,7 @@ void PressVehicleAction()
 
 void PressVehicleLockAction()
 {
-    Xyron::AppCommand::SendVehicleLockToggle();
+    Supremo::AppCommand::SendVehicleLockToggle();
 }
 
 void RequestPassengerVehicleAction()

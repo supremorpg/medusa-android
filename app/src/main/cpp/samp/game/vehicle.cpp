@@ -19,8 +19,8 @@ void RefreshVehicleNativeState(CVehicleGTA* vehicle, const char* reason, bool fo
 
 	const uint32_t now = GetTickCount();
 	const int modelId = vehicle->m_nModelIndex;
-	if (Xyron::Streaming::IsValidResourceId(modelId) && !Xyron::Streaming::IsModelLoaded(modelId)) {
-		Xyron::Streaming::TryLoadModel(modelId);
+	if (Supremo::Streaming::IsValidResourceId(modelId) && !Supremo::Streaming::IsModelLoaded(modelId)) {
+		Supremo::Streaming::TryLoadModel(modelId);
 	}
 
 	if (!vehicle->m_pRwObject) {
@@ -28,8 +28,8 @@ void RefreshVehicleNativeState(CVehicleGTA* vehicle, const char* reason, bool fo
 	}
 
 	const CVector pos = vehicle->GetPosition();
-	Xyron::Streaming::WorldStreamRequest streamRequest{};
-	streamRequest.areaCode = Xyron::Streaming::ResolveEffectiveWorldAreaCode(pos, vehicle->m_nAreaCode);
+	Supremo::Streaming::WorldStreamRequest streamRequest{};
+	streamRequest.areaCode = Supremo::Streaming::ResolveEffectiveWorldAreaCode(pos, vehicle->m_nAreaCode);
 	streamRequest.streamingFlags = STREAMING_DEFAULT;
 	streamRequest.addModels = false;
 	streamRequest.addLods = false;
@@ -38,7 +38,7 @@ void RefreshVehicleNativeState(CVehicleGTA* vehicle, const char* reason, bool fo
 	streamRequest.ensureIpls = false;
 	streamRequest.loadSceneCollision = true;
 	streamRequest.reason = reason ? reason : "vehicle-refresh";
-	Xyron::Streaming::PrepareWorldAtPoint(pos, streamRequest);
+	Supremo::Streaming::PrepareWorldAtPoint(pos, streamRequest);
 
 	vehicle->m_bUsesCollision = true;
 	vehicle->m_bCollisionProcessed = false;
@@ -89,7 +89,7 @@ CVehicle::CVehicle(int iType, float fX, float fY, float fZ, float fRotation, boo
 		(iType != TRAIN_FREIGHT) &&
 		(iType != TRAIN_TRAM)) {
 
-        if (!Xyron::Streaming::TryLoadModel(iType))
+        if (!Supremo::Streaming::TryLoadModel(iType))
             throw std::runtime_error("Model not loaded");
 
 		ScriptCommand(&create_car, iType, fX, fY, fZ, &m_dwGTAId);
@@ -154,18 +154,18 @@ CVehicle::CVehicle(int iType, float fX, float fY, float fZ, float fRotation, boo
 			dwDirection = 1;
 		}
 
-        if (!Xyron::Streaming::TryLoadModel(TRAIN_PASSENGER_LOCO))
+        if (!Supremo::Streaming::TryLoadModel(TRAIN_PASSENGER_LOCO))
             throw std::runtime_error("Model not loaded");
 
-        if (!Xyron::Streaming::TryLoadModel(TRAIN_PASSENGER))
+        if (!Supremo::Streaming::TryLoadModel(TRAIN_PASSENGER))
             throw std::runtime_error("Model not loaded");
 
-        if (!Xyron::Streaming::TryLoadModel(TRAIN_FREIGHT_LOCO))
+        if (!Supremo::Streaming::TryLoadModel(TRAIN_FREIGHT_LOCO))
             throw std::runtime_error("Model not loaded");
 
-        if (!Xyron::Streaming::TryLoadModel(TRAIN_FREIGHT))
+        if (!Supremo::Streaming::TryLoadModel(TRAIN_FREIGHT))
             throw std::runtime_error("Model not loaded");
-        if (!Xyron::Streaming::TryLoadModel(TRAIN_TRAM))
+        if (!Supremo::Streaming::TryLoadModel(TRAIN_TRAM))
             throw std::runtime_error("Model not loaded");
 
 		ScriptCommand(&create_train, iType, fX, fY, fZ, dwDirection, &m_dwGTAId);
@@ -237,7 +237,7 @@ CVehicle::~CVehicle()
 			ScriptCommand(&destroy_car, m_dwGTAId);
 		}
 
-        Xyron::Streaming::RemoveModelIfNoRefs(modelId);
+        Supremo::Streaming::RemoveModelIfNoRefs(modelId);
 	}
 }
 
@@ -248,12 +248,12 @@ void CVehicle::TeleportTo(float fX, float fY, float fZ)
 	}
 
 	CVector pos(fX, fY, fZ);
-	Xyron::Streaming::WorldStreamRequest streamRequest{};
-	streamRequest.areaCode = Xyron::Streaming::ResolveEffectiveWorldAreaCode(pos, m_pVehicle->m_nAreaCode);
+	Supremo::Streaming::WorldStreamRequest streamRequest{};
+	streamRequest.areaCode = Supremo::Streaming::ResolveEffectiveWorldAreaCode(pos, m_pVehicle->m_nAreaCode);
 	streamRequest.streamingFlags = STREAMING_DEFAULT;
 	streamRequest.refreshGame = true;
 	streamRequest.reason = "vehicle-teleport";
-	Xyron::Streaming::PrepareWorldAtPoint(pos, streamRequest);
+	Supremo::Streaming::PrepareWorldAtPoint(pos, streamRequest);
 
 	if (IsATrainPart()) {
 		ScriptCommand(&put_train_at, m_dwGTAId, fX, fY, fZ);
@@ -361,7 +361,7 @@ void CVehicle::AddComponent(int iComponentID)
 	if (!m_pVehicle || !GamePool_Vehicle_GetAt(m_dwGTAId)) return;
 	if (GetVehicleSubtype() != VEHICLE_SUBTYPE_CAR) return;
 
-    if (!Xyron::Streaming::TryLoadModel(iComponentID))
+    if (!Supremo::Streaming::TryLoadModel(iComponentID))
         throw std::runtime_error("Model not loaded");
 
 	if (!ScriptCommand(&is_component_available, iComponentID)) {
@@ -567,16 +567,16 @@ bool CVehicle::VerifyInstance()
 // 0.3.7
 void CVehicle::SetDoorState(int state)
 {
-	if (state)
-	{
-		m_pVehicle->m_nDoorLock = (eCarLock)2;
-		m_bDoorsLocked = true;
+	if (!m_pVehicle || !GamePool_Vehicle_GetAt(m_dwGTAId)) {
+		return;
 	}
-	else
-	{
-		m_pVehicle->m_nDoorLock =(eCarLock) 0;
-		m_bDoorsLocked = false;
-	}
+
+	const bool locked = state != 0;
+	m_pVehicle->m_nDoorLock = locked ? CARLOCK_LOCKED : CARLOCK_NOT_USED;
+	m_bDoorsLocked = locked;
+	// Keep the pool-side flag in sync too. The local HUD and entry gate use
+	// m_bIsLocked, while incoming RPCs update the GTA door-lock field here.
+	m_bIsLocked = locked;
 }
 
 void CVehicle::SetComponentOpenState(int iDoor, int iComponent, float fDoorOpenRatio)

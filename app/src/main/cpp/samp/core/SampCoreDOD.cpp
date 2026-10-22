@@ -14,14 +14,14 @@
 
 #if defined(__aarch64__) || defined(__ARM_NEON) || defined(__ARM_NEON__)
 #include <arm_neon.h>
-#define XYRON_CORE_HAS_NEON 1
+#define SUPREMO_CORE_HAS_NEON 1
 #else
-#define XYRON_CORE_HAS_NEON 0
+#define SUPREMO_CORE_HAS_NEON 0
 #endif
 
 extern CNetGame* pNetGame;
 
-namespace Xyron::Core
+namespace Supremo::Core
 {
 namespace
 {
@@ -66,7 +66,7 @@ void StoreProjectionLane(std::size_t index, float sx, float sy, float cw, uint8_
     g_players.screenVisible[index] = visible;
 }
 
-#if XYRON_CORE_HAS_NEON
+#if SUPREMO_CORE_HAS_NEON
 float32x4_t MulAdd4(float32x4_t acc, float32x4_t a, float32x4_t b) noexcept
 {
 #if defined(__aarch64__)
@@ -114,7 +114,7 @@ void Initialize() noexcept
     std::memset(&g_clipFromWorld, 0, sizeof(g_clipFromWorld));
     g_stats = {};
     g_stats.nearestPlayerId = 0xFFFF;
-    g_stats.simdEnabled = XYRON_CORE_HAS_NEON ? 1 : 0;
+    g_stats.simdEnabled = SUPREMO_CORE_HAS_NEON ? 1 : 0;
     g_initialized = true;
 }
 
@@ -132,7 +132,7 @@ void BeginFrame() noexcept
     g_stats.nearestPlayerId = 0xFFFF;
     g_stats.nearestDistance = 0.0f;
     g_stats.hasProjection = g_hasProjection ? 1 : 0;
-    g_stats.simdEnabled = XYRON_CORE_HAS_NEON ? 1 : 0;
+    g_stats.simdEnabled = SUPREMO_CORE_HAS_NEON ? 1 : 0;
 }
 
 PlayerSoA& MutablePlayers() noexcept
@@ -199,7 +199,7 @@ std::size_t ComputePlayerDistances(float originX, float originY, float originZ) 
     const std::size_t count = g_players.count;
     std::size_t i = 0;
 
-#if XYRON_CORE_HAS_NEON
+#if SUPREMO_CORE_HAS_NEON
     const float32x4_t ox = vdupq_n_f32(originX);
     const float32x4_t oy = vdupq_n_f32(originY);
     const float32x4_t oz = vdupq_n_f32(originZ);
@@ -244,7 +244,7 @@ std::size_t ProjectPlayersRowMajor(const Matrix4x4& clipFromWorld, float viewpor
     const std::size_t count = g_players.count;
     std::size_t i = 0;
 
-#if XYRON_CORE_HAS_NEON
+#if SUPREMO_CORE_HAS_NEON
     const float32x4_t m00 = vdupq_n_f32(clipFromWorld.m[0]);
     const float32x4_t m01 = vdupq_n_f32(clipFromWorld.m[1]);
     const float32x4_t m02 = vdupq_n_f32(clipFromWorld.m[2]);
@@ -410,7 +410,7 @@ FrameStats GetFrameStats() noexcept
 
 const char* GetAuditString() noexcept
 {
-#if XYRON_CORE_HAS_NEON
+#if SUPREMO_CORE_HAS_NEON
     return "core=SoA players=1004 textdraws=3072 neon=on alloc_frame=zero projection=caller_matrix";
 #else
     return "core=SoA players=1004 textdraws=3072 neon=off alloc_frame=zero projection=caller_matrix";
@@ -418,17 +418,17 @@ const char* GetAuditString() noexcept
 }
 }
 
-extern "C" void XyronCoreInitialize() noexcept
+extern "C" void SupremoCoreInitialize() noexcept
 {
-    Xyron::Core::Initialize();
+    Supremo::Core::Initialize();
 }
 
-extern "C" void XyronCoreFrameTick() noexcept
+extern "C" void SupremoCoreFrameTick() noexcept
 {
-    Xyron::Core::TickFromNetGame();
+    Supremo::Core::TickFromNetGame();
 }
 
-extern "C" const char* XyronCoreAuditString() noexcept
+extern "C" const char* SupremoCoreAuditString() noexcept
 {
-    return Xyron::Core::GetAuditString();
+    return Supremo::Core::GetAuditString();
 }

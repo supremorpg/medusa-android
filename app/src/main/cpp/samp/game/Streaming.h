@@ -6,15 +6,12 @@
 
 #include <cassert>
 #include <unistd.h>
-#include <thread>
 #include "constants.h"
 #include "common.h"
 #include "CdStreamInfo.h"
 #include "game/Core/LinkList.h"
 #include "StreamingInfo.h"
 #include "game/Enums/eAreaCodes.h"
-#include "main.h"
-#include "Timer.h"
 
 struct CEntityGTA;
 enum class eChannelState
@@ -224,6 +221,7 @@ public:
     static void LoadAllRequestedModels(bool bPriorityRequestsOnly);
 #if !VER_x32
     static void RequestSceneObjectsAroundPlayer64(const CVector& playerPos, const CVector& velocity);
+    static void ResetSupremoRequestState64();
 #endif
     static void LoadScene(const CVector& point);
     static void LoadSceneCollision(const CVector& point);

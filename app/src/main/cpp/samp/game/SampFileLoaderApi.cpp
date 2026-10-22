@@ -2,7 +2,7 @@
 
 #include "FileLoader.h"
 
-namespace Xyron::FileLoader {
+namespace Supremo::FileLoader {
 
 void InstallHooks()
 {

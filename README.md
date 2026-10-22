@@ -1,6 +1,6 @@
 # Medusa Android
 
-Código-fonte do cliente Android **Medusa** (`com.xyron.game`) para desenvolvimento autorizado.
+Código-fonte do cliente Android **Medusa** (`com.supremo.launcher`) para desenvolvimento autorizado.
 
 ## Escopo da publicação
 

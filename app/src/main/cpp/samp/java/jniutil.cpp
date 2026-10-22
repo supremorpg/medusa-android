@@ -1,7 +1,6 @@
 #include "jniutil.h"
 #include "game/game.h"
 #include "../gui/gui.h"
-#include "../gui/uisettings.h"
 #include <limits>
 
 extern CGame *pGame;
@@ -104,6 +103,16 @@ CJavaWrapper::CJavaWrapper(JNIEnv *env, jobject activity)
     s_UpdateHud = env->GetMethodID(clas, "UpdateHud", "(IIIIII)V");
     s_UpdateWeaponWheel = env->GetMethodID(clas, "UpdateWeaponWheel", "(Ljava/lang/String;)V");
     s_ApplyUiBatch = env->GetMethodID(clas, "ApplyUiBatch", "(Ljava/lang/String;)V");
+    s_ShowToast = env->GetMethodID(clas, "ShowToast", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V");
+    if (!s_ShowToast && env->ExceptionCheck()) {
+        FLog("Optional Java method ShowToast is unavailable");
+        env->ExceptionClear();
+    }
+    s_OnAuthState = env->GetMethodID(clas, "onAuthState", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+    if (!s_OnAuthState && env->ExceptionCheck()) {
+        FLog("Optional Java method onAuthState is unavailable");
+        env->ExceptionClear();
+    }
 
     s_ShowWithoutReset = env->GetMethodID(clas, "showWithoutReset", "()V");
     s_HideWithoutReset = env->GetMethodID(clas, "hideWithoutReset", "()V");
@@ -385,6 +394,77 @@ void CJavaWrapper::ApplyUiBatch(const char* payload)
     env->DeleteLocalRef(batchPayload);
 
     ClearJavaException(env, "ApplyUiBatch");
+}
+
+void CJavaWrapper::ShowToast(
+    const char* severity,
+    const char* title,
+    const char* message,
+    int durationMs
+)
+{
+    ScopedJniEnv scopedEnv;
+    JNIEnv* env = scopedEnv.get();
+
+    if (!ValidateJavaCall(env, activity, s_ShowToast, "ShowToast")) {
+        return;
+    }
+
+    jstring severityValue = env->NewStringUTF(severity ? severity : "warning");
+    jstring titleValue = env->NewStringUTF(title ? title : "");
+    jstring messageValue = env->NewStringUTF(message ? message : "");
+
+    if (!severityValue || !titleValue || !messageValue) {
+        if (severityValue) env->DeleteLocalRef(severityValue);
+        if (titleValue) env->DeleteLocalRef(titleValue);
+        if (messageValue) env->DeleteLocalRef(messageValue);
+
+        ClearJavaException(env, "ShowToast strings");
+        return;
+    }
+
+    env->CallVoidMethod(
+        activity,
+        s_ShowToast,
+        severityValue,
+        titleValue,
+        messageValue,
+        static_cast<jint>(durationMs)
+    );
+
+    env->DeleteLocalRef(severityValue);
+    env->DeleteLocalRef(titleValue);
+    env->DeleteLocalRef(messageValue);
+
+    ClearJavaException(env, "ShowToast");
+}
+
+void CJavaWrapper::OnAuthState(const char* request, const char* status, const char* message)
+{
+    ScopedJniEnv scopedEnv;
+    JNIEnv* env = scopedEnv.get();
+
+    if (!ValidateJavaCall(env, activity, s_OnAuthState, "onAuthState"))
+    {
+        return;
+    }
+
+    jstring requestValue = env->NewStringUTF(request ? request : "");
+    jstring statusValue = env->NewStringUTF(status ? status : "");
+    jstring messageValue = env->NewStringUTF(message ? message : "");
+    if (!requestValue || !statusValue || !messageValue) {
+        if (requestValue) env->DeleteLocalRef(requestValue);
+        if (statusValue) env->DeleteLocalRef(statusValue);
+        if (messageValue) env->DeleteLocalRef(messageValue);
+        ClearJavaException(env, "onAuthState strings");
+        return;
+    }
+
+    env->CallVoidMethod(activity, s_OnAuthState, requestValue, statusValue, messageValue);
+    env->DeleteLocalRef(requestValue);
+    env->DeleteLocalRef(statusValue);
+    env->DeleteLocalRef(messageValue);
+    ClearJavaException(env, "onAuthState");
 }
 
 void CJavaWrapper::showWithoutReset()

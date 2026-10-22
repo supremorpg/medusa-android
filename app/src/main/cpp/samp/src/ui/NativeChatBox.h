@@ -2,8 +2,6 @@
 
 #include <array>
 #include <cstdarg>
-#include <cstdint>
-
 #include "imgui.h"
 
 class NativeChatBox {
@@ -15,6 +13,7 @@ public:
     void AddPlayerMessage(const char* nick, const char* text, ImU32 nickColor);
     void AddInfoMessage(const char* fmt, ...);
     void AddDebugMessage(const char* fmt, ...);
+    void ClearMessages();
 
     void SetVisible(bool visible) { m_visible = visible; }
     bool IsVisible() const { return m_visible; }

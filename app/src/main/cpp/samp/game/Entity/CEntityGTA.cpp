@@ -82,7 +82,7 @@ void CEntityGTA::SetInterior(int interiorId, bool needRefresh)
         CGame::currArea = interiorId;
 
         auto pos = GetPosition();
-        Xyron::Collision::RequestCollision(pos, m_nAreaCode);
+        Supremo::Collision::RequestCollision(pos, m_nAreaCode);
 
         if(interiorId == 0) {
             GTASAEngineApi::StopExtraColour(false);

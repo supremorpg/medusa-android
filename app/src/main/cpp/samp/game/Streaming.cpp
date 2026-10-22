@@ -19,9 +19,9 @@
 #include <algorithm>
 #include <atomic>
 #include <cstring>
-#include <functional>
 #include <vector>
-#include <iostream>
+#include <thread>
+#include <chrono>
 
 extern UI *pUI;
 
@@ -84,17 +84,29 @@ int32 OpenImageArchiveWithFallback(const char* requestedName, const char** opene
 #if !VER_x32
 constexpr size_t kArm64StreamingMemoryBudget = 384u * 1024u * 1024u;
 constexpr size_t kArm64StreamingMemoryHardBudget = 448u * 1024u * 1024u;
-std::atomic<int> g_xyronStreamingRenderDistance {80};
-std::atomic<bool> g_xyronStreamingEffectsEnabled {true};
+std::atomic<int> g_supremoStreamingRenderDistance {100};
+std::atomic<bool> g_supremoStreamingEffectsEnabled {true};
+uint32_t g_supremoStreamingRequestGeneration64 = 1;
 
 void RequestSceneObjectsAroundPlayer64Impl(const CVector& playerPos, const CVector& velocity)
 {
+    static uint32_t s_generation = 0;
     static uint32_t s_lastSceneRequestTick = 0;
     static uint32_t s_lastHeavySceneTick = 0;
     static uint32_t s_lastSceneLogTick = 0;
     static uint32_t s_lastStreamingEnableLogTick = 0;
     static uint32_t s_lastBlockingSceneLoadTick = 0;
     static CVector s_lastHeavyScenePos(0.0f, 0.0f, 0.0f);
+
+    if (s_generation != g_supremoStreamingRequestGeneration64) {
+        s_generation = g_supremoStreamingRequestGeneration64;
+        s_lastSceneRequestTick = 0;
+        s_lastHeavySceneTick = 0;
+        s_lastSceneLogTick = 0;
+        s_lastStreamingEnableLogTick = 0;
+        s_lastBlockingSceneLoadTick = 0;
+        s_lastHeavyScenePos = {};
+    }
 
     const uint32_t now = GetTickCount();
     const float speedSq = velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z;
@@ -107,11 +119,11 @@ void RequestSceneObjectsAroundPlayer64Impl(const CVector& playerPos, const CVect
     s_lastSceneRequestTick = now;
 
     const int renderDistance = std::clamp(
-        g_xyronStreamingRenderDistance.load(std::memory_order_relaxed),
+        g_supremoStreamingRenderDistance.load(std::memory_order_relaxed),
         35,
         220
     );
-    const bool effectsEnabled = g_xyronStreamingEffectsEnabled.load(std::memory_order_relaxed);
+    const bool effectsEnabled = g_supremoStreamingEffectsEnabled.load(std::memory_order_relaxed);
 
     GTASAEngineApi::ForceStreamingEnabled("obj-stream64");
 
@@ -230,11 +242,11 @@ void RequestSceneObjectsAroundPlayer64Impl(const CVector& playerPos, const CVect
 #endif
 }
 
-extern "C" void XyronApplyStreamingRuntimeProfile(int renderDistance, bool effectsEnabled)
+extern "C" void SupremoApplyStreamingRuntimeProfile(int renderDistance, bool effectsEnabled)
 {
 #if !VER_x32
-    g_xyronStreamingRenderDistance.store(std::clamp(renderDistance, 35, 220), std::memory_order_relaxed);
-    g_xyronStreamingEffectsEnabled.store(effectsEnabled, std::memory_order_relaxed);
+    g_supremoStreamingRenderDistance.store(std::clamp(renderDistance, 35, 220), std::memory_order_relaxed);
+    g_supremoStreamingEffectsEnabled.store(effectsEnabled, std::memory_order_relaxed);
 #else
     (void)renderDistance;
     (void)effectsEnabled;
@@ -771,6 +783,17 @@ void CStreaming::LoadSceneCollision(const CVector& point) {
 #if !VER_x32
 void CStreaming::RequestSceneObjectsAroundPlayer64(const CVector& playerPos, const CVector& velocity) {
     RequestSceneObjectsAroundPlayer64Impl(playerPos, velocity);
+}
+
+void CStreaming::ResetSupremoRequestState64() {
+    ++g_supremoStreamingRequestGeneration64;
+    if (g_supremoStreamingRequestGeneration64 == 0) {
+        g_supremoStreamingRequestGeneration64 = 1;
+    }
+}
+
+extern "C" void ResetSupremoStreamingRequestState64() {
+    CStreaming::ResetSupremoRequestState64();
 }
 #endif
 

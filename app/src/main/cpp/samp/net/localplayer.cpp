@@ -2,9 +2,9 @@
 #include "../game/game.h"
 #include "../game/SampInputApi.h"
 #include "../game/SampStreamingApi.h"
-#include "../game/World.h"
 #include "../game/Camera.h"
 #include "../game/GTASAEngineApi.h"
+#include "../game/util.h"
 #include "../game/Models/ModelInfo.h"
 #include "netgame.h"
 #include "localplayer.h"
@@ -25,7 +25,7 @@ extern CJavaWrapper *pJavaWrapper;
 extern "C" void ApplyVehicleSelfTestInputKeys();
 #if !VER_x32
 extern "C" void RequestArm64WorldCollisionForPosition(const CVector& pos, uint8_t area, bool immediate);
-extern "C" void XyronRememberLocalVehicleForRender64(CVehicleGTA* vehicle);
+extern "C" void SupremoRememberLocalVehicleForRender64(CVehicleGTA* vehicle);
 #endif
 
 extern int iNetModeNormalOnFootSendRate;
@@ -88,6 +88,15 @@ bool IsReliableGamePosition64(const CVector& pos)
 		!IsZeroishGamePosition64(pos) &&
 		pos.z > -1000.0f &&
 		pos.z < 3000.0f;
+}
+
+bool IsCurrentLocalPedReady(CPlayerPed* playerPed)
+{
+	if (!playerPed || !playerPed->m_pPed || !playerPed->m_dwGTAId) {
+		return false;
+	}
+	return GamePool_Ped_GetAt(playerPed->m_dwGTAId) == playerPed->m_pPed &&
+		IsValidGamePed(playerPed->m_pPed);
 }
 
 CVector ResolveReliableLocalSyncPosition64(const CVector& primary,
@@ -356,10 +365,10 @@ bool RepairVehicleAfterLocalExit(CVehicleGTA* vehicle, CPlayerPed* playerPed, ui
 
 	const int modelId = static_cast<int>(vehicle->m_nModelIndex);
 	if (!vehicle->m_pRwObject && modelId >= 0 && modelId < CModelInfo::NUM_MODEL_INFOS) {
-		if (Xyron::Streaming::IsModelLoaded(modelId)) {
+		if (Supremo::Streaming::IsModelLoaded(modelId)) {
 			vehicle->CreateRwObject();
 		} else {
-			Xyron::Streaming::RequestModel(modelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
+			Supremo::Streaming::RequestModel(modelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
 		}
 	}
 	if (vehicle->m_pRwObject) {
@@ -367,7 +376,7 @@ bool RepairVehicleAfterLocalExit(CVehicleGTA* vehicle, CPlayerPed* playerPed, ui
 		vehicle->UpdateRwFrame();
 	}
 #if !VER_x32
-	XyronRememberLocalVehicleForRender64(vehicle);
+	SupremoRememberLocalVehicleForRender64(vehicle);
 #endif
 
 	static uint32_t s_lastExitVehicleRepairLog = 0;
@@ -523,22 +532,22 @@ void WarmupSpawnWorld64(CPlayerPed* playerPed, const CVector& spawnPos)
 
 	const uint32_t startTick = GetTickCount();
 	const int32 rawAreaCode = playerPed && playerPed->m_pPed ? playerPed->m_pPed->m_nAreaCode : CGame::currArea;
-	const int32 areaCode = Xyron::Streaming::ResolveEffectiveWorldAreaCode(spawnPos, rawAreaCode);
+	const int32 areaCode = Supremo::Streaming::ResolveEffectiveWorldAreaCode(spawnPos, rawAreaCode);
 	int sampleCount = 0;
 	float beforeGroundZ = 0.0f;
 	const bool beforeHit = ProbeSpawnGround64(spawnPos, &beforeGroundZ);
 
-	Xyron::Streaming::ForceStreamingEnabled("spawn-warmup64");
+	Supremo::Streaming::ForceStreamingEnabled("spawn-warmup64");
 
 	auto requestAt = [&](const CVector& sample, bool loadScene) {
 		++sampleCount;
-		Xyron::Streaming::WorldStreamRequest request{};
+		Supremo::Streaming::WorldStreamRequest request{};
 		request.areaCode = areaCode;
 		request.streamingFlags = STREAMING_DEFAULT;
 		request.loadScene = loadScene;
 		request.refreshGame = true;
 		request.reason = "spawn-warmup64";
-		Xyron::Streaming::PrepareWorldAtPoint(sample, request);
+		Supremo::Streaming::PrepareWorldAtPoint(sample, request);
 	};
 
 	auto requestCross = [&](float radius, bool loadScene) {
@@ -555,11 +564,11 @@ void WarmupSpawnWorld64(CPlayerPed* playerPed, const CVector& spawnPos)
 	};
 
 	const CVector zeroVelocity(0.0f, 0.0f, 0.0f);
-	Xyron::Streaming::RequestSceneObjectsAroundPlayer(spawnPos, zeroVelocity);
+	Supremo::Streaming::RequestSceneObjectsAroundPlayer(spawnPos, zeroVelocity);
 	const float radii[] = { 12.0f, 24.0f, 42.0f, 64.0f };
 	for (int pass = 0; pass < 4; ++pass) {
 		requestCross(radii[pass], pass == 0);
-		Xyron::Streaming::LoadAllRequestedModels(false);
+		Supremo::Streaming::LoadAllRequestedModels(false);
 	}
 	RequestArm64WorldCollisionForPosition(
 		spawnPos,
@@ -579,7 +588,7 @@ void WarmupSpawnWorld64(CPlayerPed* playerPed, const CVector& spawnPos)
 	     afterHit ? 1 : 0,
 	     afterGroundZ,
 	     GetTickCount() - startTick,
-	     Xyron::Streaming::IsStreamingDisabled() ? 1 : 0);
+	     Supremo::Streaming::IsStreamingDisabled() ? 1 : 0);
 }
 #endif
 }
@@ -612,7 +621,9 @@ CLocalPlayer::CLocalPlayer()
 	m_pPlayerPed = pGame->FindPlayerPed();
 	m_bIsActive = false;
 	m_bIsWasted = false;
-	
+	m_bSpawnInProgress = false;
+	m_dwLastSpawnTick = 0;
+
 	m_iDisplayZoneTick = 0;
 	m_dwLastSendTick = GetTickCount();
 	m_dwLastSendSpecTick = GetTickCount();
@@ -647,19 +658,27 @@ extern bool DriveBy;
 
 bool CLocalPlayer::Process()
 {
-	if (m_bIsActive && m_pPlayerPed != nullptr)
+	// Spawn performs native actor/model work synchronously. Do not let a
+	// re-entrant pool tick publish movement or sync for a half-spawned ped.
+	if (m_bSpawnInProgress) {
+		return true;
+	}
+
+	if (m_bIsActive && IsCurrentLocalPedReady(m_pPlayerPed))
 	{
 		EnsureLocalPedWorldCollision(m_pPlayerPed);
 
-		// local player is dead
-		if (!m_bIsWasted && m_pPlayerPed->GetActionTrigger() == ACTION_DEATH || m_pPlayerPed->IsDead())
+		// local player is dead. Keep this transition one-shot; otherwise a
+		// zero-health ped can repeatedly enter the death path before respawn.
+		if (!m_bIsWasted &&
+			(m_pPlayerPed->GetActionTrigger() == ACTION_DEATH ||
+			 m_pPlayerPed->IsDead()))
 		{
-			ToggleSpectating(false);
+			StopSpectatingWithoutSpawn();
 			if(m_pPlayerPed->GetDanceStyle() != -1) m_pPlayerPed->StopDancing();
 			if(m_pPlayerPed->IsCellphoneEnabled()) m_pPlayerPed->ToggleCellphone(0);
 			if(m_pPlayerPed->IsPissing()) m_pPlayerPed->StopPissing();
 			if(m_pPlayerPed->GetStuff() != eStuffType::STUFF_TYPE_NONE) m_pPlayerPed->DropStuff();
-			m_pPlayerPed->TogglePlayerControllable(true);
 			if (m_bInRCMode)
 			{
 				m_bInRCMode = false;
@@ -672,8 +691,10 @@ bool CLocalPlayer::Process()
 				m_LastVehicle = pNetGame->GetVehiclePool()->FindIDFromGtaPtr(m_pPlayerPed->GetGtaVehicle());
 			}
 			m_pPlayerPed->ExtinguishFire();
-            m_pPlayerPed->SetHealth(0.0f);
-            m_pPlayerPed->SetDead();
+			// The native ped is already in its death state when this branch
+			// runs. Do not issue a second kill_actor here: it restarts the
+			// death camera/fade and delays the server-authoritative response.
+			// The server now decides whether and when this player respawns.
 			SendWastedNotification();
 			m_bIsActive = false;
 			m_bIsWasted = true;
@@ -686,8 +707,8 @@ bool CLocalPlayer::Process()
 
 		uint32_t dwThisTick = GetTickCount();
 		MaintainLocalVehicleExitCamera(m_pPlayerPed, dwThisTick);
-		const bool secondaryAttackDown = Xyron::Input::IsSourceSecondaryPressed();
-		const bool fireDown = Xyron::Input::IsSourceFirePressed();
+		const bool secondaryAttackDown = Supremo::Input::IsSourceSecondaryPressed();
+		const bool fireDown = Supremo::Input::IsSourceFirePressed();
 
 		if(m_pPlayerPed->GetDanceStyle() != -1) 
 		{
@@ -705,7 +726,6 @@ bool CLocalPlayer::Process()
 			if(secondaryAttackDown || m_pPlayerPed->IsInVehicle()
 				|| m_pPlayerPed->IsInJetpackMode())
 			{ 
-				m_pPlayerPed->TogglePlayerControllable(true);
 			}
 		}
 
@@ -784,12 +804,14 @@ bool CLocalPlayer::Process()
 		// DRIVER CONDITIONS
 		else if (m_pPlayerPed->IsInVehicle() && !m_pPlayerPed->IsAPassenger())
 		{
-            MaybeSendExitVehicle();
-
 			g_bLockEnterVehicleWidget = false;
 
-            CVehicleGTA* pGtaVehicle = m_pPlayerPed->GetGtaVehicle();
-			m_nLastVehicle = pNetGame->GetVehiclePool()->FindIDFromGtaPtr(pGtaVehicle);
+            CVehiclePool *pVehiclePool = pNetGame->GetVehiclePool();
+			if (!pVehiclePool) {
+				return true;
+			}
+			CVehicleGTA* pGtaVehicle = m_pPlayerPed->GetGtaVehicle();
+			m_nLastVehicle = pVehiclePool->FindIDFromGtaPtr(pGtaVehicle);
 
 			//m_pPlayerPed->RemoveWeaponWhenEnteringVehicle();
 			MoveHeadWithCamera();
@@ -801,14 +823,7 @@ bool CLocalPlayer::Process()
 				SendAimSyncData();
 			}
 
-			CVehiclePool *pVehiclePool = pNetGame->GetVehiclePool();
-			CVehicle *pVehicle = nullptr;
-
-			if (pVehiclePool) {
-				m_CurrentVehicle = pVehiclePool->FindIDFromGtaPtr(m_pPlayerPed->GetGtaVehicle());
-			}
-
-			pVehicle = pVehiclePool->GetAt(m_CurrentVehicle);
+			CVehicle *pVehicle = pVehiclePool->GetAt(m_CurrentVehicle);
 			if (pVehicle && !m_bInRCMode && pVehicle->IsRCVehicle())
 			{
 				m_pPlayerPed->m_pPed->Remove();
@@ -903,7 +918,6 @@ bool CLocalPlayer::Process()
 		// PASSENGER CONDITIONS
 		else if (m_pPlayerPed->GetActionTrigger() == ACTION_INCAR && m_pPlayerPed->IsAPassenger())
 		{
-            MaybeSendExitVehicle();
 			g_bLockEnterVehicleWidget = false;
 
             CVehicleGTA* pGtaVehicle = m_pPlayerPed->GetGtaVehicle();
@@ -920,7 +934,7 @@ bool CLocalPlayer::Process()
 			//GTA_CONTROLSET *controls = GameGetInternalKeys();
 
 			if(!m_bPassengerDriveByMode &&
-				Xyron::Input::IsPassengerDriveByInputPressed() &&
+				Supremo::Input::IsPassengerDriveByInputPressed() &&
 				m_pPlayerPed->CanStartPassengerDriveByMode()) {
 				if(m_pPlayerPed->StartPassengerDriveByMode()) {
 					m_bPassengerDriveByMode = true;
@@ -1014,10 +1028,16 @@ bool CLocalPlayer::Process()
 	}
 
 	// HANDLE NEEDS TO RESPAWN AFTER DEATH
-	if (m_bIsWasted
-		&& m_pPlayerPed->GetActionTrigger() != ACTION_WASTED
-		&& m_pPlayerPed->GetActionTrigger() != ACTION_DEATH)
+	if (m_bIsWasted &&
+		IsCurrentLocalPedReady(m_pPlayerPed) &&
+		pNetGame &&
+		pNetGame->GetGameState() == GAMESTATE_CONNECTED &&
+		m_pPlayerPed->GetActionTrigger() != ACTION_WASTED &&
+		m_pPlayerPed->GetActionTrigger() != ACTION_DEATH)
 	{
+		if (m_bSpawnInProgress) {
+			return true;
+		}
         m_pPlayerPed->FlushAttach();
 
 		//if (sub_100AC660(_this->m_pPlayerPed))
@@ -1054,7 +1074,7 @@ void CLocalPlayer::ProcessClassSelection()
 { 
 	if (!m_bSpawnDialogShowed)
 	{
-		if (pUI) pUI->spawn()->setVisible(false);
+		if (pUI) pUI->spawn()->setVisible(true);
 		RequestClass(m_iSelectedClass);
 		m_bSpawnDialogShowed = true;
 		FLog("[SPAWN_FLOW64] auto-class-request class=%d", m_iSelectedClass);
@@ -1064,6 +1084,8 @@ void CLocalPlayer::ProcessClassSelection()
 void CLocalPlayer::ResetAllSyncAttributes()
 {
 	m_bHasSpawnInfo = false;
+	m_bSpawnInProgress = false;
+	m_dwLastSpawnTick = 0;
 	m_bWaitingForSpawnRequestReply = false;
 	m_iSelectedClass = 0;
 	m_byteCurInterior = 0;
@@ -1094,10 +1116,24 @@ void CLocalPlayer::ResetAllSyncAttributes()
 void CLocalPlayer::ToggleSpectating(bool bToggle)
 {
 	if (m_bIsSpectating && !bToggle) {
-		Spawn();
+		if (pNetGame &&
+			pNetGame->GetGameState() == GAMESTATE_CONNECTED &&
+			m_bHasSpawnInfo &&
+			!m_bIsWasted &&
+			!m_bSpawnInProgress) {
+			Spawn();
+		}
 	}
 
 	m_bIsSpectating = bToggle;
+	m_byteSpectateType = SPECTATE_TYPE_NONE;
+	m_bSpectateProcessed = false;
+	m_SpectateID = 0xFFFFFFFF;
+}
+
+void CLocalPlayer::StopSpectatingWithoutSpawn()
+{
+	m_bIsSpectating = false;
 	m_byteSpectateType = SPECTATE_TYPE_NONE;
 	m_bSpectateProcessed = false;
 	m_SpectateID = 0xFFFFFFFF;
@@ -1211,9 +1247,21 @@ void CLocalPlayer::ProcessSpectating()
 
 bool CLocalPlayer::Spawn()
 {
-	if (!m_bHasSpawnInfo) {
+	if (!m_bHasSpawnInfo ||
+		!IsCurrentLocalPedReady(m_pPlayerPed) ||
+		m_bSpawnInProgress) {
 		return false;
 	}
+
+	CVector spawnPos = m_SpawnInfo.vecPos;
+	if (!IsReliableGamePosition64(spawnPos)) {
+		FLog("[SPAWN_FLOW64] rejected invalid spawn pos=%.2f %.2f %.2f",
+			 spawnPos.x, spawnPos.y, spawnPos.z);
+		return false;
+	}
+
+	m_bSpawnInProgress = true;
+	m_dwLastSpawnTick = GetTickCount();
 
 	if (m_bSpawnDialogShowed == true)
 	{
@@ -1224,9 +1272,12 @@ bool CLocalPlayer::Spawn()
     TheCamera.Restore();
     CCamera::SetBehindPlayer();
 
-    CVector spawnPos = m_SpawnInfo.vecPos;
 #if !VER_x32
-	WarmupSpawnWorld64(m_pPlayerPed, spawnPos);
+	// Defer deep streaming/collision warmup to the normal frame streamer.
+	// Running the full world warmup while the ped is being recreated can
+	// invalidate render objects during the death -> respawn transition.
+	FLog("[SPAWN_WORLD64] deferred inline warmup pos=%.2f %.2f %.2f",
+		 spawnPos.x, spawnPos.y, spawnPos.z);
 #else
 	pGame->RefreshStreamingAt(spawnPos.x, spawnPos.y);
 #endif
@@ -1283,6 +1334,9 @@ bool CLocalPlayer::Spawn()
 	m_pPlayerPed->TogglePlayerControllable(true);
 
 	if (pJavaWrapper) {
+		// Loading remains authoritative until the local player is fully spawned.
+		// ShowHud() then enables the Java/native gameplay layers together.
+		pJavaWrapper->HideLoadingScreen();
 		pJavaWrapper->ShowLogo(true);
 		pJavaWrapper->ShowHud();
 	}
@@ -1294,6 +1348,7 @@ bool CLocalPlayer::Spawn()
 	NetTransport::Rpc(pNetGame->GetRakClient(), &RPC_Spawn, &bsSendSpawn, HIGH_PRIORITY, RELIABLE_ORDERED, 0, false, UNASSIGNED_NETWORK_ID, nullptr, "spawn");
 
 	m_iDisplayZoneTick = GetTickCount() + 1000;
+	m_bSpawnInProgress = false;
 
 	return true;
 }
@@ -1697,7 +1752,7 @@ void CLocalPlayer::UpdateCameraTarget()
 }
 
 void CLocalPlayer::ProcessSurfing() {
-	if(m_pPlayerPed && !m_pPlayerPed->IsDead() && !Xyron::Input::IsJumpDown()) {
+	if(m_pPlayerPed && !m_pPlayerPed->IsDead() && !Supremo::Input::IsJumpDown()) {
 		CEntityGTA* contactEntity = m_pPlayerPed->GetEntityUnderPlayer();
 		if(contactEntity && pNetGame){
 			CVehiclePool* vehiclePool = pNetGame->GetVehiclePool();
@@ -1766,7 +1821,7 @@ void CLocalPlayer::UpdateSurfing() {
 	static CVector surfInstMoveSpeed;
 	static CVector surfInstTurnSpeed;
 	if(m_pPlayerPed) {
-		if (Xyron::Input::IsJumpDown()) {
+		if (Supremo::Input::IsJumpDown()) {
 			return;
 		}
 		if (m_surfData.bIsActive) {
@@ -1888,15 +1943,17 @@ void CLocalPlayer::HandleSourceVehicleAction()
 	}
 
 	if (!EnterVehicleAsDriver()) {
-		Xyron::Input::RequestPassengerVehicleAction();
+		Supremo::Input::RequestPassengerVehicleAction();
 	}
 }
 
 bool CLocalPlayer::HandlePassengerEntry()
 {
+	if (!pNetGame) return false;
 	CVehiclePool* pVehiclePool = pNetGame->GetVehiclePool();
+	if (!pVehiclePool) return false;
 
-	if (!Xyron::Input::HasPendingPassengerVehicleAction()) return false;
+	if (!Supremo::Input::HasPendingPassengerVehicleAction()) return false;
 	VEHICLEID ClosetVehicleID = pVehiclePool->FindNearestToLocalPlayerPed();
 	CVehicle* pVehicle = pVehiclePool->GetAt(ClosetVehicleID);
 	if (!pVehicle) return false;
@@ -1909,15 +1966,17 @@ bool CLocalPlayer::HandlePassengerEntry()
 
 		m_pPlayerPed->EnterVehicle(pVehicle->m_dwGTAId, true);
 		SendEnterVehicleNotification(ClosetVehicleID, true);
-		Xyron::Input::ClearPassengerVehicleActionRequest();
+		Supremo::Input::ClearPassengerVehicleActionRequest();
 	}
-	Xyron::Input::ClearPassengerVehicleActionRequest();
+	Supremo::Input::ClearPassengerVehicleActionRequest();
 	return true;
 }
 
 bool CLocalPlayer::EnterVehicleAsDriver()
 {
+	if (!pNetGame) return false;
 	CVehiclePool* pVehiclePool = pNetGame->GetVehiclePool();
+	if (!pVehiclePool) return false;
 	VEHICLEID ClosetVehicleID = pVehiclePool->FindNearestToLocalPlayerPed();
 	CVehicle* pVehicle = pVehiclePool->GetAt(ClosetVehicleID);
 	if (!pVehicle) return false;
@@ -2050,7 +2109,6 @@ void CLocalPlayer::SendSpawn()
 	if (!m_bSpawnDialogShowed) return;
 
 	RequestSpawn();
-	m_bWaitingForSpawnRequestReply = true;
 }
 // 0.3.7
 void CLocalPlayer::RequestClass(int iClass)
@@ -2060,10 +2118,30 @@ void CLocalPlayer::RequestClass(int iClass)
 	NetTransport::Rpc(pNetGame->GetRakClient(), &RPC_RequestClass, &bsClassRequest, HIGH_PRIORITY, RELIABLE, 0, false, UNASSIGNED_NETWORK_ID, nullptr, "request-class");
 }
 // 0.3.7
-void CLocalPlayer::RequestSpawn()
+bool CLocalPlayer::RequestSpawn()
 {
+	if (!pNetGame || pNetGame->GetGameState() != GAMESTATE_CONNECTED ||
+		m_bIsActive || m_bWaitingForSpawnRequestReply || !m_bClearedToSpawn) {
+		return false;
+	}
+
+	static uint32_t s_lastRequestTick = 0;
+	const uint32_t now = GetTickCount();
+	if (now - s_lastRequestTick < 1200u) {
+		return false;
+	}
+
 	RakNet::BitStream bsSpawnRequest;
-	NetTransport::Rpc(pNetGame->GetRakClient(), &RPC_RequestSpawn, &bsSpawnRequest, HIGH_PRIORITY, RELIABLE, 0, false, UNASSIGNED_NETWORK_ID, nullptr, "request-spawn");
+	if (!NetTransport::Rpc(pNetGame->GetRakClient(), &RPC_RequestSpawn, &bsSpawnRequest,
+		HIGH_PRIORITY, RELIABLE, 0, false, UNASSIGNED_NETWORK_ID, nullptr, "request-spawn")) {
+		FLog("[SPAWN_FLOW64] request-spawn send failed");
+		return false;
+	}
+
+	s_lastRequestTick = now;
+	m_bWaitingForSpawnRequestReply = true;
+	FLog("[SPAWN_FLOW64] request-spawn sent");
+	return true;
 }
 
 void CLocalPlayer::ApplySpecialAction(uint8_t byteSpecialAction)
@@ -2197,10 +2275,11 @@ void CLocalPlayer::HandleClassSelectionOutcome(bool bOutcome)
 		m_bClearedToSpawn = true;
 		if (!m_bIsActive && !m_bWaitingForSpawnRequestReply)
 		{
-			if (pUI) pUI->spawn()->setVisible(false);
-			RequestSpawn();
-			m_bWaitingForSpawnRequestReply = true;
-			FLog("[SPAWN_FLOW64] class-ready auto-request-spawn");
+			// Keep the << / Spawn / >> selector visible until the player
+			// explicitly presses Spawn. The server's class response only
+			// updates the preview; it must not auto-submit the spawn RPC.
+			if (pUI) pUI->spawn()->setVisible(true);
+			FLog("[SPAWN_FLOW64] class-ready waiting-for-user-spawn");
 		}
 	}
 }
@@ -2634,32 +2713,24 @@ void CLocalPlayer::SendUnoccupiedData(VEHICLEID vehicleId, CVehicle *pVehicle)
 	}
 }
 
-void CLocalPlayer::MaybeSendExitVehicle() {
-    bool exitVehicleState = m_pPlayerPed->m_pPed->IsExitingVehicle();
-
-    if(Xyron::Input::ConsumeExitVehicleTaskStarted(exitVehicleState)) {
-        auto vehicleId = pNetGame->GetVehiclePool()->FindIDFromGtaPtr(m_pPlayerPed->m_pPed->pVehicle);
-
-        if(vehicleId != INVALID_VEHICLE_ID) {
-            RakNet::BitStream bsSend;
-
-            bsSend.Write(vehicleId);
-            NetTransport::Rpc(pNetGame->GetRakClient(), &RPC_ExitVehicle, &bsSend, HIGH_PRIORITY, RELIABLE_SEQUENCED, 0, false, UNASSIGNED_NETWORK_ID, NULL, "maybe-exit-vehicle");
-        }
-
-    }
-}
-
 void CLocalPlayer::MaybeSendEnterVehicle() {
-    CTaskComplexEnterCarAsDriver* task
-            = static_cast<CTaskComplexEnterCarAsDriver*>(m_pPlayerPed->m_pPed->GetTaskManager().CTaskManager::FindActiveTaskByType(TASK_COMPLEX_ENTER_CAR_AS_DRIVER));
+    if (!pNetGame || !m_pPlayerPed || !m_pPlayerPed->m_pPed) {
+        return;
+    }
 
+    CTaskComplexEnterCarAsDriver* task = static_cast<CTaskComplexEnterCarAsDriver*>(
+        m_pPlayerPed->m_pPed->GetTaskManager().CTaskManager::FindActiveTaskByType(
+            TASK_COMPLEX_ENTER_CAR_AS_DRIVER));
     bool enterVehicleState = task != nullptr;
 
-    if(Xyron::Input::ConsumeDriverEnterVehicleTaskStarted(enterVehicleState)) {
-        auto vehicleId = pNetGame->GetVehiclePool()->FindIDFromGtaPtr(task->GetTarget());
-
-        if(vehicleId != INVALID_VEHICLE_ID)
+    if (Supremo::Input::ConsumeDriverEnterVehicleTaskStarted(enterVehicleState) && task) {
+        CVehiclePool* vehiclePool = pNetGame->GetVehiclePool();
+        if (!vehiclePool || !task->GetTarget()) {
+            return;
+        }
+        auto vehicleId = vehiclePool->FindIDFromGtaPtr(task->GetTarget());
+        if (vehicleId != INVALID_VEHICLE_ID) {
             SendEnterVehicleNotification(vehicleId, false);
+        }
     }
 }

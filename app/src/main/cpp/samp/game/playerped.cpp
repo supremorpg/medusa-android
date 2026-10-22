@@ -182,7 +182,7 @@ CPlayerPed::~CPlayerPed()
 
 	}
 
-    Xyron::Streaming::RemoveModelIfNoRefs(modelId);
+    Supremo::Streaming::RemoveModelIfNoRefs(modelId);
 }
 
 
@@ -226,42 +226,26 @@ void CPlayerPed::TeleportTo(float fX, float fY, float fZ)
     if (pGame) {
         pGame->RefreshStreamingAt(fX, fY);
     }
-    Xyron::Collision::AddCollisionNeededAtPosn(pos);
-    Xyron::Collision::RequestCollision(pos, m_pPed->m_nAreaCode);
-    Xyron::Ipl::AddNeededAtPosition(pos);
-    Xyron::Ipl::LoadAtPosition(pos, false);
-    Xyron::Ipl::EnsureInMemory(pos);
+    Supremo::Collision::AddCollisionNeededAtPosn(pos);
+    Supremo::Collision::RequestCollision(pos, m_pPed->m_nAreaCode);
+    Supremo::Ipl::AddNeededAtPosition(pos);
+    Supremo::Ipl::LoadAtPosition(pos, false);
+    Supremo::Ipl::EnsureInMemory(pos);
 
-#if VER_x32
-    m_pPed->SetPosn(pos);
-#else
-    static uint32_t s_directTeleportLogCount = 0;
-    static uint32_t s_lastDirectTeleportLogTick = 0;
-    const bool nearBallys = fX > 1835.0f && fX < 2025.0f && fY > 1280.0f && fY < 1450.0f;
-    const bool lowTeleport = fZ < -10.0f;
-    const uint32_t now = GetTickCount();
-    if (s_directTeleportLogCount < 24 || nearBallys || lowTeleport || now - s_lastDirectTeleportLogTick >= 1250) {
-        ++s_directTeleportLogCount;
-        s_lastDirectTeleportLogTick = now;
-        const CVector oldPos = m_pPed->GetPosition();
-        FLog("[PED_TELEPORT64] direct matrix teleport #%u gta=%u old=%.2f %.2f %.2f pos=%.2f %.2f %.2f nearBallys=%d low=%d",
-             s_directTeleportLogCount,
-             m_dwGTAId,
-             oldPos.x,
-             oldPos.y,
-             oldPos.z,
-             fX,
-             fY,
-             fZ,
-             nearBallys ? 1 : 0,
-             lowTeleport ? 1 : 0);
-    }
-
+#if !VER_x32
+    // The ARM64 placeable vtable slot is not safe for this multiplayer ped:
+    // invoking it enters the native CPed teleport/task path and can construct a
+    // CTaskComplex with an invalid task manager during the first spawn.  The
+    // surrounding streaming/collision work above keeps the world in sync; move
+    // the already-valid matrix directly and let the normal frame update below
+    // publish the new transform.
     if (m_pPed->m_matrix) {
         m_pPed->m_matrix->GetPosition() = pos;
     } else {
         m_pPed->m_placement.m_vPosn = pos;
     }
+#else
+    m_pPed->SetPosn(pos);
 #endif
     m_pPed->ResetMoveSpeed();
     m_pPed->ResetTurnSpeed();
@@ -318,21 +302,21 @@ void CPlayerPed::SetDead()
     {
         return;
     }
-    if (!GamePool_Ped_GetAt(m_dwGTAId))
+    if (GamePool_Ped_GetAt(m_dwGTAId) != m_pPed || !IsValidGamePed(m_pPed))
     {
         return;
     }
 
-    RwMatrix mat;
-    m_pPed->GetMatrix(&mat);
-    // will reset the tasks
-    TeleportTo(mat.pos.x, mat.pos.y, mat.pos.z);
+    // The native SA-MP death path already owns the actor state transition.
+    // Do not teleport/stream the ped while the render thread can still be
+    // drawing the dying actor; that used to invalidate world objects during
+    // the death -> respawn transition and left RenderThread in eglSwapBuffers.
     SetHealth(0.f);
 
     uint8_t old = CWorld::PlayerInFocus;
     CWorld::PlayerInFocus = m_bytePlayerNumber;
     ScriptCommand(&kill_actor, m_dwGTAId);
-    CWorld::PlayerInFocus = 0;
+    CWorld::PlayerInFocus = old;
 }
 // 0.3.7
 bool CPlayerPed::IsDead()
@@ -366,10 +350,16 @@ void CPlayerPed::TogglePlayerControllable(bool bControllable)
         FLog("TogglePlayerControllable6");
         ScriptCommand(&toggle_player_controllable, m_bytePlayerNumber, 1);
         ScriptCommand(&lock_actor, m_dwGTAId, 0);
+#if VER_x32
         if (!IsInVehicle()) {
             RwMatrix mat = m_pPed->GetMatrix().ToRwMatrix();
             TeleportTo(mat.pos.x, mat.pos.y, mat.pos.z);
         }
+#else
+        // On ARM64 this legacy re-teleport re-enters streaming and RW object
+        // updates while the spawn frame is still settling. Spawn() already
+        // positioned and prepared the SA-MP ped; only unlock it here.
+#endif
     }
 }
 // 0.3.7
@@ -610,7 +600,7 @@ void CPlayerPed::SetModelIndex(uint uiModel)
     {
         auto oldModelId = m_pPed->m_nModelIndex;
 
-        if (!Xyron::Streaming::TryLoadModel(uiModel))
+        if (!Supremo::Streaming::TryLoadModel(uiModel))
             return;
 
         m_pPed->DeleteRwObject();
@@ -622,7 +612,7 @@ void CPlayerPed::SetModelIndex(uint uiModel)
         m_pPed->UpdateRW();
         m_pPed->UpdateRwFrame();
 
-        Xyron::Streaming::RemoveModelIfNoRefs(oldModelId);
+        Supremo::Streaming::RemoveModelIfNoRefs(oldModelId);
     }
 }
 
@@ -770,12 +760,12 @@ void CPlayerPed::SetKeys(uint16_t lrAnalog, uint16_t udAnalog, uint16_t wKeys)
 
 uint8_t CPlayerPed::GetAdditionalKeys()
 {
-	return Xyron::Input::ConsumeAdditionalKey();
+	return Supremo::Input::ConsumeAdditionalKey();
 }
 
 uint16_t CPlayerPed::GetKeys(uint16_t *lrAnalog, uint16_t *udAnalog, bool clear)
 {
-	return Xyron::Input::PackSampKeys(IsInVehicle(), lrAnalog, udAnalog, clear);
+	return Supremo::Input::PackSampKeys(IsInVehicle(), lrAnalog, udAnalog, clear);
 }
 
 // 0.3.7
@@ -846,7 +836,7 @@ void CPlayerPed::SetInterior(uint8_t byteInteriorId, bool bRefresh)
 	{
 		ScriptCommand(&select_interior, byteInteriorId);
 		ScriptCommand(&link_actor_to_interior, m_dwGTAId, byteInteriorId);
-		if (bRefresh)
+		if (bRefresh && m_pPed && IsValidGamePed(m_pPed))
 		{
 			RwMatrix mat;
             mat = m_pPed->GetMatrix().ToRwMatrix();
@@ -1036,22 +1026,18 @@ void CPlayerPed::ExitCurrentVehicle()
 {
     FLog("ExitCurrentVehicle");
 
-    if (!m_pPed) return;
-    if(!m_dwGTAId)return;
-    if (!IsValidGamePed(m_pPed) || !GamePool_Ped_GetAt(m_dwGTAId)) {
+    if (!m_pPed || !m_dwGTAId) return;
+    if (!IsValidGamePed(m_pPed) || GamePool_Ped_GetAt(m_dwGTAId) != m_pPed) {
         return;
     }
 
-    if(m_pPed->bInVehicle || m_pPed->pVehicle)
-    {
-        CVehicleGTA* oldVehicle = m_pPed->pVehicle;
-        const uint32_t oldModel = oldVehicle ? oldVehicle->GetModelId() : 0;
-        const ePedState oldState = m_pPed->m_nPedState;
-        m_pPed->RemoveFromVehicle();
-        FLog("[PED_DETACH64] reason=rpc-remove oldVehicle=%p model=%u state=%u",
-             oldVehicle,
-             oldModel,
-             static_cast<uint32_t>(oldState));
+    // Queue the native leave-car task instead of detaching the ped directly.
+    // Direct RemoveFromVehicle() skips the door/exit animation and can make the
+    // local state diverge from the exit RPC observed by other clients.
+    if (m_pPed->bInVehicle || m_pPed->pVehicle) {
+        ScriptCommand(&TASK_LEAVE_ANY_CAR, m_dwGTAId);
+        FLog("[PED_EXIT64] queued-native-leave-task ped=%u vehicle=%p",
+             m_dwGTAId, m_pPed->pVehicle);
     }
 }
 // 0.3.7
@@ -1691,9 +1677,9 @@ void CPlayerPed::ProcessDancing()
 	uint16_t wKeysUpDown, wKeysLeftRight, iExtra;
 	if(!m_bytePlayerNumber)
 	{
-		wKeysUpDown = static_cast<uint16_t>(Xyron::Input::SourceAnalogUpDown());
-		wKeysLeftRight = static_cast<uint16_t>(Xyron::Input::SourceAnalogLeftRight());
-		iExtra = Xyron::Input::IsSourceSprintActionPressed() ? 1 : 0;
+		wKeysUpDown = static_cast<uint16_t>(Supremo::Input::SourceAnalogUpDown());
+		wKeysLeftRight = static_cast<uint16_t>(Supremo::Input::SourceAnalogLeftRight());
+		iExtra = Supremo::Input::IsSourceSprintActionPressed() ? 1 : 0;
 	}
 	else
 	{
@@ -2104,7 +2090,6 @@ void CPlayerPed::ProcessSpecialAction(int iAction)
 	}
 }
 
-#include "RW/RenderWare.h"
 void CPlayerPed::ProcessCuffAndCarry()
 {
 

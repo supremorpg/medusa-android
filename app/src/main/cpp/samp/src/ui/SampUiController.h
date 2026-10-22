@@ -20,6 +20,7 @@ public:
     static void AddPlayerMessage(const char* nick, const char* text, ImU32 nickColor);
     static void AddInfoMessage(const char* fmt, ...);
     static void AddDebugMessage(const char* fmt, ...);
+    static void ClearChat();
     static void SetChatInputActive(bool active);
     static void ToggleChatVisible();
     static bool WantsInputCapture();

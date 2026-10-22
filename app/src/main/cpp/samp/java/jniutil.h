@@ -44,6 +44,8 @@ public:
     void UpdateHud(int hp, int armour, int eat, int money, int gunId, int ammo);
     void UpdateWeaponWheel(const char* weaponsJson);
     void ApplyUiBatch(const char* payload);
+    void ShowToast(const char* severity, const char* title, const char* message, int durationMs);
+    void OnAuthState(const char* request, const char* status, const char* message);
 
     void showWithoutReset();
     void hideWithoutReset();
@@ -82,6 +84,8 @@ public:
     jmethodID s_UpdateHud;
     jmethodID s_UpdateWeaponWheel;
     jmethodID s_ApplyUiBatch;
+    jmethodID s_ShowToast;
+    jmethodID s_OnAuthState;
     jmethodID s_ShowWithoutReset;
     jmethodID s_HideWithoutReset;
     jmethodID s_PassaGer;

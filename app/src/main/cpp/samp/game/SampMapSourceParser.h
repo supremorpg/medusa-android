@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace Xyron::MapSource {
+namespace Supremo::MapSource {
 
 enum class SourceAssetKind : uint8_t {
     Unknown,

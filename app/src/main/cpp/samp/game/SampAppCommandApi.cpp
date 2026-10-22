@@ -9,7 +9,7 @@
 
 extern CNetGame* pNetGame;
 
-namespace Xyron::AppCommand {
+namespace Supremo::AppCommand {
 namespace {
 
 constexpr std::size_t kMaxAppCommandBytes = 512;

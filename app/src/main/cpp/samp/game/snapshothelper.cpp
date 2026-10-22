@@ -57,7 +57,7 @@ RwTexture* CSnapShotHelper::CreateObjectSnapShot(int iModel, uint32_t dwColor, C
 {
     if(iModel > 20000) return nullptr;
     FLog("CreateObjectSnapShot: %d, %f, %f, %f", iModel, vecRot->x, vecRot->y, vecRot->z);
-    Xyron::Streaming::TryLoadModel(iModel);
+    Supremo::Streaming::TryLoadModel(iModel);
 
     auto pRwObject = ModelInfoCreateInstance(iModel);
     if (pRwObject == nullptr) {
@@ -193,7 +193,7 @@ RwTexture* CSnapShotHelper::CreatePedSnapShot(int iModel, uint32_t dwColor, CVec
 
 	delete pPed;
 
-    Xyron::Streaming::RemoveModelIfNoRefs(iModel);
+    Supremo::Streaming::RemoveModelIfNoRefs(iModel);
 
 	return bufferTexture;
 }

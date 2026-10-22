@@ -5,7 +5,7 @@
 
 -keep public class com.wardrumstudios.utils.* { *; }
 
--keep public class com.xyron.game.main.* { *; }
+-keep public class com.supremo.launcher.main.* { *; }
 
 -keep class com.startapp.** {
       *;

@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace Xyron::MapSource {
+namespace Supremo::MapSource {
 
 constexpr size_t kInventoryPathSize = 384;
 constexpr size_t kInventoryErrorSize = 96;

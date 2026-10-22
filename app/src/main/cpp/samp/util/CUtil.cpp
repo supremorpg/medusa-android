@@ -27,7 +27,7 @@ uintptr_t CUtil::FindLib(const char* libname)
 
 RwTexture* CUtil::LoadTextureFromDB(const char* dbname, const char* texture)
 {
-    Xyron::Perf::ScopedZone perfTexture(Xyron::Perf::Zone::Texture);
+    Supremo::Perf::ScopedZone perfTexture(Supremo::Perf::Zone::Texture);
     TextureDatabaseRuntime* db_handle = TextureDatabaseRuntime::GetDatabase(dbname);
     if(!db_handle)
     {
@@ -52,7 +52,7 @@ RwTexture* CUtil::LoadTextureFromDB(const char* dbname, const char* texture)
 
 RwTexture* CUtil::GetTexture(const char* name)
 {
-    Xyron::Perf::ScopedZone perfTexture(Xyron::Perf::Zone::Texture);
+    Supremo::Perf::ScopedZone perfTexture(Supremo::Perf::Zone::Texture);
     auto tex = TextureDatabaseRuntime::GetTexture(name);
     if (!tex)
     {

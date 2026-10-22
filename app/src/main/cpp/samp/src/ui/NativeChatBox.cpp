@@ -54,6 +54,18 @@ void NativeChatBox::AddDebugMessage(const char* fmt, ...) {
     va_end(args);
 }
 
+void NativeChatBox::ClearMessages() {
+    m_start = 0;
+    m_count = 0;
+    m_scrollOffsetLines = 0;
+    m_dragging = false;
+    m_lastDragY = 0.0f;
+    for (Line& line : m_lines) {
+        line.text[0] = '\0';
+        line.color = 0;
+    }
+}
+
 void NativeChatBox::AddLine(const char* text, ImU32 color) {
     int slot = 0;
     if (m_count == kMaxLines) {

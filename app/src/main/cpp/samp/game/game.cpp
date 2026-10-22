@@ -38,24 +38,24 @@ extern bool IsPedModel(unsigned int iModelID);
 
 static bool EnsurePedStreamingModelLoaded64(int modelId, const char* context)
 {
-    if (!Xyron::Streaming::IsValidResourceId(modelId)) {
+    if (!Supremo::Streaming::IsValidResourceId(modelId)) {
         FLog("[PED64] invalid model=%d context=%s", modelId, context ? context : "?");
         return false;
     }
 
-    if (Xyron::Streaming::IsModelLoaded(modelId)) {
+    if (Supremo::Streaming::IsModelLoaded(modelId)) {
         return true;
     }
 
     FLog("[PED64] preloading model=%d context=%s", modelId, context ? context : "?");
-    Xyron::Streaming::RequestModel(modelId, STREAMING_GAME_REQUIRED | STREAMING_KEEP_IN_MEMORY);
-    Xyron::Streaming::LoadAllRequestedModels(false);
+    Supremo::Streaming::RequestModel(modelId, STREAMING_GAME_REQUIRED | STREAMING_KEEP_IN_MEMORY);
+    Supremo::Streaming::LoadAllRequestedModels(false);
 
-    if (!Xyron::Streaming::IsModelLoaded(modelId)) {
-        Xyron::Streaming::TryLoadModel(modelId);
+    if (!Supremo::Streaming::IsModelLoaded(modelId)) {
+        Supremo::Streaming::TryLoadModel(modelId);
     }
 
-    if (!Xyron::Streaming::IsModelLoaded(modelId)) {
+    if (!Supremo::Streaming::IsModelLoaded(modelId)) {
         FLog("[PED64] model=%d still not loaded context=%s", modelId, context ? context : "?");
         return false;
     }
@@ -65,7 +65,7 @@ static bool EnsurePedStreamingModelLoaded64(int modelId, const char* context)
 
 static int NormalizeNetworkPedSkin64(int skin)
 {
-    if (!Xyron::Streaming::IsValidResourceId(skin) || skin == MODEL_PLAYER ||
+    if (!Supremo::Streaming::IsValidResourceId(skin) || skin == MODEL_PLAYER ||
         !IsPedModel(static_cast<unsigned int>(skin))) {
         FLog("[PED64] invalid ped skin=%d, using fallback=%d", skin, MODEL_MALE01);
         return MODEL_MALE01;
@@ -111,10 +111,16 @@ static TextureDatabaseRuntime* LoadRuntimeTextureDatabase(const char* name,
                                                           bool fullyLoad,
                                                           TextureDatabaseFormat format)
 {
+#if !VER_x32
+    FLog("[TEX_INIT64] begin name=%s requested=%d full=%d",
+         name ? name : "?",
+         static_cast<int>(format),
+         fullyLoad ? 1 : 0);
+#endif
     TextureDatabaseRuntime* db = TextureDatabaseRuntime::Load(name, fullyLoad, format);
 #if !VER_x32
     if (db) {
-        FLog("[TEX_INIT64] name=%s requested=%d loaded=%d entries=%u thumbs={dxt:%u,pvr:%u,etc:%u}",
+        FLog("[TEX_INIT64] end name=%s requested=%d loaded=%d entries=%u thumbs={dxt:%u,pvr:%u,etc:%u}",
              name ? name : "?",
              static_cast<int>(format),
              static_cast<int>(db->loadedFormat),
@@ -123,7 +129,7 @@ static TextureDatabaseRuntime* LoadRuntimeTextureDatabase(const char* name,
              db->thumbs[TextureDatabaseFormat::DF_PVR].numEntries,
              db->thumbs[TextureDatabaseFormat::DF_ETC].numEntries);
     } else {
-        FLog("[TEX_INIT64] name=%s requested=%d result=null",
+        FLog("[TEX_INIT64] end name=%s requested=%d result=null",
              name ? name : "?",
              static_cast<int>(format));
     }
@@ -248,7 +254,7 @@ void CGame::PreloadObjectsAnims()
 	if(IsAnimationLoaded("WOP") == 0) RequestAnimation("WOP");
 
     // Force preloading and locking of Shamal (519) model in memory
-    Xyron::Streaming::TryLoadModel(519);
+    Supremo::Streaming::TryLoadModel(519);
     CBaseModelInfo* shamalInfo = CModelInfo::GetModelInfo(519);
     if (shamalInfo) {
         shamalInfo->m_nRefCount = 999;
@@ -258,11 +264,8 @@ void CGame::PreloadObjectsAnims()
 void CGame::SetWorldWeather(int byteWeatherID)
 {
     GTASAEngineApi::SetWeatherNow(byteWeatherID);
-
-    if(!m_bClockEnabled)
-    {
-        GTASAEngineApi::ForceWeatherNow(byteWeatherID);
-    }
+    // Weather RPCs are authoritative independently of clock progression.
+    GTASAEngineApi::ForceWeatherNow(byteWeatherID);
 }
 // 0.3.7
 void CGame::DisplayHUD(bool bDisp)
@@ -423,7 +426,7 @@ void CGame::RemoveModel(int iModel, bool bFromStreaming)
 		if (bFromStreaming)
 		{
 			if(ScriptCommand(&is_model_available, iModel))
-                Xyron::Streaming::RemoveStreamingModel(iModel);
+                Supremo::Streaming::RemoveStreamingModel(iModel);
 		}
 		else
 		{
@@ -707,7 +710,7 @@ void CGame::InitialiseOnceBeforeRW() {
     GTASAEngineApi::InitialiseMobileSettings();
     GTASAEngineApi::InitialiseLocalisation();
     CFileMgr::Initialise();
-    Xyron::Streaming::InitialiseCdStreams();
+    Supremo::Streaming::InitialiseCdStreams();
     GTASAEngineApi::InitialisePad();
 }
 
@@ -741,13 +744,15 @@ bool CGame::InitialiseRenderWare() {
     constexpr TextureDatabaseFormat gtaIntTexFormat = TextureDatabaseFormat::DF_Default;
     constexpr TextureDatabaseFormat mobileTexFormat = TextureDatabaseFormat::DF_Default;
 #else
-    // The bundled world texdb package on this data set ships gta3/gta_int/txd/mobile
-    // as .dxt banks only. DF_Default may choose ETC on Adreno and leaves Loading
-    // placeholder textures on large world surfaces.
+    // Let the runtime select the SAMP format.  Unlike the world databases,
+    // external SAMP packages may provide ETC or PVR instead of a DXT triplet.
     constexpr TextureDatabaseFormat sampTexFormat = TextureDatabaseFormat::DF_Default;
     constexpr TextureDatabaseFormat txdTexFormat = TextureDatabaseFormat::DF_DXT;
     constexpr TextureDatabaseFormat gta3TexFormat = TextureDatabaseFormat::DF_DXT;
-    constexpr TextureDatabaseFormat gtaIntTexFormat = TextureDatabaseFormat::DF_DXT;
+    // gta_int is selected through the engine's native default-format policy.
+    // Its external packages may expose ETC/PVR metadata even when the world
+    // DXT banks are present; forcing DXT reaches SortEntries with bad metadata.
+    constexpr TextureDatabaseFormat gtaIntTexFormat = TextureDatabaseFormat::DF_Default;
     constexpr TextureDatabaseFormat mobileTexFormat = TextureDatabaseFormat::DF_DXT;
 #endif
 
@@ -900,12 +905,12 @@ void ForceSpawnCollisionDebug()
             loadSample.z = 18.0f;
         }
 
-        Xyron::Collision::AddCollisionNeededAtPosn(loadSample);
-        Xyron::Collision::RequestCollision(loadSample, localPlayerPed->m_pPed->m_nAreaCode);
-        Xyron::Ipl::AddNeededAtPosition(loadSample);
-        Xyron::Ipl::LoadAtPosition(loadSample, false);
-        Xyron::Ipl::EnsureInMemory(loadSample);
-        Xyron::Streaming::LoadSceneCollision(loadSample);
+        Supremo::Collision::AddCollisionNeededAtPosn(loadSample);
+        Supremo::Collision::RequestCollision(loadSample, localPlayerPed->m_pPed->m_nAreaCode);
+        Supremo::Ipl::AddNeededAtPosition(loadSample);
+        Supremo::Ipl::LoadAtPosition(loadSample, false);
+        Supremo::Ipl::EnsureInMemory(loadSample);
+        Supremo::Streaming::LoadSceneCollision(loadSample);
         if (pGame) {
             pGame->RefreshStreamingAt(loadSample.x, loadSample.y);
         }
@@ -934,9 +939,9 @@ void ForceSpawnCollisionDebug()
     auto flushStreamingQueue = [&](bool allowBlocking) {
         if (allowBlocking && now - s_lastBlockingLoadTick >= 1800) {
             s_lastBlockingLoadTick = now;
-            Xyron::Streaming::LoadAllRequestedModels(false);
+            Supremo::Streaming::LoadAllRequestedModels(false);
         } else {
-            Xyron::Streaming::LoadRequestedModels();
+            Supremo::Streaming::LoadRequestedModels();
         }
     };
 
@@ -981,38 +986,7 @@ void ForceSpawnCollisionDebug()
 void MainLoop();
 void CGame::Process() {
     if(bIsGameExiting)return;
-    Xyron::Perf::ScopedZone perfGameProcess(Xyron::Perf::Zone::GameProcess);
-
-    MainLoop();
-    if (pNetGame)
-    {
-        if(pGame && pGame->FindPlayerPed() && pUI && pUI->buttonpanel() && pUI->buttonpanel()->m_bH)
-        {
-            if(pGame->FindPlayerPed()->IsInVehicle())
-            {
-                pUI->buttonpanel()->m_bH->setCaption("D/B");
-            }
-            else
-                pUI->buttonpanel()->m_bH->setCaption("H");
-        }
-
-        CObjectPool* pObjectPool = pNetGame->GetObjectPool();
-        if (pObjectPool) {
-            {
-                Xyron::Perf::ScopedZone perfObjects(Xyron::Perf::Zone::Objects);
-                pObjectPool->Process();
-            }
-            {
-                Xyron::Perf::ScopedZone perfObjectMaterial(Xyron::Perf::Zone::ObjectMaterial);
-                pObjectPool->ProcessMaterialText();
-            }
-        }
-
-        CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
-        if (pTextDrawPool) {
-            pTextDrawPool->SnapshotProcess();
-        }
-    }
+    Supremo::Perf::ScopedZone perfGameProcess(Supremo::Perf::Zone::GameProcess);
 
     ProcessMainThreadTasks();
 
@@ -1021,24 +995,29 @@ void CGame::Process() {
     uint32_t v2; // r5
     uint32_t v3; // r5
 
-    Xyron::Input::ProcessNativeFrame();
+    // Keep the stock mobile input/camera frame path.  The optional source
+    // camera bridge is disabled for the vanilla baseline; Java gameplay touch
+    // events are no longer converted into custom camera matrices.
 
 //	CLoadMonitor::BeginFrame(&g_LoadMonitor);
     CurrentTimeInCycles = CTimer::GetCurrentTimeInCycles();
     v1 = CurrentTimeInCycles / CTimer::GetCyclesPerMillisecond();
 
     {
-        Xyron::Perf::ScopedZone perfStreaming(Xyron::Perf::Zone::Streaming);
-        Xyron::Streaming::UpdateStreamingFrame();
+        Supremo::Perf::ScopedZone perfStreaming(Supremo::Perf::Zone::Streaming);
+        Supremo::Streaming::UpdateStreamingFrame();
+        // The native CGame::Process below remains authoritative; this call is
+        // retained for the launcher's compatibility hooks but no longer runs
+        // the additional spawn-repair loop below.
     }
 
     v2 = CTimer::GetCurrentTimeInCycles();
     v3 = v2 / CTimer::GetCyclesPerMillisecond();
 
-    {
-        Xyron::Perf::ScopedZone perfCollision(Xyron::Perf::Zone::Collision);
-        ForceSpawnCollisionDebug();
-    }
+    // The stock engine owns spawn collision and streaming.  The previous
+    // diagnostic repair loop requested large cross-shaped model/collision
+    // rings every frame and mutated live ped collision flags, which produced
+    // stale world geometry around spawn.
 
     //	CCutsceneMgr::Update();
 

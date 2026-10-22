@@ -34,7 +34,7 @@ list(APPEND SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/game/SampMapSourceInventory.cpp
         ${CMAKE_CURRENT_LIST_DIR}/game/SampMapSourceParser.cpp
         ${CMAKE_CURRENT_LIST_DIR}/game/SampStreamingApi.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/java/xyron_bridge.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/java/supremo_bridge.cpp
         ${CMAKE_CURRENT_LIST_DIR}/java/sistemas.cpp
         ${CMAKE_CURRENT_LIST_DIR}/net/nettransport.cpp
         ${CMAKE_CURRENT_LIST_DIR}/perf/PerformanceProfiler.cpp

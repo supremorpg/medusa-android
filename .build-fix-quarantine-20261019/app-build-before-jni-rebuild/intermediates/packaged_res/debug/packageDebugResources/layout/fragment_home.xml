@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="22dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:letterSpacing="0.32"
+            android:text="INICIO"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:letterSpacing="0.18"
+            android:text="CENTRAL VOLTARA RP"
+            android:textAllCaps="true"
+            android:textColor="#76FFFFFF"
+            android:textSize="7.2sp" />
+
+        <TextView
+            android:id="@+id/selected_server_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:maxLines="1"
+            android:text="Jogador_Misterioso"
+            android:textColor="@android:color/white"
+            android:textSize="8.5sp" />
+
+        <TextView
+            android:id="@+id/selected_server_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:maxLines="1"
+            android:text="Downtown Los Santos"
+            android:textColor="#D8D8D8"
+            android:textSize="8.2sp" />
+
+        <TextView
+            android:id="@+id/selected_server_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:lineSpacingExtra="2dp"
+            android:maxLines="2"
+            android:text="Bem-vindo de volta. Sua ultima localizacao salva foi encontrada. Deseja retornar a partida agora?"
+            android:textColor="#8FFFFFFF"
+            android:textSize="7.8sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="26dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/play_button"
+                android:layout_width="156dp"
+                android:layout_height="38dp"
+                android:background="@drawable/vice_button_outline"
+                android:fontFamily="@font/montserrat_bold"
+                android:letterSpacing="0.12"
+                android:text="▷  INICIAR JOGO   →"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="8.5sp" />
+
+            <TextView
+                android:id="@+id/select_server_button"
+                android:layout_width="126dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/vice_button_outline"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:letterSpacing="0.08"
+                android:text="TROCAR CIDADE"
+                android:textColor="#CFFFFFFF"
+                android:textSize="7.6sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:letterSpacing="0.32"
+        android:text="BUILD 8.4.12 // CINEMATIC SYSTEM"
+        android:textAllCaps="true"
+        android:textColor="#38FFFFFF"
+        android:textSize="5.5sp" />
+
+    <TextView
+        android:id="@+id/home_readiness_title"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/home_readiness_body"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/home_next_step_button"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="invisible" />
+
+    <View
+        android:id="@+id/home_quick_host"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="invisible" />
+
+    <View
+        android:id="@+id/home_quick_files"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="invisible" />
+
+    <View
+        android:id="@+id/home_quick_settings"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="invisible" />
+</FrameLayout>

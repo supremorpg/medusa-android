@@ -5,7 +5,7 @@
 
 class CWidgetGta;
 
-namespace Xyron::Input {
+namespace Supremo::Input {
 
 enum class SourceButton : uint8_t {
     Action = 0,

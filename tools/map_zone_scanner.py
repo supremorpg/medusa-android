@@ -575,7 +575,7 @@ def write_html_map(path: Path, zones: list[Zone], bounds: tuple[float, float, fl
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Xyron map zone scan</title>
+<title>Supremo map zone scan</title>
 <style>
 body {{ margin: 0; background: #101318; color: #e7ecef; font-family: Arial, sans-serif; }}
 main {{ padding: 18px; }}
@@ -588,7 +588,7 @@ small {{ color: #aeb8c2; }}
 </head>
 <body>
 <main>
-<h1>Xyron map zone scan</h1>
+<h1>Supremo map zone scan</h1>
 <small>Hover a square to see evidence. Coordinates are GTA world X/Y; north is up.</small>
 <div class="legend">
 <span class="chip"><span class="swatch" style="background:#25a244"></span>green: covered and clean</span>
@@ -648,7 +648,7 @@ def write_markdown_report(
     top_yellow = sorted(yellow, key=lambda z: (-z.static_bad_score, z.samples, z.confidence))[:20]
 
     lines = [
-        "# Xyron map zone scan",
+        "# Supremo map zone scan",
         "",
         f"- Generated: `{time.strftime('%Y-%m-%d %H:%M:%S')}`",
         f"- Bounds: `{bounds[0]:.0f},{bounds[1]:.0f}` to `{bounds[2]:.0f},{bounds[3]:.0f}`",

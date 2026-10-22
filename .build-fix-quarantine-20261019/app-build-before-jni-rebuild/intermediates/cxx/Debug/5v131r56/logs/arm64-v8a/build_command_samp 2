@@ -1,0 +1,4 @@
+/Users/manoel/Library/Android/sdk/cmake/3.22.1/bin/ninja \
+  -C \
+  /Users/manoel/Projects/arquivos2/reduto-launcher/app/.cxx/Debug/5v131r56/arm64-v8a \
+  samp

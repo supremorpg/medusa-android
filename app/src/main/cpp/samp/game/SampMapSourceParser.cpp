@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstring>
 
-namespace Xyron::MapSource {
+namespace Supremo::MapSource {
 namespace {
 
 constexpr uint32_t kImgEntrySize = 32;

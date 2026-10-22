@@ -1,4 +1,4 @@
 #pragma once
 
-extern "C" void XyronInstallEglSwapBuffersHook() noexcept;
-extern "C" bool XyronIsEglSwapBuffersHookInstalled() noexcept;
+extern "C" void SupremoInstallEglSwapBuffersHook() noexcept;
+extern "C" bool SupremoIsEglSwapBuffersHookInstalled() noexcept;

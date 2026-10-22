@@ -1346,7 +1346,7 @@ int32 WrapRepeatSectorIndex(int32 value, int32 max)
 
 void RequestCollisionNative(const CVector& pos, int32 areaCode)
 {
-    Xyron::Perf::ScopedZone perfCollision(Xyron::Perf::Zone::Collision);
+    Supremo::Perf::ScopedZone perfCollision(Supremo::Perf::Zone::Collision);
     CHook::CallFunction<void>(GtaAddress(kColRequestCollision32, kColRequestCollision64), &pos, areaCode);
 }
 
@@ -1577,7 +1577,7 @@ void ProcessCamera(CCamera* camera)
     if (!camera) {
         return;
     }
-    Xyron::Perf::ScopedZone perfCamera(Xyron::Perf::Zone::Camera);
+    Supremo::Perf::ScopedZone perfCamera(Supremo::Perf::Zone::Camera);
     CHook::CallFunction<void>(GtaAddress(kCameraProcess32, kCameraProcess64), camera);
 }
 
@@ -2070,7 +2070,7 @@ void UpdateWaterCannons()
 
 void ProcessWorld()
 {
-    Xyron::Perf::ScopedZone perfWorld(Xyron::Perf::Zone::WorldProcess);
+    Supremo::Perf::ScopedZone perfWorld(Supremo::Perf::Zone::WorldProcess);
     CHook::CallFunction<void>(GtaAddress(kWorldProcess32, kWorldProcess64));
 }
 
@@ -3533,7 +3533,7 @@ bool ProcessLineOfSight(const CVector* origin,
         return false;
     }
 
-    Xyron::Perf::ScopedZone perfCollision(Xyron::Perf::Zone::Collision);
+    Supremo::Perf::ScopedZone perfCollision(Supremo::Perf::Zone::Collision);
     return CHook::CallFunction<bool>(
         GtaAddress(kProcessLineOfSight32, kProcessLineOfSight64),
         origin,
@@ -3569,7 +3569,7 @@ bool ProcessVerticalLine(const CVector* origin,
         return false;
     }
 
-    Xyron::Perf::ScopedZone perfCollision(Xyron::Perf::Zone::Collision);
+    Supremo::Perf::ScopedZone perfCollision(Supremo::Perf::Zone::Collision);
     return CHook::CallFunction<bool>(
         GtaAddress(kProcessVerticalLine32, kProcessVerticalLine64),
         origin,
@@ -3631,7 +3631,7 @@ float FindGroundZForCoord(float x, float y)
         return 0.0f;
     }
 
-    Xyron::Perf::ScopedZone perfCollision(Xyron::Perf::Zone::Collision);
+    Supremo::Perf::ScopedZone perfCollision(Supremo::Perf::Zone::Collision);
     return CHook::CallFunction<float>(GtaAddress(kFindGroundZForCoord32, kFindGroundZForCoord64), x, y);
 }
 
@@ -3702,7 +3702,7 @@ void SetCollisionRequired(const CVector& pos, int32 areaCode)
     if (!IsFiniteVector(pos)) {
         return;
     }
-    Xyron::Perf::ScopedZone perfCollision(Xyron::Perf::Zone::Collision);
+    Supremo::Perf::ScopedZone perfCollision(Supremo::Perf::Zone::Collision);
     CHook::CallFunction<void>(GtaAddress(kColSetRequired32, kColSetRequired64), &pos, areaCode);
 }
 
@@ -3721,7 +3721,7 @@ bool HasCollisionLoaded(const CVector& pos, int32 areaCode)
     if (!IsFiniteVector(pos)) {
         return false;
     }
-    Xyron::Perf::ScopedZone perfCollision(Xyron::Perf::Zone::Collision);
+    Supremo::Perf::ScopedZone perfCollision(Supremo::Perf::Zone::Collision);
     return CHook::CallFunction<bool>(GtaAddress(kColHasLoaded32, kColHasLoaded64), &pos, areaCode);
 }
 
@@ -3730,7 +3730,7 @@ void LoadCollision(const CVector& pos, bool ignorePlayerVehicle)
     if (!IsFiniteVector(pos)) {
         return;
     }
-    Xyron::Perf::ScopedZone perfCollision(Xyron::Perf::Zone::Collision);
+    Supremo::Perf::ScopedZone perfCollision(Supremo::Perf::Zone::Collision);
     CHook::CallFunction<void>(GtaAddress(kColLoadCollision32, kColLoadCollision64), &pos, ignorePlayerVehicle);
 }
 
@@ -3739,7 +3739,7 @@ void EnsureCollisionIsInMemory(const CVector& pos)
     if (!IsFiniteVector(pos)) {
         return;
     }
-    Xyron::Perf::ScopedZone perfCollision(Xyron::Perf::Zone::Collision);
+    Supremo::Perf::ScopedZone perfCollision(Supremo::Perf::Zone::Collision);
     CHook::CallFunction<void>(GtaAddress(kColEnsureInMemory32, kColEnsureInMemory64), &pos);
 }
 
@@ -3809,7 +3809,7 @@ void AddIplsNeededAtPosn(const CVector& pos)
     if (!IsFiniteVector(pos)) {
         return;
     }
-    Xyron::Perf::ScopedZone perfStreaming(Xyron::Perf::Zone::Streaming);
+    Supremo::Perf::ScopedZone perfStreaming(Supremo::Perf::Zone::Streaming);
     CHook::CallFunction<void>(GtaAddress(kIplAddNeeded32, kIplAddNeeded64), &pos);
 }
 
@@ -3818,7 +3818,7 @@ void LoadIpls(const CVector& pos, bool avoidLoadInPlayerVehicleMovingDirection)
     if (!IsFiniteVector(pos)) {
         return;
     }
-    Xyron::Perf::ScopedZone perfStreaming(Xyron::Perf::Zone::Streaming);
+    Supremo::Perf::ScopedZone perfStreaming(Supremo::Perf::Zone::Streaming);
     CHook::CallFunction<void>(
         GtaAddress(kIplLoad32, kIplLoad64),
         pos,
@@ -3830,7 +3830,7 @@ void EnsureIplsAreInMemory(const CVector& pos)
     if (!IsFiniteVector(pos)) {
         return;
     }
-    Xyron::Perf::ScopedZone perfStreaming(Xyron::Perf::Zone::Streaming);
+    Supremo::Perf::ScopedZone perfStreaming(Supremo::Perf::Zone::Streaming);
     CHook::CallFunction<void>(GtaAddress(kIplEnsure32, kIplEnsure64), &pos);
 }
 
@@ -3844,7 +3844,7 @@ void AddModelsToRequestList(const CVector& point, int32 streamingFlags)
     if (!IsFiniteVector(point)) {
         return;
     }
-    Xyron::Perf::ScopedZone perfStreaming(Xyron::Perf::Zone::Streaming);
+    Supremo::Perf::ScopedZone perfStreaming(Supremo::Perf::Zone::Streaming);
     CHook::CallFunction<void>(GtaAddress(kStreamingAddModels32, kStreamingAddModels64), &point, streamingFlags);
 }
 
@@ -3853,7 +3853,7 @@ void AddLodsToRequestList(const CVector& point, int32 streamingFlags)
     if (!IsFiniteVector(point)) {
         return;
     }
-    Xyron::Perf::ScopedZone perfStreaming(Xyron::Perf::Zone::Streaming);
+    Supremo::Perf::ScopedZone perfStreaming(Supremo::Perf::Zone::Streaming);
     CHook::CallFunction<void>(GtaAddress(kStreamingAddLods32, kStreamingAddLods64), &point, streamingFlags);
 }
 
@@ -3862,7 +3862,7 @@ void LoadSceneCollision(const CVector& point)
     if (!IsFiniteVector(point)) {
         return;
     }
-    Xyron::Perf::ScopedZone perfStreaming(Xyron::Perf::Zone::Streaming);
+    Supremo::Perf::ScopedZone perfStreaming(Supremo::Perf::Zone::Streaming);
     CHook::CallFunction<void>(
         GtaAddress(kStreamingLoadSceneCollision32, kStreamingLoadSceneCollision64),
         &point);
@@ -3883,7 +3883,7 @@ void LoadScene(const CVector& point)
 
 void LoadRequestedModels()
 {
-    Xyron::Perf::ScopedZone perfStreaming(Xyron::Perf::Zone::Streaming);
+    Supremo::Perf::ScopedZone perfStreaming(Supremo::Perf::Zone::Streaming);
     CHook::CallFunction<void>(GtaAddress(kStreamingLoadRequested32, kStreamingLoadRequested64));
 }
 
@@ -4614,7 +4614,9 @@ OSDeviceForm GetOSDeviceForm()
 
 CWidgetGta** TouchInterfaceWidgets()
 {
-    return *reinterpret_cast<CWidgetGta***>(GtaAddress(kTouchInterfaceWidgets32, kTouchInterfaceWidgets64));
+    // Exported array, not a pointer or a WidgetPositionIDs table. The legacy
+    // 32-bit GOT offset resolves to unrelated collision data in the bundled SO.
+    return reinterpret_cast<CWidgetGta**>(CHook::getSym("_ZN15CTouchInterface10m_pWidgetsE"));
 }
 
 uintptr_t RebaseFromGta(uintptr_t address)

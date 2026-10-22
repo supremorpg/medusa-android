@@ -47,7 +47,7 @@ import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.xyron.game.R;
+import com.supremo.launcher.R;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -100,12 +100,15 @@ public abstract class NvEventQueueActivity
     GL11 gl = null;
 
     private boolean ranInit = false;
-    protected EGLSurface eglSurface = null;
-    protected EGLDisplay eglDisplay = null;
-    protected EGLContext eglContext = null;
-    protected EGLConfig eglConfig = null;
+    protected volatile EGLSurface eglSurface = null;
+    protected volatile EGLDisplay eglDisplay = null;
+    protected volatile EGLContext eglContext = null;
+    protected volatile EGLConfig eglConfig = null;
+    private final Object eglLifecycleLock = new Object();
+    private volatile long eglOwnerThreadId = 0L;
+    private volatile boolean eglSurfaceReleasePending = false;
 
-    protected SurfaceHolder cachedSurfaceHolder = null;
+    protected volatile SurfaceHolder cachedSurfaceHolder = null;
     private int surfaceWidth = 0;
     private int surfaceHeight = 0;
     private boolean nativeImGuiBridgeAvailable = true;
@@ -143,7 +146,7 @@ public abstract class NvEventQueueActivity
     protected int maxDisplayWidth = 1920;
     SharedPreferences prefs;
     protected SurfaceView view;
-    protected boolean viewIsActive = false;
+    protected volatile boolean viewIsActive = false;
     boolean waitingForResume = false;
 
     /**
@@ -1063,9 +1066,6 @@ public abstract class NvEventQueueActivity
                 applyPreferredFrameRate(frameRateLimit);
                 boolean firstRun = cachedSurfaceHolder == null;
                 cachedSurfaceHolder = holder;
-                if (!firstRun && ResumeEventDone && shouldDispatchAutomaticPauseResume()) {
-                    resumeEvent();
-                }
 
                 ranInit = true;
                 if (!supportPauseResume) {
@@ -1080,6 +1080,23 @@ public abstract class NvEventQueueActivity
 
                 if (firstRun) {
                     GamepadReportSurfaceCreated(holder);
+                }
+
+                synchronized (eglLifecycleLock) {
+                    // A recreated holder is a live target. The render thread
+                    // releases the old holder before creating this one.
+                    viewIsActive = true;
+                }
+
+                // Resume only after native initialization and the surface
+                // callback have completed.  DoResumeEvent performs the
+                // idempotent dispatch from the NVEvent side.
+                if (ResumeEventDone && shouldDispatchAutomaticPauseResume()) {
+                    new Handler(getMainLooper()).post(() -> {
+                        if (!paused && cachedSurfaceHolder == holder) {
+                            resumeEvent();
+                        }
+                    });
                 }
             }
 
@@ -1106,8 +1123,14 @@ public abstract class NvEventQueueActivity
                 if (shouldDispatchAutomaticPauseResume()) {
                     pauseEvent();
                 }
-                destroyEGLSurface();
-                viewIsActive = false;
+                synchronized (eglLifecycleLock) {
+                    viewIsActive = false;
+                    // The render thread owns EGL current/destroy operations.
+                    // Mark the surface inactive; its next safe boundary will
+                    // unbind and destroy the old surface.
+                    eglSurfaceReleasePending = true;
+                    System.out.println("surfaceDestroyed: queued EGL surface release");
+                }
             }
         });
 
@@ -1320,24 +1343,77 @@ public abstract class NvEventQueueActivity
      */
     protected void createEGLSurface(SurfaceHolder surface)
     {
-        eglSurface = egl.eglCreateWindowSurface(eglDisplay, eglConfig, surface, null);
-        System.out.println("eglSurface: " + eglSurface + ", err: " + egl.eglGetError());
-        int[] sizes = new int[1];
+        synchronized (eglLifecycleLock) {
+            if (surface == null || eglDisplay == null || eglConfig == null) {
+                System.out.println("createEGLSurface skipped: EGL is not initialized");
+                return;
+            }
+            if (eglSurface != null) {
+                System.out.println("createEGLSurface skipped: surface already exists");
+                return;
+            }
 
-        egl.eglQuerySurface(eglDisplay, eglSurface, EGL10.EGL_WIDTH, sizes);
-        surfaceWidth = sizes[0];
-        egl.eglQuerySurface(eglDisplay, eglSurface, EGL10.EGL_HEIGHT, sizes);
-        surfaceHeight = sizes[0];
+            EGLSurface createdSurface = egl.eglCreateWindowSurface(
+                    eglDisplay, eglConfig, surface, null);
+            int createError = egl.eglGetError();
+            System.out.println("eglSurface: " + createdSurface + ", err: " + createError);
+            if (createdSurface == null || createdSurface == EGL10.EGL_NO_SURFACE) {
+                System.out.println("createEGLSurface failed");
+                return;
+            }
+            eglSurface = createdSurface;
 
-        System.out.println("checking glVendor == null?");
-        if (glVendor == null)
-        {
-            System.out.println("Making current and back");
-            makeCurrent();
-            unMakeCurrent();
+            int[] sizes = new int[1];
+            if (egl.eglQuerySurface(eglDisplay, eglSurface, EGL10.EGL_WIDTH, sizes)) {
+                surfaceWidth = sizes[0];
+            }
+            if (egl.eglQuerySurface(eglDisplay, eglSurface, EGL10.EGL_HEIGHT, sizes)) {
+                surfaceHeight = sizes[0];
+            }
+
+            // Do not make the context current from the SurfaceHolder/UI thread.
+            // The NVEvent render thread owns all context binding and will claim
+            // it through makeCurrent() before querying GL capabilities.
+            System.out.println("EGL surface created; render thread will make context current");
+        }
+    }
+
+    private boolean releasePendingEglSurfaceLocked() {
+        if (!eglSurfaceReleasePending) {
+            return true;
         }
 
-        System.out.println("Done. Making current and back");
+        long threadId = Thread.currentThread().getId();
+        if (eglOwnerThreadId != 0L && eglOwnerThreadId != threadId) {
+            System.out.println("releasePendingEglSurface refused: EGL owner thread is "
+                    + eglOwnerThreadId + ", caller is " + threadId);
+            return false;
+        }
+        if (eglDisplay != null && eglSurface != null) {
+            if (!egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE,
+                    EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT)) {
+                System.out.println("releasePendingEglSurface unbind error: " + egl.eglGetError());
+                return false;
+            }
+            if (!egl.eglDestroySurface(eglDisplay, eglSurface)) {
+                System.out.println("releasePendingEglSurface destroy error: " + egl.eglGetError());
+                return false;
+            }
+        }
+        eglSurface = null;
+        eglOwnerThreadId = 0L;
+        eglSurfaceReleasePending = false;
+        return true;
+    }
+
+    private boolean prepareEglSurfaceForRenderThreadLocked() {
+        if (!releasePendingEglSurfaceLocked()) {
+            return false;
+        }
+        if (eglSurface == null && !paused && viewIsActive && cachedSurfaceHolder != null) {
+            createEGLSurface(cachedSurfaceHolder);
+        }
+        return eglSurface != null;
     }
 
     protected boolean recoverEglSurfaceIfNeeded() {
@@ -1389,11 +1465,29 @@ public abstract class NvEventQueueActivity
      */
     protected void destroyEGLSurface()
     {
-        if (eglDisplay != null && eglSurface != null)
-            egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
-        if (eglSurface != null)
-            egl.eglDestroySurface(eglDisplay, eglSurface);
-        eglSurface = null;
+        synchronized (eglLifecycleLock) {
+            long threadId = Thread.currentThread().getId();
+            if (eglOwnerThreadId != 0L && eglOwnerThreadId != threadId) {
+                System.out.println("destroyEGLSurface refused: EGL owner thread is "
+                        + eglOwnerThreadId + ", caller is " + threadId);
+                return;
+            }
+            if (eglDisplay != null && eglSurface != null) {
+                System.out.println("destroyEGLSurface: unbinding owner thread=" + threadId);
+                if (!egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE,
+                        EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT)) {
+                    int error = egl.eglGetError();
+                    System.out.println("destroyEGLSurface unbind error: " + error);
+                    return;
+                }
+                if (!egl.eglDestroySurface(eglDisplay, eglSurface)) {
+                    System.out.println("destroyEGLSurface destroy error: " + egl.eglGetError());
+                    return;
+                }
+            }
+            eglSurface = null;
+            eglOwnerThreadId = 0L;
+        }
     }
 
     /**
@@ -1403,23 +1497,38 @@ public abstract class NvEventQueueActivity
     protected void cleanupEGL() {
         System.out.println("cleanupEGL");
         destroyEGLSurface();
-        if (eglDisplay != null)
-            egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT);
-        if (eglContext != null)
-            egl.eglDestroyContext(eglDisplay, eglContext);
-        if (eglDisplay != null)
-            egl.eglTerminate(eglDisplay);
+        synchronized (eglLifecycleLock) {
+            long threadId = Thread.currentThread().getId();
+            if (eglOwnerThreadId != 0L && eglOwnerThreadId != threadId) {
+                System.out.println("cleanupEGL refused: EGL owner thread is "
+                        + eglOwnerThreadId + ", caller is " + threadId);
+                return;
+            }
+            if (eglDisplay != null) {
+                if (!egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE,
+                        EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT)) {
+                    System.out.println("cleanupEGL unbind error: " + egl.eglGetError());
+                }
+            }
+            if (eglContext != null && eglDisplay != null) {
+                System.out.println("cleanupEGL: destroying context owner=" + threadId);
+                egl.eglDestroyContext(eglDisplay, eglContext);
+            }
+            if (eglDisplay != null) {
+                egl.eglTerminate(eglDisplay);
+            }
 
-        eglDisplay = null;
+            eglDisplay = null;
         eglContext = null;
         eglSurface = null;
 
         ranInit = false;
         eglConfig = null;
 
-        cachedSurfaceHolder = null;
-        surfaceWidth = 0;
-        surfaceHeight = 0;
+            cachedSurfaceHolder = null;
+            surfaceWidth = 0;
+            surfaceHeight = 0;
+        }
     }
 
     /**
@@ -1431,6 +1540,13 @@ public abstract class NvEventQueueActivity
     @SuppressWarnings("unused")
     public boolean swapBuffers()
     {
+        synchronized (eglLifecycleLock) {
+            if (!prepareEglSurfaceForRenderThreadLocked()) {
+                idleMissingSurfaceLoop();
+                return true;
+            }
+        }
+
         if (SwapBufferSkip > 0)
         {
             SwapBufferSkip--;
@@ -1492,32 +1608,52 @@ public abstract class NvEventQueueActivity
     @SuppressWarnings("UnusedReturnValue")
     public boolean makeCurrent()
     {
-        if (eglContext == null)
-        {
-            System.out.println("eglContext is NULL");
-            return false;
-        }
-        else if (eglSurface == null)
-        {
-            if (paused || !viewIsActive) {
-                idleMissingSurfaceLoop();
+        synchronized (eglLifecycleLock) {
+            if (!prepareEglSurfaceForRenderThreadLocked()) {
+                if (paused || !viewIsActive) {
+                    idleMissingSurfaceLoop();
+                } else {
+                    logMissingSurfaceThrottled("makeCurrent");
+                }
                 return false;
             }
-            if (!recoverEglSurfaceIfNeeded()) {
-                logMissingSurfaceThrottled("makeCurrent");
-                idleMissingSurfaceLoop();
-            }
-            return false;
-        }
-        else
-        {
-            if (!egl.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext))
+            if (eglContext == null)
             {
-                System.out.println("eglMakeCurrent err: " + egl.eglGetError());
-                if (!egl.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext))
-                {
+                System.out.println("eglContext is NULL");
+                return false;
+            }
+            else if (eglSurface == null)
+            {
+                if (paused || !viewIsActive) {
+                    idleMissingSurfaceLoop();
                     return false;
                 }
+                if (!recoverEglSurfaceIfNeeded()) {
+                    logMissingSurfaceThrottled("makeCurrent");
+                    idleMissingSurfaceLoop();
+                }
+                return false;
+            }
+            else
+            {
+                long threadId = Thread.currentThread().getId();
+                String threadName = Thread.currentThread().getName();
+                System.out.println("eglMakeCurrent request: thread=" + threadId
+                        + " name=" + threadName + " owner=" + eglOwnerThreadId);
+                if (eglOwnerThreadId != 0L && eglOwnerThreadId != threadId) {
+                    System.out.println("eglMakeCurrent refused: EGL owner thread changed from "
+                            + eglOwnerThreadId + " to " + threadId);
+                    return false;
+                }
+                if (!egl.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext))
+                {
+                    int error = egl.eglGetError();
+                    System.out.println("eglMakeCurrent err: " + error);
+                    return false;
+                }
+                eglOwnerThreadId = threadId;
+                System.out.println("eglMakeCurrent bound: thread=" + threadId
+                        + " name=" + threadName);
             }
         }
 
@@ -1540,13 +1676,36 @@ public abstract class NvEventQueueActivity
     @SuppressWarnings("UnusedReturnValue")
     public boolean unMakeCurrent()
     {
-        if (!egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT))
-        {
-            System.out.println("egl(Un)MakeCurrent err: " + egl.eglGetError());
-            return false;
-        }
+        synchronized (eglLifecycleLock) {
+            if (egl == null || eglDisplay == null) {
+                System.out.println("egl(Un)MakeCurrent skipped: EGL is not initialized");
+                return false;
+            }
 
-        return true;
+            long threadId = Thread.currentThread().getId();
+            if (eglOwnerThreadId != 0L && eglOwnerThreadId != threadId) {
+                System.out.println("egl(Un)MakeCurrent refused: EGL owner thread is "
+                        + eglOwnerThreadId + ", caller is " + threadId);
+                return false;
+            }
+
+            if (!egl.eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE,
+                    EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_CONTEXT))
+            {
+                System.out.println("egl(Un)MakeCurrent err: " + egl.eglGetError());
+                return false;
+            }
+
+            // EGL current state is thread-local.  Once the owning thread has
+            // successfully released the context, the render thread may claim
+            // it through makeCurrent().  Leaving this marker set would reject
+            // that valid handoff even though EGL has already unbound it.
+            if (eglOwnerThreadId == threadId) {
+                eglOwnerThreadId = 0L;
+            }
+            System.out.println("egl(Un)MakeCurrent ok: owner released " + threadId);
+            return true;
+        }
     }
 
     /**

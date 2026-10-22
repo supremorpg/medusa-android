@@ -1,7 +1,18 @@
-#include "../main.h"
-#include "../game/game.h"
 #include "netgame.h"
 #include "playerpool.h"
+#include "../game/util.h"
+
+namespace {
+bool IsReadyForAttachedObjectProcessing(CPlayerPed* playerPed)
+{
+	if (!playerPed || !playerPed->m_pPed || !playerPed->m_dwGTAId) {
+		return false;
+	}
+	return GamePool_Ped_GetAt(playerPed->m_dwGTAId) == playerPed->m_pPed &&
+		IsValidGamePed(playerPed->m_pPed) &&
+		playerPed->m_pPed->GetIntelligence() != nullptr;
+}
+}
 
 CPlayerPool::CPlayerPool()
 {
@@ -89,7 +100,7 @@ bool CPlayerPool::Delete(PLAYERID playerId, uint8_t byteReason)
 	}
 
 	if (m_pLocalPlayer && m_pLocalPlayer->IsSpectating() && m_pLocalPlayer->m_SpectateID == playerId) {
-		m_pLocalPlayer->ToggleSpectating(false);
+		m_pLocalPlayer->StopSpectatingWithoutSpawn();
 	}
 	m_bPlayerSlotState[playerId] = false;
 
@@ -225,7 +236,7 @@ void CPlayerPool::ProcessAttachedObjects()
 	if (m_pLocalPlayer)
 	{
 		CPlayerPed* pPlayerPed = m_pLocalPlayer->GetPlayerPed();
-		if (pPlayerPed)
+		if (IsReadyForAttachedObjectProcessing(pPlayerPed))
 		{
 			pPlayerPed->ProcessSpecialAction(pPlayerPed->iSpecialAction);
 			pPlayerPed->ProcessAttach();
@@ -239,7 +250,8 @@ void CPlayerPool::ProcessAttachedObjects()
 		if (pRemotePlayer)
 		{
 			CPlayerPed* pPlayerPed = pRemotePlayer->GetPlayerPed();
-			if (pPlayerPed && pPlayerPed->m_pPed && !pPlayerPed->m_pPed->m_bRemoveFromWorld)
+			if (IsReadyForAttachedObjectProcessing(pPlayerPed) &&
+				!pPlayerPed->m_pPed->m_bRemoveFromWorld)
 			{
 				pPlayerPed->ProcessSpecialAction(pPlayerPed->iSpecialAction);
 				pPlayerPed->ProcessAttach();

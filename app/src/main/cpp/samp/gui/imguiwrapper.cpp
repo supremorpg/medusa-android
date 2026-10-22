@@ -71,7 +71,12 @@ bool ImGuiWrapper::initialize()
 		return false;
 	}
 
-	createFontTexture();
+	if (!createFontTexture())
+	{
+		Log::addParameter("font texture", "creation failed");
+		ImGui::DestroyContext();
+		return false;
+	}
 
 	m_vertexBuffer = g_staticImGuiVertexPool;
 	m_vertexBufferSize = kStaticImGuiVertexCapacity;
@@ -254,11 +259,17 @@ bool ImGuiWrapper::createFontTexture()
 	io.Fonts->GetTexDataAsRGBA32(&pxs, &width, &height, &bytes_per_pixel);
 
 	RwImage* font_img = RwImageCreate(width, height, bytes_per_pixel * 8);
-	RwImageAllocatePixels(font_img);
-
 	if (font_img == nullptr)
 	{
 		Log::addParameter("Font image pointer", font_img);
+		return false;
+	}
+
+	RwImageAllocatePixels(font_img);
+	if (font_img->cpPixels == nullptr)
+	{
+		Log::addParameter("Font image pixels", font_img->cpPixels);
+		RwImageDestroy(font_img);
 		return false;
 	}
 

@@ -1,8 +1,6 @@
 #include "main.h"
 #include "settings.h"
 #include "vendor/inih/cpp/INIReader.h"
-
-#include "vendor/SimpleIni/SimpleIni.h"
 #include "game/game.h"
 
 #include <cstring>
@@ -74,7 +72,13 @@ CSettings::CSettings()
 	m_Settings.szHost[length] = '\0';
 	length = reader.Get("client", "password", "").copy(m_Settings.szPassword, MAX_SETTINGS_STRING);
 	m_Settings.szPassword[length] = '\0';
-    length = reader.Get("client", "version", "0.3.7").copy(m_Settings.szVersion, MAX_SETTINGS_STRING);
+    // The launcher identity is part of the protocol contract. Do not let a
+    // stale local settings.ini change the client version sent to the gamemode.
+    length = std::strlen(SAMP_VERSION);
+    if (length > MAX_SETTINGS_STRING) {
+        length = MAX_SETTINGS_STRING;
+    }
+    std::memcpy(m_Settings.szVersion, SAMP_VERSION, length);
     m_Settings.szVersion[length] = '\0';
 	m_Settings.iPort = reader.GetInteger("client", "port", 7777);
     m_Settings.bAutoAim = reader.GetBoolean("client", "autoaim", false);

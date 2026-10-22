@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace Xyron::AppCommand {
+namespace Supremo::AppCommand {
 
 enum class KnownCommand : uint8_t {
     Sync = 0,

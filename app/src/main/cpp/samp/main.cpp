@@ -1,6 +1,7 @@
 ﻿#include <jni.h>
 #include <pthread.h>
 #include <cmath>
+#include <sstream>
 #include <syscall.h>
 
 #include "main.h"
@@ -28,12 +29,15 @@
 #include "core/SampCoreDOD.h"
 #include "core/SampRenderHook.h"
 #include "perf/PerformanceProfiler.h"
+#include "src/ui/SampUiController.h"
 
 /*
 Peerapol Unarak
 */
 
 JavaVM* javaVM;
+bool g_bNativeImGuiTouchBridgeSeen = false;
+bool g_bDirectTouchConsumed = false;
 
 char* g_pszStorage = nullptr;
 
@@ -73,9 +77,9 @@ int work = 0;
 
 bool Mchat = false;
 
-extern "C" void XyronNativeFrameTick();
-extern "C" void XyronApplyStreamingRuntimeProfile(int renderDistance, bool effectsEnabled);
-extern "C" void XyronRequestVehicleRenderRefresh64();
+extern "C" void SupremoNativeFrameTick();
+extern "C" void SupremoApplyStreamingRuntimeProfile(int renderDistance, bool effectsEnabled);
+extern "C" void SupremoRequestVehicleRenderRefresh64();
 
 static bool IsWeaponIdValidForWheel(uint32_t weaponId)
 {
@@ -156,7 +160,7 @@ static CLocalPlayer* GetLocalPlayerForHud()
 	return pPlayerPool ? pPlayerPool->GetLocalPlayer() : nullptr;
 }
 
-static bool IsLocalPlayerHudReady()
+bool IsLocalPlayerHudReady()
 {
 	CLocalPlayer* pLocalPlayer = GetLocalPlayerForHud();
 	if (!pLocalPlayer || !pLocalPlayer->m_bIsActive || pLocalPlayer->IsSpectating() ||
@@ -188,6 +192,9 @@ struct SampChatScaleInfo
 static SampChatCfgPtrs g_sampChatCfg = { nullptr, nullptr, nullptr, nullptr, nullptr };
 static bool g_sampChatCfgReady = false;
 static bool g_sampChatCfgTried = false;
+static bool g_sampChatCfgRuntimeConfirmed = false;
+static uint32_t g_sampChatCfgWidth = 0;
+static uint32_t g_sampChatCfgHeight = 0;
 static SampChatScaleInfo g_sampChatScale = { 1.0f, 1.0f, false };
 static pthread_mutex_t g_sampChatAreaMutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -353,6 +360,9 @@ static bool FindSampChatConfig()
 				const float curY = *g_sampChatCfg.posY;
 
 				g_sampChatScale.originBottom = fabsf(curY - bottomY) < fabsf(curY - topY);
+					g_sampChatCfgWidth = static_cast<uint32_t>(dispW);
+					g_sampChatCfgHeight = static_cast<uint32_t>(dispH);
+					g_sampChatCfgRuntimeConfirmed = false;
 
 				fclose(fp);
 				FLog("SAMP chat config found at %p (scaleX=%.3f scaleY=%.3f bottom=%d)",
@@ -458,7 +468,7 @@ static bool ApplySampChatAreaOverride()
 
 	ApplySampChatWidgetArea(x, y, width, height);
 
-	if (g_sampChatCfgReady) {
+	if (g_sampChatCfgReady && g_sampChatCfgRuntimeConfirmed) {
 		WriteSampChatFloat(g_sampChatCfg.posX, x);
 		WriteSampChatFloat(g_sampChatCfg.posY, y);
 		WriteSampChatFloat(g_sampChatCfg.sizeX, width);
@@ -484,7 +494,7 @@ static void ApplySampChatLineRuntime()
 	const float width = fmaxf(pUI->chat()->width(), UISettings::chatSize().x);
 	const float height = itemHeight * static_cast<float>(GetRuntimeChatMaxMessages());
 	ApplySampChatWidgetArea(pUI->chat()->position().x, pUI->chat()->position().y, width, height);
-	if (g_sampChatCfgReady) {
+	if (g_sampChatCfgReady && g_sampChatCfgRuntimeConfirmed) {
 		WriteSampChatFloat(g_sampChatCfg.sizeY, height);
 	}
 }
@@ -524,12 +534,15 @@ static void UpdateSampChatPos(bool radarVisible)
 	const float posX = posXBase * scaleX;
 	const float posY = posYBase * scaleY;
 
+	if (!g_sampChatCfgRuntimeConfirmed) {
+		return;
+	}
 	CHook::UnFuck(reinterpret_cast<uintptr_t>(g_sampChatCfg.posX), sizeof(float) * 2);
 	*g_sampChatCfg.posX = posX;
 	*g_sampChatCfg.posY = posY;
 }
 
-extern "C" void XyronApplyNativeChatArea(
+extern "C" void SupremoApplyNativeChatArea(
 	int left,
 	int top,
 	int width,
@@ -565,7 +578,7 @@ extern "C" void XyronApplyNativeChatArea(
 	ApplySampChatAreaOverride();
 }
 
-extern "C" void XyronApplyNativeMenuRuntimeSettings(int chatMaxMessages)
+extern "C" void SupremoApplyNativeMenuRuntimeSettings(int chatMaxMessages)
 {
 	if (pSettings) {
 		pSettings->Get().iChatMaxMessages = ClampIntValue(chatMaxMessages, 1, 30);
@@ -573,17 +586,13 @@ extern "C" void XyronApplyNativeMenuRuntimeSettings(int chatMaxMessages)
 	ApplySampChatLineRuntime();
 }
 
-extern "C" void XyronApplyNativeRenderRuntimeSettings(
+extern "C" void SupremoApplyNativeRenderRuntimeSettings(
 	int renderDistance,
 	bool,
 	bool effectsEnabled)
 {
-	const float safeRenderDistance = static_cast<float>(ClampIntValue(renderDistance, 20, 300));
-	if (pNetGame && pNetGame->m_pNetSet) {
-		pNetGame->m_pNetSet->fNameTagDrawDistance = safeRenderDistance;
-	}
-	XyronApplyStreamingRuntimeProfile(ClampIntValue(renderDistance, 35, 220), effectsEnabled);
-	XyronRequestVehicleRenderRefresh64();
+	SupremoApplyStreamingRuntimeProfile(ClampIntValue(renderDistance, 35, 220), effectsEnabled);
+	SupremoRequestVehicleRenderRefresh64();
 }
 
 void ReadSettingFile()
@@ -747,11 +756,12 @@ void DoInitStuff()
 		pAudioStream = new CAudioStream();
 		pAudioStream->Initialize();
 
-		if (pJavaWrapper) {
-			pJavaWrapper->HideLoadingScreen();
+		// The connection state is not gameplay-ready yet.  Loading is closed by
+		// the local-player spawn transition, not by network initialization.
+		if (pUI && pUI->chat()) {
+			pUI->chat()->setVisible(false);
+			Mchat = false;
 		}
-		pUI->chat()->setVisible(true);
-		Mchat = true;
 
 		pGame->Initialize();
 		pGame->SetMaxStats();
@@ -868,7 +878,7 @@ extern "C" {
 		}
 	}
 
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_initializeSAMP(JNIEnv *pEnv, jobject thiz)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_initializeSAMP(JNIEnv *pEnv, jobject thiz)
 	{
 		InitializeSAMPBridge(pEnv, thiz);
 	}
@@ -876,7 +886,7 @@ extern "C" {
 	{
 		InitializeSAMPBridge(pEnv, thiz);
 	}
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_onInputEnd(JNIEnv *pEnv, jobject thiz, jbyteArray str)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_onInputEnd(JNIEnv *pEnv, jobject thiz, jbyteArray str)
 	{
 		OnInputEndBridge(pEnv, thiz, str);
 	}
@@ -884,7 +894,7 @@ extern "C" {
 	{
 		OnInputEndBridge(pEnv, thiz, str);
 	}
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_onEventBackPressed(JNIEnv *pEnv, jobject thiz)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_onEventBackPressed(JNIEnv *pEnv, jobject thiz)
 	{
 		OnEventBackPressedBridge();
 	}
@@ -892,15 +902,15 @@ extern "C" {
 	{
 		OnEventBackPressedBridge();
 	}
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_setNativeOverlayState(JNIEnv *pEnv, jobject thiz, jint overlayType)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_setNativeOverlayState(JNIEnv *pEnv, jobject thiz, jint overlayType)
 	{
 		g_nativeOverlayState = overlayType;
 	}
-	JNIEXPORT jint JNICALL Java_com_xyron_game_main_SAMP_getNativeOverlayState(JNIEnv *pEnv, jobject thiz)
+	JNIEXPORT jint JNICALL Java_com_supremo_launcher_main_SAMP_getNativeOverlayState(JNIEnv *pEnv, jobject thiz)
 	{
 		return g_nativeOverlayState;
 	}
-	JNIEXPORT jboolean JNICALL Java_com_xyron_game_main_SAMP_isNativeUserPauseActiveNative(JNIEnv *pEnv, jobject thiz)
+	JNIEXPORT jboolean JNICALL Java_com_supremo_launcher_main_SAMP_isNativeUserPauseActiveNative(JNIEnv *pEnv, jobject thiz)
 	{
 		const bool timerPaused = CTimer::GetIsPaused();
 		const bool frontendPaused = pGame && pGame->IsGamePaused();
@@ -908,11 +918,11 @@ extern "C" {
 		const bool mobileMenuActive = IsNativeMobileMenuActive();
 		return (timerPaused || frontendPaused || menuActive || mobileMenuActive) ? JNI_TRUE : JNI_FALSE;
 	}
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_setAllowNextNativePauseMenu(JNIEnv *pEnv, jobject thiz, jboolean allow)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_setAllowNextNativePauseMenu(JNIEnv *pEnv, jobject thiz, jboolean allow)
 	{
 		g_allowNextNativePauseMenu = (allow == JNI_TRUE);
 	}
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_forceEndNativeUserPause(JNIEnv *pEnv, jobject thiz)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_forceEndNativeUserPause(JNIEnv *pEnv, jobject thiz)
 	{
 		g_allowNextNativePauseMenu = false;
 		ForceCloseNativeMobileMenu();
@@ -920,7 +930,7 @@ extern "C" {
 			CTimer::EndUserPause();
 		}
 	}
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_sendSyntheticNativeTouch(JNIEnv *pEnv, jobject thiz, jint x, jint y)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_sendSyntheticNativeTouch(JNIEnv *pEnv, jobject thiz, jint x, jint y)
 	{
 		if (!pUI) {
 			FLog("[TOUCH_SYNTH64] ignored ui-null x=%d y=%d", (int)x, (int)y);
@@ -939,11 +949,11 @@ extern "C" {
 			pNetGame->GetTextDrawPool()->onTouchEvent(1, false, touchX, touchY);
 		}
 	}
-	JNIEXPORT jfloatArray JNICALL Java_com_xyron_game_main_SAMP_getPlayerPlacementSnapshot(JNIEnv *pEnv, jobject thiz)
+	JNIEXPORT jfloatArray JNICALL Java_com_supremo_launcher_main_SAMP_getPlayerPlacementSnapshot(JNIEnv *pEnv, jobject thiz)
 	{
 		return nullptr;
 	}
-	JNIEXPORT jboolean JNICALL Java_com_xyron_game_main_SAMP_showLocalPickupPreview(JNIEnv *pEnv, jobject thiz, jint modelId, jint pickupType, jfloat x, jfloat y, jfloat z)
+	JNIEXPORT jboolean JNICALL Java_com_supremo_launcher_main_SAMP_showLocalPickupPreview(JNIEnv *pEnv, jobject thiz, jint modelId, jint pickupType, jfloat x, jfloat y, jfloat z)
 	{
 		(void)modelId;
 		(void)pickupType;
@@ -954,7 +964,7 @@ extern "C" {
 	}
 	JNIEXPORT void JNICALL Java_com_nvidia_devtech_NvEventQueueActivity_nativeImGuiRenderFrame(JNIEnv *pEnv, jobject thiz)
 	{
-		XyronNativeFrameTick();
+		SupremoNativeFrameTick();
 	}
 	JNIEXPORT void JNICALL Java_com_nvidia_devtech_NvEventQueueActivity_nativeImGuiTouchEvent(JNIEnv *pEnv, jobject thiz, jint action, jint pointer, jint x, jint y)
 	{
@@ -978,9 +988,43 @@ extern "C" {
 				break;
 		}
 
-		pUI->OnTouchEvent(touchType, pointer != 0, x, y);
+		const bool multiTouch = pointer != 0;
+		TouchType widgetTouchType = TouchType::none;
+		switch (touchType) {
+			case 1:
+				widgetTouchType = TouchType::pop;
+				break;
+			case 2:
+				widgetTouchType = TouchType::push;
+				break;
+			case 3:
+				widgetTouchType = TouchType::move;
+				break;
+		}
+
+		if (!g_bNativeImGuiTouchBridgeSeen) {
+			g_bNativeImGuiTouchBridgeSeen = true;
+			FLog("[TOUCH_BRIDGE64] direct Java touch dispatch enabled");
+		}
+		g_bDirectTouchConsumed = false;
+
+		pUI->OnTouchEvent(touchType, multiTouch, x, y);
+		if (widgetTouchType != TouchType::none) {
+			pUI->touchEvent(ImVec2(x, y), widgetTouchType);
+		}
+
+		const bool uiCapturesTouch =
+			pUI->keyboard()->visible() ||
+			pUI->dialog()->visible() ||
+			SampUiController::WantsInputCapture();
+		if (!uiCapturesTouch && pNetGame && pNetGame->GetTextDrawPool()) {
+			g_bDirectTouchConsumed = !pNetGame->GetTextDrawPool()->onTouchEvent(
+				touchType, multiTouch, x, y);
+		} else {
+			g_bDirectTouchConsumed = uiCapturesTouch;
+		}
 	}
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_ui_dialog_DialogManager_sendDialogResponse(JNIEnv* pEnv, jobject thiz, jint i3, jint i, jint i2, jbyteArray str)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_ui_dialog_DialogManager_sendDialogResponse(JNIEnv* pEnv, jobject thiz, jint i3, jint i, jint i2, jbyteArray str)
 	{
 		jboolean isCopy = true;
 
@@ -1011,7 +1055,7 @@ extern "C" {
 
 		pEnv->ReleaseByteArrayElements(str, pMsg, JNI_ABORT);
 	}
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_ui_dialog_DialogManager_setDialogVisible(JNIEnv* pEnv, jobject thiz, jboolean visible)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_ui_dialog_DialogManager_setDialogVisible(JNIEnv* pEnv, jobject thiz, jboolean visible)
 	{
 		g_bDialogVisible = (visible == JNI_TRUE);
 		if (!pGame) {
@@ -1035,11 +1079,11 @@ void MainLoop()
 {
 	if (pGame->bIsGameExiting) return;
 
-	Xyron::Perf::BeginFrame();
-	Xyron::Perf::ScopedZone perfMainLoop(Xyron::Perf::Zone::MainLoop);
+	Supremo::Perf::BeginFrame();
+	Supremo::Perf::ScopedZone perfMainLoop(Supremo::Perf::Zone::MainLoop);
 
-	if (!XyronIsEglSwapBuffersHookInstalled()) {
-		XyronCoreFrameTick();
+	if (!SupremoIsEglSwapBuffersHookInstalled()) {
+		SupremoCoreFrameTick();
 	}
 	DoInitStuff();
 
@@ -1049,9 +1093,6 @@ void MainLoop()
 
 	if (pNetGame) {
 		pNetGame->Process();
-
-		CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
-		if(pTextDrawPool) pTextDrawPool->Draw();
 	}
 
 	if (g_bDialogVisible && pGame) {
@@ -1059,6 +1100,16 @@ void MainLoop()
 	}
 
 	static uint32_t s_lastChatScan = 0;
+	const uint32_t currentWidth = RsGlobal ? static_cast<uint32_t>(RsGlobal->maximumWidth) : 0u;
+	const uint32_t currentHeight = RsGlobal ? static_cast<uint32_t>(RsGlobal->maximumHeight) : 0u;
+	if (g_sampChatCfgReady && currentWidth > 0 && currentHeight > 0 &&
+		(currentWidth != g_sampChatCfgWidth || currentHeight != g_sampChatCfgHeight)) {
+		g_sampChatCfg = { nullptr, nullptr, nullptr, nullptr, nullptr };
+		g_sampChatCfgReady = false;
+		g_sampChatCfgRuntimeConfirmed = false;
+		g_sampChatCfgTried = false;
+		FLog("[CHAT_SCAN64] invalidated after resolution change width=%u height=%u", currentWidth, currentHeight);
+	}
 	if (!g_sampChatCfgReady)
 	{
 		uint32_t now = GetTickCount();
@@ -1093,7 +1144,10 @@ void MainLoop()
 		CPlayerPed* pLocalPlayerPed = pLocalPlayer ? pLocalPlayer->GetPlayerPed() : nullptr;
 		if (pLocalPlayerPed && IsLocalPlayerHudReady())
 		{
-			pGame->DisplayHUD(false);
+			// Keep the stock mobile HUD/radar/touch layer visible during normal
+			// gameplay. DisplayHUD(false) cleared the native visible flag;
+			// clearing only the disable flag afterwards did not restore it.
+			pGame->DisplayHUD(true);
 			GTASAEngineApi::SetNativeHudDisabled(g_bDialogVisible);
 			if (pJavaWrapper) {
 				CWeapon* weaponSlot = pLocalPlayerPed->GetCurrentWeaponSlot();
@@ -1113,9 +1167,9 @@ void MainLoop()
 			if (pJavaWrapper && g_bHudVisible) {
 				pJavaWrapper->HideHud();
 			}
-			if (pUI) {
-				pUI->chat()->setVisible(true);
-				Mchat = true;
+			if (pUI && pUI->chat()) {
+				pUI->chat()->setVisible(false);
+				Mchat = false;
 			}
 		}
 	}
@@ -1126,11 +1180,11 @@ void MainLoop()
 	}
 
 	if (pAudioStream) {
-		Xyron::Perf::ScopedZone perfAudio(Xyron::Perf::Zone::Audio);
+		Supremo::Perf::ScopedZone perfAudio(Supremo::Perf::Zone::Audio);
 		pAudioStream->Process();
 	}
 
-	Xyron::Perf::EndFrame();
+	Supremo::Perf::EndFrame();
 }
 
 void InitGui()
@@ -1141,7 +1195,12 @@ void InitGui()
 
 	std::string font_path = string_format("%sfonts/%s", g_pszStorage, FONT_NAME);
 	pUI = new UI(ImVec2(RsGlobal->maximumWidth, RsGlobal->maximumHeight), font_path.c_str());
-	pUI->initialize();
+	if (!pUI->initialize()) {
+		FLog("ImGui UI initialization failed; native UI disabled");
+		delete pUI;
+		pUI = nullptr;
+		return;
+	}
 	pUI->performLayout();
 }
 
@@ -1188,8 +1247,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	firebase::crashlytics::SetCustomKey("libc.so", str);
 
 	CHook::InitHookStuff();
-	XyronCoreInitialize();
-	XyronInstallEglSwapBuffersHook();
+	SupremoCoreInitialize();
+	// Keep the native EGL swap path untouched for the stock baseline.  The
+	// optional hook only advances launcher telemetry and is not required by
+	// gameplay; installing it also creates a second per-frame execution path.
 	InstallSpecialHooks();
 	ApplyPatches_level0();
     InitRenderWareFunctions();

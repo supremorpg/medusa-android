@@ -1,6 +1,10 @@
 #pragma once
 
+#include <cstdint>
+
 #include "RW/RenderWare.h"
+#include "Core/Vector.h"
+#include "Core/Rect.h"
 
 #define MAX_TEXT_DRAW_LINE 800
 #pragma pack(push, 1)
@@ -103,6 +107,8 @@ private:
     RwTexture* m_human;
     RwTexture* m_food;
     RwTexture* m_water;
+    uint32_t m_dwNextSnapshotAttemptTick;
+    uint8_t m_nSnapshotAttempts;
 
 public:
     TEXT_DRAW_DATA m_TextDrawData;

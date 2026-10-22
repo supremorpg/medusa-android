@@ -5,11 +5,11 @@
 #include "WidgetGta.h"
 #include "main.h"
 #include "game/game.h"
+#include "net/netgame.h"
 #include "game/GTASAEngineApi.h"
 #include "game/GTASAEnginePedInputBindings.h"
-#include "net/netgame.h"
+#include "game/SampInputApi.h"
 #include "vendor/armhook/patch.h"
-#include "WidgetRegionLook.h"
 #include "TouchInterface.h"
 #include "WidgetButton.h"
 #include "src/ui/SampUiController.h"
@@ -17,6 +17,10 @@
 
 extern CNetGame *pNetGame;
 extern CGame *pGame;
+
+struct WidgetPosition;
+class CWidgetPlayerInfo;
+class CWidgetVitalStats;
 
 CWidgetGta* m_pWidgets[WidgetIDs::NUM_WIDGETS];
 
@@ -29,15 +33,19 @@ WidgetIDs GetWidgetTypeFromWidget(CWidgetGta* pWidget)
 {
     if(!pWidget) return static_cast<WidgetIDs>(-1);
 
+    // Both bundled engines index m_pWidgets by WidgetIDs, not layout positions.
+    // The native array is authoritative; layout positions are separate IDs.
+    if (CTouchInterface::m_pWidgets) {
+        for (int i = 0; i < WidgetIDs::NUM_WIDGETS; ++i) {
+            if (pWidget == CTouchInterface::m_pWidgets[i]) {
+                return static_cast<WidgetIDs>(i);
+            }
+        }
+    }
+
     for(int i = 0; i < WidgetIDs::NUM_WIDGETS; ++i)
     {
         if(m_pWidgets[i] && pWidget == m_pWidgets[i]) return static_cast<WidgetIDs>(i);
-        if(CTouchInterface::m_pWidgets &&
-           CTouchInterface::m_pWidgets[i] &&
-           pWidget == CTouchInterface::m_pWidgets[i])
-        {
-            return static_cast<WidgetIDs>(i);
-        }
     }
 
     return static_cast<WidgetIDs>(-1);
@@ -70,7 +78,8 @@ void SetWidgetFromName(const char* name, CWidgetGta* pWidget)
     if(!strcmp("handbrake", name) || !strcmp("air_shoot", name)) SetWidgetFromId(WidgetIDs::WIDGET_HANDBRAKE, pWidget);
     if(!strcmp("horn", name)) SetWidgetFromId(WidgetIDs::WIDGET_HORN, pWidget);
     if(!strcmp("sprint", name) || !strcmp("run", name) || !strcmp("button_run", name)) SetWidgetFromId(WidgetIDs::WIDGET_SPRINT, pWidget);
-    if(!strcmp("button_sprint", name) || !strcmp("sprint_swim", name) || !strcmp("button_jump", name) || !strcmp("jump", name)) SetWidgetFromId(WidgetIDs::WIDGET_BUTTON_SPRINT, pWidget);
+    if(!strcmp("button_sprint", name) || !strcmp("sprint_swim", name)) SetWidgetFromId(WidgetIDs::WIDGET_BUTTON_SPRINT, pWidget);
+    if(!strcmp("button_jump", name) || !strcmp("jump", name)) SetWidgetFromId(WidgetIDs::WIDGET_BASKETBALL_JUMP, pWidget);
     if(!strcmp("button_swim", name)) SetWidgetFromId(WidgetIDs::WIDGET_BUTTON_SWIM, pWidget);
     if(!strcmp("button_crouch", name)) SetWidgetFromId(WidgetIDs::WIDGET_BUTTON_CROUCH, pWidget);
     if(!strcmp("button_dive", name) || !strcmp("hud_dive", name)) SetWidgetFromId(WidgetIDs::WIDGET_BUTTON_DIVE, pWidget);
@@ -299,16 +308,45 @@ bool IsSourceHudNativeHid(HIDMapping mapping)
     }
 }
 
-bool ShouldSuppressSourceHudNativeWidget(CWidgetGta* pWidget)
+bool ShouldSuppressSourceHudNativeWidgetImpl(CWidgetGta* pWidget)
 {
-    if(!pNetGame || !pWidget) return false;
+    if (!pWidget || !Supremo::Input::IsSourceInputOverrideEnabled() ||
+        !pNetGame || pNetGame->GetGameState() != GAMESTATE_CONNECTED ||
+        !IsLocalPlayerHudReady()) {
+        return false;
+    }
 
-    if(IsRememberedSuppressedSourceHudNativeWidget(pWidget)) return true;
+    // Sprint visuals are handled separately: disabling either sprint layout
+    // here also disables shared jump/swim input and leaves alpha at zero.
+    if (GetWidgetTypeFromWidget(pWidget) != WidgetIDs::WIDGET_ENTER_CAR) {
+        return false;
+    }
+    CPlayerPed* playerPed = pNetGame->GetPlayerPool()->GetLocalPlayer()->GetPlayerPed();
+    // Keep native entry available when the launcher entry button is hidden.
+    return playerPed && playerPed->m_pPed && playerPed->IsInVehicle();
+}
 
-    WidgetIDs widgetType = GetWidgetTypeFromWidget(pWidget);
-    if(IsSourceHudNativeWidgetId(widgetType)) return true;
+bool ShouldSuppressNativeSourceWidgetDraw(CWidgetGta* widget)
+{
+    if (!widget || !Supremo::Input::IsSourceInputOverrideEnabled()) {
+        return false;
+    }
 
-    return IsSourceHudNativeHid(pWidget->m_HIDMapping);
+    const WidgetIDs type = GetWidgetTypeFromWidget(widget);
+    const bool isEnterCarWidget =
+        type == WidgetIDs::WIDGET_ENTER_CAR ||
+        widget->m_HIDMapping == HID_MAPPING_ENTER_CAR;
+    if (!isEnterCarWidget &&
+        type != WidgetIDs::WIDGET_BUTTON_SPRINT &&
+        type != WidgetIDs::WIDGET_SPRINT &&
+        !IsSourceHudNativeWidgetId(type)) {
+        return false;
+    }
+
+    // Keep duplicate source controls hidden before spawn and throughout
+    // connected gameplay. The launcher XML HUD owns these visuals; native
+    // input state is still driven by the existing bridge and touch hooks.
+    return true;
 }
 
 void ResetSuppressedWidgetTouch(CWidgetGta* pWidget, CVector2D* pVecOut)
@@ -337,17 +375,30 @@ void DisableSuppressedNativeWidget(CWidgetGta* pWidget)
 }
 }
 
+bool ShouldSuppressSourceHudNativeWidget(CWidgetGta* pWidget)
+{
+    return ShouldSuppressSourceHudNativeWidgetImpl(pWidget);
+}
+
 eWidgetState ProcessFixedWidget(CWidgetGta* pWidget)
 {
     WidgetIDs widgetType = GetWidgetTypeFromWidget(pWidget);
 
-    CPlayerPed *pPlayerPed = pGame->FindPlayerPed();
+    if (!pNetGame || pNetGame->GetGameState() != GAMESTATE_CONNECTED ||
+        !IsLocalPlayerHudReady()) {
+        return STATE_NONE;
+    }
+
+    CPlayerPed *pPlayerPed = pGame ? pGame->FindPlayerPed() : nullptr;
+    if (!pPlayerPed || !pPlayerPed->m_pPed) {
+        return STATE_NONE;
+    }
+
     switch(widgetType)
     {
         case -1:
             return STATE_NONE;
         case WidgetIDs::WIDGET_ATTACK:
-        case WidgetIDs::WIDGET_SPRINT:
             if(pPlayerPed->IsInVehicle() ||
                pPlayerPed->IsInJetpackMode())
             {
@@ -406,7 +457,7 @@ bool CWidget__IsTouched_hook(uintptr_t *thiz, CVector2D *pVecOut) {
 //        return false;
 
     CWidgetGta* widget = reinterpret_cast<CWidgetGta*>(thiz);
-    if(ShouldSuppressSourceHudNativeWidget(widget))
+    if(::ShouldSuppressSourceHudNativeWidget(widget))
     {
         DisableSuppressedNativeWidget(widget);
         ResetSuppressedWidgetTouch(widget, pVecOut);
@@ -432,7 +483,7 @@ bool CWidget__IsTouched_hook(uintptr_t *thiz, CVector2D *pVecOut) {
 bool (*CWidget__IsReleased)(uintptr_t *thiz, CVector2D *pVecOut);
 bool CWidget__IsReleased_hook(uintptr_t *thiz, CVector2D *pVecOut) {
     CWidgetGta* widget = reinterpret_cast<CWidgetGta*>(thiz);
-    if(ShouldSuppressSourceHudNativeWidget(widget))
+    if(::ShouldSuppressSourceHudNativeWidget(widget))
     {
         DisableSuppressedNativeWidget(widget);
         ResetSuppressedWidgetTouch(widget, pVecOut);
@@ -455,29 +506,42 @@ bool CWidget__IsReleased_hook(uintptr_t *thiz, CVector2D *pVecOut) {
     return CWidget__IsReleased(thiz, pVecOut);
 }
 
-uintptr_t (*CWidget)(CWidgetButton* thiz, const char* name, uintptr_t* a3, int a4, uintptr_t* a5);
-uintptr_t CWidget_hook(CWidgetButton* thiz, const char* name, uintptr_t*  a3, int a4, uintptr_t* a5)
+// The native constructor ABI is void CWidgetButton::CWidgetButton(
+// CWidgetButton*, const char*, const WidgetPosition&, uint32_t, uint32_t,
+// HIDMapping). Keep this hook disabled until the exact native type layout is
+// represented locally; the old uintptr_t/uintptr_t* signature corrupts the
+// call frame on both ABIs.
+using CWidgetButtonConstructorFn = void (*)(CWidgetButton*, const char*, const WidgetPosition&, uint32_t, uint32_t, HIDMapping);
+CWidgetButtonConstructorFn CWidgetButtonConstructor = nullptr;
+
+void CWidgetButtonConstructor_hook(CWidgetButton* thiz,
+                                   const char* name,
+                                   const WidgetPosition& position,
+                                   uint32_t width,
+                                   uint32_t height,
+                                   HIDMapping mapping)
 {
-    FLog("New Widget: \"%s\" 0x%zX", name, static_cast<size_t>(GTASAEngineApi::RebaseFromGta(reinterpret_cast<uintptr_t>(thiz))));
+    if (CWidgetButtonConstructor) {
+        CWidgetButtonConstructor(thiz, name, position, width, height, mapping);
+    }
 
     SetWidgetFromName(name, thiz);
     if(IsSourceHudNativeWidgetName(name))
     {
         RememberSuppressedSourceHudNativeWidget(thiz);
     }
-    return CWidget(thiz, name, a3, a4, a5);
 }
 
 void (*CWidget__SetEnabled)(CWidgetGta* pWidget, bool bEnabled);
 void CWidget__SetEnabled_hook(CWidgetGta* pWidget, bool bEnabled)
 {
-    if(ShouldSuppressSourceHudNativeWidget(pWidget))
+    if(::ShouldSuppressSourceHudNativeWidget(pWidget))
     {
         DisableSuppressedNativeWidget(pWidget);
         bEnabled = false;
     }
 
-    if(pNetGame)
+    if (pNetGame)
     {
         switch(ProcessFixedWidget(pWidget))
         {
@@ -493,13 +557,13 @@ void CWidget__SetEnabled_hook(CWidgetGta* pWidget, bool bEnabled)
 
 void (*CWidgetButton__Update)(CWidgetButton* thiz);
 void CWidgetButton__Update_hook(CWidgetButton* thiz) {
-    if(ShouldSuppressSourceHudNativeWidget(thiz))
+    if(::ShouldSuppressSourceHudNativeWidget(thiz))
     {
         DisableSuppressedNativeWidget(thiz);
         return;
     }
 
-    if(pNetGame)
+    if (pNetGame)
     {
         switch(ProcessFixedWidget(thiz))
         {
@@ -511,10 +575,57 @@ void CWidgetButton__Update_hook(CWidgetButton* thiz) {
     CWidgetButton__Update(thiz);
 }
 
+// DrawAll dispatches these methods through the native vtables in both bundled
+// ABIs. Skipping only Draw leaves Update, touch state, alpha and enabled intact.
+void (*CWidgetButton__Draw)(CWidgetButton*) = nullptr;
+void CWidgetButton__Draw_hook(CWidgetButton* widget)
+{
+    if (!ShouldSuppressNativeSourceWidgetDraw(widget)) {
+        CWidgetButton__Draw(widget);
+    }
+}
+
+void (*CWidgetRegionSprint__Draw)(CWidgetGta*) = nullptr;
+void CWidgetRegionSprint__Draw_hook(CWidgetGta* widget)
+{
+    if (!ShouldSuppressNativeSourceWidgetDraw(widget)) {
+        CWidgetRegionSprint__Draw(widget);
+    }
+}
+
+// Enter-car has a derived draw implementation, so the generic button hook
+// cannot suppress its directional indicator. Filter the complete widget here.
+void (*CWidgetButtonEnterCar__Draw)(CWidgetGta*) = nullptr;
+void CWidgetButtonEnterCar__Draw_hook(CWidgetGta* widget)
+{
+    if (!ShouldSuppressNativeSourceWidgetDraw(widget)) {
+        CWidgetButtonEnterCar__Draw(widget);
+    }
+}
+
+// These exact exported native methods own the weapon/time/money and health
+// panels. No-op only the panels; leave the native radar and touch interface
+// paths untouched.
+void CWidgetPlayerInfo__Draw_hook(CWidgetPlayerInfo*) {}
+void CWidgetVitalStats__Draw_hook(CWidgetVitalStats*) {}
+void (*CWidgetPlayerInfo__Draw_original)(CWidgetPlayerInfo*) = nullptr;
+void (*CWidgetVitalStats__Draw_original)(CWidgetVitalStats*) = nullptr;
+
 void CWidgetGta::InjectHooks() {
     GTASAEngineApi::InstallWidgetButtonUpdateHook(&CWidgetButton__Update_hook, &CWidgetButton__Update);
-    CHook::InlineHook("_ZN13CWidgetButtonC2EPKcRK14WidgetPositionjj10HIDMapping", &CWidget_hook, &CWidget);
+    // CWidgetButton constructor hook intentionally disabled: the former hook
+    // used an incompatible return type and argument list. Do not install it
+    // until the exact native ABI and a non-fail-fast symbol-resolution path
+    // are verified.
     CHook::InlineHook("_ZN7CWidget10SetEnabledEb", &CWidget__SetEnabled_hook, &CWidget__SetEnabled);
+    CHook::InlineHook("_ZN13CWidgetButton4DrawEv", &CWidgetButton__Draw_hook, &CWidgetButton__Draw);
+    CHook::InlineHook("_ZN19CWidgetRegionSprint4DrawEv", &CWidgetRegionSprint__Draw_hook, &CWidgetRegionSprint__Draw);
+    CHook::InlineHook("_ZN21CWidgetButtonEnterCar4DrawEv", &CWidgetButtonEnterCar__Draw_hook, &CWidgetButtonEnterCar__Draw);
+
+    // Verified in both bundled libGTASA ABIs with nm -D. These are exact
+    // symbol hooks and do not affect radar or touch rendering.
+    CHook::InlineHook("_ZN17CWidgetPlayerInfo4DrawEv", &CWidgetPlayerInfo__Draw_hook, &CWidgetPlayerInfo__Draw_original);
+    CHook::InlineHook("_ZN17CWidgetVitalStats4DrawEv", &CWidgetVitalStats__Draw_hook, &CWidgetVitalStats__Draw_original);
     GTASAEngineApi::InstallWidgetTouchHooks(&CWidget__IsTouched_hook, &CWidget__IsTouched,
                                             &CWidget__IsReleased_hook, &CWidget__IsReleased);
 }

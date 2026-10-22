@@ -11,53 +11,26 @@
 static bool (*TextureDatabase__LoadThumbs)(TextureDatabase *thiz, TextureDatabaseFormat forFormat, bool setEntries);
 static void (*TextureDatabaseRuntime__SortEntries)(TextureDatabaseRuntime *thiz, bool fullSort);
 
-static uint32_t TextureDatabaseRuntime_GetEtcThumbLimit(const TextureDatabase *db)
+static bool TextureDatabase__LoadThumbs_hook(TextureDatabase *thiz,
+                                              TextureDatabaseFormat forFormat,
+                                              bool setEntries)
 {
-    if (!db || !db->name) {
-        return 0;
+    if (!TextureDatabase__LoadThumbs) {
+        FLog("[TEXDB64] LoadThumbs original is unavailable");
+        return false;
     }
 
-    // The shipped gta3 ETC database is shorter than gta3.txt on arm64.  If the
-    // native loader uses the full entry count it clears the ETC thumbs and
-    // crashes before streaming can render the world textures.
-    if (!std::strcmp(db->name, "gta3")) {
-        return 12449;
-    }
-
-    return 0;
-}
-
-static bool TextureDatabase__LoadThumbs_hook(TextureDatabase *thiz, TextureDatabaseFormat forFormat, bool setEntries)
-{
-    const uint32_t originalEntries = thiz ? thiz->entries.numEntries : 0;
-    const uint32_t etcLimit = (forFormat == TextureDatabaseFormat::DF_ETC)
-                                  ? TextureDatabaseRuntime_GetEtcThumbLimit(thiz)
-                                  : 0;
-
-    if (etcLimit > 0 && originalEntries > etcLimit) {
-        FLog("[TEXDB64] trim entries before LoadThumbs name=%s fmt=%d entries=%u limit=%u",
-             thiz->name ? thiz->name : "?",
-             static_cast<int>(forFormat),
-             originalEntries,
-             etcLimit);
-
-        thiz->entries.numEntries = etcLimit;
-    }
-
+    // LoadThumbs reads the selected thumbnail bank.  Do not modify the native
+    // entry count here: SortEntries consumes that count immediately afterward.
     const bool result = TextureDatabase__LoadThumbs(thiz, forFormat, setEntries);
 
-    if (thiz && forFormat == TextureDatabaseFormat::DF_ETC) {
-        FLog("[TEXDB64] LoadThumbs result name=%s fmt=%d ok=%d entries=%u thumbs=%u originalEntries=%u",
+    if (thiz) {
+        FLog("[TEXDB64] LoadThumbs name=%s fmt=%d ok=%d entries=%u thumbs=%u",
              thiz->name ? thiz->name : "?",
              static_cast<int>(forFormat),
              result ? 1 : 0,
              thiz->entries.numEntries,
-             thiz->thumbs[TextureDatabaseFormat::DF_ETC].numEntries,
-             originalEntries);
-    }
-
-    if (!result && etcLimit > 0 && originalEntries > etcLimit) {
-        thiz->entries.numEntries = originalEntries;
+             thiz->thumbs[forFormat].numEntries);
     }
 
     return result;
@@ -74,44 +47,14 @@ static bool TextureDatabaseRuntime_IsWorldTextureDb(const char *name)
 
 static void TextureDatabaseRuntime__SortEntries_hook(TextureDatabaseRuntime *thiz, bool fullSort)
 {
-#if !VER_x32
-    if (thiz && TextureDatabaseRuntime_IsWorldTextureDb(thiz->name)) {
-        FLog("[TEXDB64] sort begin name=%s loaded=%d fullSort=%d entries=%u thumbs={dxt:%u,pvr:%u,etc:%u}",
-             thiz->name ? thiz->name : "?",
-             static_cast<int>(thiz->loadedFormat),
-             fullSort ? 1 : 0,
-             thiz->entries.numEntries,
-             thiz->thumbs[TextureDatabaseFormat::DF_DXT].numEntries,
-             thiz->thumbs[TextureDatabaseFormat::DF_PVR].numEntries,
-             thiz->thumbs[TextureDatabaseFormat::DF_ETC].numEntries);
-    }
-#endif
-
-    if (thiz &&
-        thiz->loadedFormat == TextureDatabaseFormat::DF_ETC &&
-        TextureDatabaseRuntime_IsWorldTextureDb(thiz->name)) {
-        auto &etcThumbs = thiz->thumbs[TextureDatabaseFormat::DF_ETC];
-
-        if (etcThumbs.numEntries > 0 && thiz->entries.numEntries > etcThumbs.numEntries) {
-            FLog("[TEXDB64] trim ETC entries before SortEntries name=%s entries=%u etcThumbs=%u",
-                 thiz->name ? thiz->name : "?",
-                 thiz->entries.numEntries,
-                 etcThumbs.numEntries);
-
-            thiz->entries.numEntries = etcThumbs.numEntries;
-        }
+    if (!TextureDatabaseRuntime__SortEntries) {
+        FLog("[TEXDB64] SortEntries original is unavailable");
+        return;
     }
 
+    // Keep this wrapper observational only.  Native SortEntries rebuilds the
+    // hash and sorted-entry arrays and must receive the original metadata.
     TextureDatabaseRuntime__SortEntries(thiz, fullSort);
-
-#if !VER_x32
-    if (thiz && TextureDatabaseRuntime_IsWorldTextureDb(thiz->name)) {
-        FLog("[TEXDB64] sort end name=%s entries=%u hashes=%u",
-             thiz->name ? thiz->name : "?",
-             thiz->entries.numEntries,
-             thiz->numHashes);
-    }
-#endif
 }
 #endif
 
@@ -213,11 +156,17 @@ TextureDatabaseRuntime* TextureDatabaseRuntime::GetDatabase(const char *dbName) 
 
 void TextureDatabaseRuntime::InjectHooks() {
 #if !VER_x32
+    // Keep the native SortEntries implementation untouched.  It owns the
+    // hash/sorted-entry rebuild and must see the original entry cardinality;
+    // the former wrapper could alter that state before the native call.
+    // Keep the texture database loader completely native while diagnosing
+    // external package compatibility.  The wrappers are observational only,
+    // but even an inline hook here can change a loader's ABI-sensitive state.
     GTASAEngineApi::InstallTextureDatabaseRuntimeHooksNative(
-        reinterpret_cast<uintptr_t>(&TextureDatabase__LoadThumbs_hook),
-        reinterpret_cast<void**>(&TextureDatabase__LoadThumbs),
-        reinterpret_cast<uintptr_t>(&TextureDatabaseRuntime__SortEntries_hook),
-        reinterpret_cast<void**>(&TextureDatabaseRuntime__SortEntries));
+        0,
+        nullptr,
+        0,
+        nullptr);
 #endif
 }
 

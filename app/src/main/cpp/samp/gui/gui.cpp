@@ -93,7 +93,7 @@ bool UI::initialize()
 
 void UI::render()
 {
-	Xyron::Perf::ScopedZone perfUiRender(Xyron::Perf::Zone::UiRender);
+	Supremo::Perf::ScopedZone perfUiRender(Supremo::Perf::Zone::UiRender);
 	ImGuiWrapper::render();
 
     renderDebug();

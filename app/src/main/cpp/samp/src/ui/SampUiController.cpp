@@ -5,7 +5,9 @@
 
 #include "main.h"
 
-bool SampUiController::s_enabled = true;
+// Keep the stock mobile HUD/radar/crosshair active by default.  The custom
+// ImGui overlay remains available only when explicitly enabled by runtime UI.
+bool SampUiController::s_enabled = false;
 
 NativeChatBox& SampUiController::Chat() {
     static NativeChatBox chat;
@@ -89,6 +91,10 @@ void SampUiController::AddDebugMessage(const char* fmt, ...) {
     std::vsnprintf(line, sizeof(line), fmt ? fmt : "", args);
     va_end(args);
     Chat().AddClientMessage(line, IM_COL32(195, 195, 195, 255));
+}
+
+void SampUiController::ClearChat() {
+    Chat().ClearMessages();
 }
 
 void SampUiController::SetChatInputActive(bool active) {

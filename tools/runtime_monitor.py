@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ADB-side watcher for Xyron runtime collision/FPS monitor logs."""
+"""ADB-side watcher for Supremo runtime collision/FPS monitor logs."""
 
 from __future__ import annotations
 
@@ -13,8 +13,8 @@ from pathlib import Path
 from typing import Iterable, Optional
 
 
-DEFAULT_PACKAGE = "com.xyron.game"
-DEFAULT_REMOTE_SUBDIR = "files/SAMP/xyron_monitor"
+DEFAULT_PACKAGE = "com.supremo.launcher"
+DEFAULT_REMOTE_SUBDIR = "files/SAMP/supremo_monitor"
 
 
 def run_adb(args: list[str], serial: Optional[str] = None, timeout: int = 20, binary: bool = False):
@@ -121,7 +121,7 @@ def format_event(event: dict) -> str:
 def write_report(output_dir: Path, events: Iterable[dict], latest: Optional[dict], serial: str, remote_dir: str) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     lines = [
-        "# Xyron runtime monitor",
+        "# Supremo runtime monitor",
         "",
         f"- Device: `{serial}`",
         f"- Remote: `{remote_dir}`",
@@ -161,7 +161,7 @@ def write_report(output_dir: Path, events: Iterable[dict], latest: Optional[dict
 
 
 def main(argv: list[str]) -> int:
-    parser = argparse.ArgumentParser(description="Watch Xyron runtime collision/FPS monitor over ADB.")
+    parser = argparse.ArgumentParser(description="Watch Supremo runtime collision/FPS monitor over ADB.")
     parser.add_argument("--serial", help="ADB serial. Default picks connected device, preferring 192.168.3.155:39911.")
     parser.add_argument("--package", default=DEFAULT_PACKAGE)
     parser.add_argument("--output", default="")

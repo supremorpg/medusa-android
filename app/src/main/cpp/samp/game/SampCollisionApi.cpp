@@ -1,7 +1,7 @@
 #include "SampCollisionApi.h"
 #include "Collision/ColStore.h"
 
-namespace Xyron::Collision {
+namespace Supremo::Collision {
 namespace {
 
 CColPool* CollisionPool()

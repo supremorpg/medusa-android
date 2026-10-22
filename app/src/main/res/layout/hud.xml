@@ -4,7 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/hud"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:background="#000">
+
+    <ImageView
+        android:id="@+id/hud_top_logo"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="fitCenter"
+        android:alpha="0.6"
+        app:srcCompat="@drawable/logo_supremo"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <View
         android:id="@+id/hud_game_touch_passthrough"
@@ -61,7 +75,7 @@
         android:id="@+id/hud_top_right_panel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         android:clickable="false"
         android:focusable="false"
@@ -74,7 +88,7 @@
         <LinearLayout
             android:id="@+id/hud_top_info_row"
             android:layout_width="wrap_content"
-            android:layout_height="15dp"
+            android:layout_height="22dp"
             android:clickable="false"
             android:focusable="false"
             android:gravity="center_vertical"
@@ -93,12 +107,21 @@
                 android:paddingEnd="6dp">
 
                 <ImageView
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:layout_gravity="center_vertical"
                     android:scaleType="centerInside"
                     android:tint="#F2FFFFFF"
                     app:srcCompat="@drawable/ic_hud_location_pin" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="#33FFFFFF"
+                />
 
                 <TextView
                     android:id="@+id/hud_city_name"
@@ -112,7 +135,7 @@
                     android:singleLine="true"
                     android:text="Los Santos"
                     android:textColor="#F2FFFFFF"
-                    android:textSize="6.6sp" />
+                    android:textSize="7.5sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -129,12 +152,21 @@
                 android:paddingEnd="6dp">
 
                 <ImageView
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
+                    android:layout_width="18dp"
+                    android:layout_height="14dp"
                     android:layout_gravity="center_vertical"
                     android:scaleType="centerInside"
                     android:tint="#F2FFFFFF"
                     app:srcCompat="@drawable/ic_hud_clock_small" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="#33FFFFFF"
+                />
 
                 <TextView
                     android:id="@+id/hud_clock_value"
@@ -147,7 +179,7 @@
                     android:singleLine="true"
                     android:text="00:00"
                     android:textColor="#F2FFFFFF"
-                    android:textSize="6.6sp" />
+                    android:textSize="7.5sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -164,12 +196,21 @@
                 android:paddingEnd="6dp">
 
                 <ImageView
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:layout_gravity="center_vertical"
                     android:scaleType="centerInside"
                     android:tint="#F2FFFFFF"
                     app:srcCompat="@drawable/ic_hud_coin_small" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="#33FFFFFF"
+                 />
 
                 <TextView
                     android:id="@+id/hud_coin_value"
@@ -183,7 +224,7 @@
                     android:singleLine="true"
                     android:text="0"
                     android:textColor="#F2FFFFFF"
-                    android:textSize="6.6sp" />
+                    android:textSize="7.5sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -386,7 +427,7 @@
                 android:clickable="false"
                 android:focusable="false">
 
-                <com.xyron.game.main.HudCircleProgressView
+                <com.supremo.launcher.main.HudCircleProgressView
                     android:id="@+id/hud_food_ring"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -446,7 +487,7 @@
                 android:clickable="false"
                 android:focusable="false">
 
-                <com.xyron.game.main.HudCircleProgressView
+                <com.supremo.launcher.main.HudCircleProgressView
                     android:id="@+id/hud_thirst_ring"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -506,7 +547,7 @@
                 android:clickable="false"
                 android:focusable="false">
 
-                <com.xyron.game.main.HudCircleProgressView
+                <com.supremo.launcher.main.HudCircleProgressView
                     android:id="@+id/hud_sleep_ring"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -589,7 +630,6 @@
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -618,7 +658,6 @@
         android:layout_marginTop="140dp"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/btn_status_toggle"
         app:layout_constraintTop_toTopOf="parent">
@@ -643,12 +682,11 @@
         android:id="@+id/WeaponShowLayout"
         android:layout_width="56dp"
         android:layout_height="52dp"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="53dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/hud_classic_weapon_bg"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -724,11 +762,12 @@
 
     <FrameLayout
         android:id="@+id/btn_0"
-        android:layout_width="@dimen/_33sdp"
-        android:layout_height="@dimen/_26sdp"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
         android:layout_gravity="bottom"
         android:layout_marginStart="5dp"
         android:layout_marginTop="140dp"
+        android:alpha="0.7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -739,8 +778,8 @@
             app:srcCompat="@drawable/hud_btn_bg" />
 
         <ImageView
-            android:layout_width="@dimen/_16sdp"
-            android:layout_height="@dimen/_16sdp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="center"
             android:tint="#FFFFFFFF"
             app:srcCompat="@drawable/ic_hud_quick_actions" />
@@ -748,14 +787,43 @@
 
     <FrameLayout
         android:id="@+id/btn_1"
-        android:layout_width="@dimen/_33sdp"
-        android:layout_height="@dimen/_26sdp"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="2dp"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="-5dp"
         android:layout_marginTop="140dp"
-        android:visibility="invisible"
+        android:alpha="0.7"
+        android:visibility="visible"
         app:layout_constraintStart_toEndOf="@+id/btn_0"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="1.0"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/hud_btn_bg" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:alpha="1.0"
+            android:tint="#FFFFFFFF"
+            app:srcCompat="@drawable/ic_hud_interactions" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/btn_chat"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="2dp"
+        android:alpha="0.7"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintStart_toEndOf="@id/btn_1"
+        app:layout_constraintTop_toTopOf="@id/btn_1"
+        app:layout_constraintBottom_toBottomOf="@id/btn_1">
 
         <ImageView
             android:layout_width="match_parent"
@@ -764,25 +832,27 @@
             app:srcCompat="@drawable/hud_btn_bg" />
 
         <ImageView
-            android:layout_width="@dimen/_17sdp"
-            android:layout_height="@dimen/_17sdp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_gravity="center"
+            android:scaleType="centerInside"
             android:tint="#FFFFFFFF"
-            app:srcCompat="@drawable/ic_hud_interactions" />
+            app:srcCompat="@drawable/ic_hud_chat" />
+
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/btn_hud_options"
-        android:layout_width="@dimen/_33sdp"
-        android:layout_height="@dimen/_26sdp"
+        android:layout_width="33dp"
+        android:layout_height="26dp"
         android:layout_gravity="bottom"
         android:layout_marginStart="2dp"
         android:layout_marginTop="140dp"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/btn_1"
+        tools:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/btn_chat"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -801,14 +871,15 @@
 
     <FrameLayout
         android:id="@+id/btn_2"
-        android:layout_width="@dimen/_33sdp"
-        android:layout_height="@dimen/_26sdp"
+        android:layout_width="33dp"
+        android:layout_height="26dp"
         android:layout_gravity="bottom"
         android:layout_marginStart="2dp"
         android:layout_marginTop="140dp"
         android:clickable="false"
         android:focusable="false"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintStart_toEndOf="@+id/btn_hud_options"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -819,8 +890,8 @@
             app:srcCompat="@drawable/hud_btn_bg" />
 
         <ImageView
-            android:layout_width="@dimen/_16sdp"
-            android:layout_height="@dimen/_16sdp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="center"
             android:tint="#FFFFFFFF"
             app:srcCompat="@drawable/ic_hud_motor_car" />
@@ -830,12 +901,12 @@
         android:id="@+id/btn_weapon_wheel"
         android:layout_width="48dp"
         android:layout_height="42dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="110dp"
         android:layout_marginEnd="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -884,7 +955,6 @@
         android:clickable="true"
         android:contentDescription="Abrir chat"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -912,7 +982,6 @@
         android:layout_marginTop="140dp"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/btn_chat_toggle"
         app:layout_constraintTop_toTopOf="parent">
@@ -1261,9 +1330,9 @@
         android:clickable="false"
         android:enabled="false"
         android:focusable="false"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/enter_passanger"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.93"
@@ -1280,9 +1349,9 @@
         android:clickable="false"
         android:enabled="false"
         android:focusable="false"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/vehicle_lock_butt"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/enter_passenger"
         app:layout_constraintHorizontal_bias="1.0"
@@ -1292,41 +1361,43 @@
 
     <FrameLayout
         android:id="@+id/hud_source_vehicle_button"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="154dp"
-        android:background="@drawable/hud_source_control_button_bg"
+        android:alpha="0.7"
         android:clickable="true"
         android:contentDescription="Entrar ou sair do veiculo"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:visibility="invisible"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
+            android:id="@+id/hud_source_vehicle_icon"
             android:layout_width="29dp"
             android:layout_height="29dp"
             android:layout_gravity="center"
             android:tint="#FFFFFFFF"
-            app:srcCompat="@drawable/ic_hud_car" />
+            android:alpha="0.7"
+            app:srcCompat="@drawable/ic_hud_native_car" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/hud_source_lock_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_marginEnd="82dp"
         android:layout_marginBottom="157dp"
-        android:background="@drawable/hud_source_control_button_bg"
+        android:alpha="0.7"
         android:clickable="true"
         android:contentDescription="Trancar veiculo"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:visibility="invisible"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -1334,54 +1405,59 @@
             android:layout_width="27dp"
             android:layout_height="27dp"
             android:layout_gravity="center"
+            android:alpha="0.7"
             app:srcCompat="@drawable/ic_hud_lock" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/hud_source_camera_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="218dp"
-        android:background="@drawable/hud_source_control_button_bg"
+        android:alpha="0.7"
         android:clickable="true"
         android:contentDescription="Centralizar camera"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        android:visibility="visible"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
+            android:id="@+id/hud_source_camera_icon"
             android:layout_width="27dp"
             android:layout_height="27dp"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_hud_camera" />
+            android:alpha="0.7"
+            app:srcCompat="@drawable/ic_hud_native_camera" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/hud_source_attack_button"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="92dp"
-        android:background="@drawable/hud_source_control_button_bg"
+        android:alpha="0.7"
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        android:visibility="visible"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
+            android:id="@+id/hud_source_attack_icon"
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_hud_fist" />
+            android:alpha="0.7"
+            app:srcCompat="@drawable/ic_hud_native_attack" />
     </FrameLayout>
 
     <FrameLayout
@@ -1394,148 +1470,161 @@
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        android:visibility="visible"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <View
+        <ImageView
             android:id="@+id/hud_source_analog_knob"
             android:layout_width="54dp"
             android:layout_height="54dp"
             android:layout_gravity="center"
+            android:scaleType="fitCenter"
             android:background="@drawable/hud_source_analog_knob" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/hud_source_accelerate_button"
-        android:layout_width="58dp"
-        android:layout_height="58dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginBottom="22dp"
-        android:background="@drawable/hud_source_control_button_bg"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="32dp"
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        android:visibility="visible"
+        android:visibility="gone"
+        android:alpha="0.7"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:id="@+id/hud_source_accelerate_icon"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_hud_accelerate" />
+            android:alpha="0.7"
+            app:srcCompat="@drawable/ic_hud_native_accelerate" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/hud_source_brake_button"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_marginEnd="84dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/hud_source_control_button_bg"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="32dp"
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        android:visibility="visible"
+        android:visibility="gone"
+        android:alpha="0.7"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:id="@+id/hud_source_brake_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_hud_brake" />
+            android:alpha="0.7"
+            app:srcCompat="@drawable/ic_hud_native_brake" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/hud_source_handbrake_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_marginEnd="146dp"
         android:layout_marginBottom="27dp"
-        android:background="@drawable/hud_source_control_button_bg"
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        android:visibility="visible"
+        android:visibility="gone"
+        android:alpha="0.7"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:layout_width="27dp"
-            android:layout_height="27dp"
+            android:id="@+id/hud_source_handbrake_icon"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_hud_handbrake" />
+            android:alpha="0.7"
+            app:srcCompat="@drawable/ic_hud_native_handbrake" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/hud_source_horn_button"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_marginEnd="202dp"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/hud_source_control_button_bg"
+        android:alpha="0.7"
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        android:visibility="visible"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
+            android:id="@+id/hud_source_horn_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_hud_horn" />
+            android:alpha="0.7"
+            app:srcCompat="@drawable/ic_hud_native_horn" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/hud_source_sprint_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
         android:layout_marginEnd="82dp"
         android:layout_marginBottom="92dp"
-        android:background="@drawable/hud_source_control_button_bg"
+        android:alpha="0.7"
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        android:visibility="visible"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
+            android:id="@+id/hud_source_sprint_icon"
             android:layout_width="27dp"
             android:layout_height="27dp"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_hud_run" />
+            android:alpha="0.7"
+            app:srcCompat="@drawable/ic_hud_native_sprint" />
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/hud_source_jump_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_marginEnd="140dp"
         android:layout_marginBottom="92dp"
-        android:background="@drawable/hud_source_control_button_bg"
+        android:alpha="0.7"
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        android:visibility="visible"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:layout_width="27dp"
-            android:layout_height="27dp"
+            android:id="@+id/hud_source_jump_icon"
+            android:layout_width="31dp"
+            android:layout_height="31dp"
             android:layout_gravity="center"
+            android:alpha="0.7"
             app:srcCompat="@drawable/ic_hud_jump" />
     </FrameLayout>
 
@@ -1547,7 +1636,6 @@
         android:layout_marginEnd="10dp"
         android:background="@drawable/chat_hide"
         android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/hud_money_row"
         app:layout_constraintTop_toTopOf="parent"
@@ -1567,55 +1655,26 @@
 
     <LinearLayout
         android:id="@+id/hud_chat_panel"
-        android:layout_width="380dp"
-        android:layout_height="156dp"
-        android:layout_marginStart="46dp"
-        android:layout_marginTop="18dp"
-        android:background="@android:color/transparent"
+        android:layout_width="300dp"
+        android:layout_height="56dp"
+        android:background="@drawable/launcher_field_surface_dark"
         android:clickable="true"
         android:elevation="14dp"
         android:focusable="true"
         android:orientation="vertical"
-        android:paddingStart="12dp"
-        android:paddingTop="10dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="10dp"
+        android:paddingStart="8dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="6dp"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="28dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/montserrat_alternates_bold"
-                android:text="Chat"
-                android:textColor="#FFFFFFFF"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/hud_chat_close"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/launcher_field_surface_dark"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:text="X"
-                android:textColor="#FFFFFFFF"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -1624,42 +1683,44 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/launcher_field_surface_dark"
-                android:hint="Digite no chat"
+                android:background="@android:color/transparent"
+                android:hint="/ comando"
                 android:imeOptions="flagNoExtractUi|actionSend"
-                android:inputType="textCapSentences|textVisiblePassword"
+                android:inputType="textVisiblePassword"
                 android:maxLines="1"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:singleLine="true"
                 android:textColor="#FFFFFFFF"
-                android:textColorHint="#8FA1AE"
-                android:textSize="11sp" />
+                android:textColorHint="#9AA8B2"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/hud_chat_send"
-                android:layout_width="76dp"
+                android:layout_width="56dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="6dp"
                 android:background="@drawable/home_server_select_button"
                 android:clickable="true"
                 android:focusable="true"
                 android:fontFamily="@font/montserrat_alternates_bold"
                 android:gravity="center"
-                android:text="Enviar"
+                android:text="OK"
                 android:textColor="#FFFFFFFF"
                 android:textSize="10sp" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/hud_chat_close"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
+
         <ScrollView
             android:id="@+id/hud_chat_scroll"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:fillViewport="false"
-            android:overScrollMode="never"
-            android:scrollbars="none">
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/hud_chat_messages"
@@ -1907,7 +1968,8 @@
         android:focusable="false"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/hud_settings_panel"
@@ -3348,7 +3410,7 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <com.xyron.game.main.ui.HdMapView
+                <com.supremo.launcher.main.ui.HdMapView
                     android:id="@+id/hud_hd_map_view"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -3586,4 +3648,19 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" /></androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/hud_toast_stack"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginBottom="18dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:gravity="bottom"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

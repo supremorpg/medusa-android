@@ -2,7 +2,7 @@
 
 #include "common.h"
 
-namespace Xyron::Collision {
+namespace Supremo::Collision {
 
 struct ColSlotInfo {
     bool valid = false;

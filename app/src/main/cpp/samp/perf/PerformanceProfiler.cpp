@@ -7,7 +7,7 @@
 
 #include "../main.h"
 
-namespace Xyron::Perf {
+namespace Supremo::Perf {
 namespace {
 
 constexpr uint64_t kReportIntervalNs = 1500ull * 1000ull * 1000ull;
@@ -279,4 +279,4 @@ ScopedZone::~ScopedZone() noexcept
     }
 }
 
-} // namespace Xyron::Perf
+} // namespace Supremo::Perf

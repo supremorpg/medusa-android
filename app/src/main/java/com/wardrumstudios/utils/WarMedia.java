@@ -40,7 +40,7 @@ public class WarMedia extends WarGamepad {
     protected String patchFileName = "";
     public XAPKFile[] xAPKS = null;
 
-    private static final String PREFS_NAME = "xyron_public_war_media";
+    private static final String PREFS_NAME = "supremo_public_war_media";
     private int currentLocale = 0;
 
     public static class XAPKFile {

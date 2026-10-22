@@ -41,11 +41,11 @@ bool QueueRuntimeCommand(const char* command)
 	char dir[512]{};
 	std::snprintf(dir, sizeof(dir), "%sSAMP", g_pszStorage);
 	mkdir(dir, 0775);
-	std::snprintf(dir, sizeof(dir), "%sSAMP/xyron_monitor", g_pszStorage);
+	std::snprintf(dir, sizeof(dir), "%sSAMP/supremo_monitor", g_pszStorage);
 	mkdir(dir, 0775);
 
 	char path[640]{};
-	std::snprintf(path, sizeof(path), "%sSAMP/xyron_monitor/runtime_command.txt", g_pszStorage);
+	std::snprintf(path, sizeof(path), "%sSAMP/supremo_monitor/runtime_command.txt", g_pszStorage);
 	FILE* file = std::fopen(path, "wb");
 	if (!file) {
 		return false;
@@ -98,6 +98,15 @@ void Chat::addDebugMessage(const std::string& format, ...)
 void Chat::addClientMessage(const std::string& message, const ImColor& color)
 {
 	addMessage(message, color);
+}
+
+void Chat::clearMessages()
+{
+	while (this->itemsCount() > 0)
+	{
+		this->removeItem(0);
+	}
+	this->setScrollY(0.0f);
 }
 
 void Chat::addMessage(const std::string& message, const ImColor& color)

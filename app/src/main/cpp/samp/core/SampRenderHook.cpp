@@ -17,7 +17,7 @@ bool g_installAttempted = false;
 
 EGLBoolean EglSwapBuffersHook(EGLDisplay display, EGLSurface surface)
 {
-    XyronCoreFrameTick();
+    SupremoCoreFrameTick();
 
     if (g_originalEglSwapBuffers)
     {
@@ -28,7 +28,7 @@ EGLBoolean EglSwapBuffersHook(EGLDisplay display, EGLSurface surface)
 }
 }
 
-extern "C" void XyronInstallEglSwapBuffersHook() noexcept
+extern "C" void SupremoInstallEglSwapBuffersHook() noexcept
 {
     if (g_installAttempted)
     {
@@ -53,7 +53,7 @@ extern "C" void XyronInstallEglSwapBuffersHook() noexcept
          g_eglSwapBuffersStub ? "installed" : "not-installed");
 }
 
-extern "C" bool XyronIsEglSwapBuffersHookInstalled() noexcept
+extern "C" bool SupremoIsEglSwapBuffersHookInstalled() noexcept
 {
     return g_eglSwapBuffersStub != nullptr;
 }

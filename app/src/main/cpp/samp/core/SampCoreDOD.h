@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace Xyron::Core
+namespace Supremo::Core
 {
 constexpr std::size_t kCacheLineSize = 64;
 constexpr std::size_t kMaxPlayers = 1004;
@@ -72,6 +72,6 @@ FrameStats GetFrameStats() noexcept;
 const char* GetAuditString() noexcept;
 }
 
-extern "C" void XyronCoreInitialize() noexcept;
-extern "C" void XyronCoreFrameTick() noexcept;
-extern "C" const char* XyronCoreAuditString() noexcept;
+extern "C" void SupremoCoreInitialize() noexcept;
+extern "C" void SupremoCoreFrameTick() noexcept;
+extern "C" const char* SupremoCoreAuditString() noexcept;

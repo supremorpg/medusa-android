@@ -1,0 +1,2814 @@
+[
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_radial_icon_43.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_radial_icon_43.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_36.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_36.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_vk.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_vk.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_discord_logo.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/discord_logo.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_26.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_26.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_46.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_46.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_intestinocircle.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/intestinocircle.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_password_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_password_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_16.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_16.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_5.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_5.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_classic_bar_armour.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_classic_bar_armour.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_attach_yellow_icon_bg.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/attach_yellow_icon_bg.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_lock.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_lock.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_faq_item_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_faq_item_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_muller_bold.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/muller_bold.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_muller_medium.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/muller_medium.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_host_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_host_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_dialog_select.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_dialog_select.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_top_money_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_top_money_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_noty_picture_27.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_noty_picture_27.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_files_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_files_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_brake.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_brake.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_radial_icon_44.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_radial_icon_44.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_heart.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/heart.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_attach_icon_push_pull.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/attach_icon_push_pull.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_attach_yellow_icon_bg.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/attach_yellow_icon_bg.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_settings_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_settings_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_noty_picture_7.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_noty_picture_7.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_down.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_down.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_00.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_00.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_fragment_servers.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/fragment_servers.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_instagram.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_instagram.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_instagram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_instagram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_dialog_edit_name.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/dialog_edit_name.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_instagram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_instagram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_vk.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_vk.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_motor_car.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_motor_car.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_attach_right_button.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/attach_right_button.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_radial_gps.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_radial_gps.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_files_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_files_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_camera.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_camera.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_infos.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_infos.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_youtube.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_youtube.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_faq_item.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/faq_item.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_settings_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_settings_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_icone_real.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/icone_real.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_slot_number_background.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/slot_number_background.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_noty_picture_27.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_noty_picture_27.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/anim_button_hide_alpha.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/anim/button_hide_alpha.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_fistbackground.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/fistbackground.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_pickup_studio_panel_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/pickup_studio_panel_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_radio.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/radio.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_handbrake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_handbrake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/raw_somradinho.mp3.flat",
+        "source": "com.supremo.launcher.app-main-33:/raw/somradinho.mp3"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_servers_on.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_servers_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_fundo_login.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/fundo_login.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_29.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_29.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_button_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_button_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_password_on.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_password_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_social_button.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_social_button.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_sampmobile_load.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/sampmobile_load.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_hud_menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/hud_menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_vk.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_vk.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_car.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_car.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_nav_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_nav_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_vice_nav_item_selected.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/vice_nav_item_selected.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_brake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_brake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_02.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_02.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_11.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_11.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_21.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_21.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_radial_icon_25.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_radial_icon_25.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_credits_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_credits_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_hud_menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/hud_menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_dialog_host_file_editor.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/dialog_host_file_editor.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_server_option_dot_selected.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_server_option_dot_selected.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_home_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_home_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_status_box_food.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_status_box_food.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_fist.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_fist.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_settinglayout_item.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/settinglayout_item.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_31.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_31.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_41.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_41.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_hud.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/hud.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_telegram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_telegram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_chat_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_chat_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_settings_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_settings_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_nav_button_active.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_nav_button_active.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_spinner_item.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/spinner_item.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_people.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_people.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_camera.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_camera.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_faq_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_faq_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_brake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_brake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_horn.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_horn.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_join_doubling.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_join_doubling.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_caixa_personalizadatrans.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/caixa_personalizadatrans.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_lock.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_lock.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_loading_police_gradient_horizontal.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/loading_police_gradient_horizontal.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/anim_scale2.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/anim/scale2.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_fistbutton.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/fistbutton.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_coin_small.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_coin_small.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_telegram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_telegram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_telegram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_telegram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_download_progress_blue.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/download_progress_blue.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_pickup_studio_card_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/pickup_studio_card_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_home_on.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_home_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_run.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_run.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_jump.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_jump.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_discord.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_discord.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_host_dashboard_hero_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/host_dashboard_hero_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_dialog_host_file_rename.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/dialog_host_file_rename.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_tablayout_item.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/tablayout_item.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_servers_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_servers_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_radial_icon_44.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_radial_icon_44.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_instagram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_instagram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_44.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_44.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_camera_butt.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/camera_butt.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_server_option_selected.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_server_option_selected.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_sonocircle.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/sonocircle.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_radial_att.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_radial_att.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_level_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_level_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_switch_thumb.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_switch_thumb.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_2menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_2menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_hud_menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/hud_menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_attach_yellow_icon_bg.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/attach_yellow_icon_bg.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_files_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_files_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_06.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_06.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_noty_picture_7.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_noty_picture_7.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_brake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_brake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_montserrat_bolditalic.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/montserrat_bolditalic.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_dialog.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/dialog.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_24.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_24.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/xml_backup_rules.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_down.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_down.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_console_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_console_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_down.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_down.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_server_status_dot_loading.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/server_status_dot_loading.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_down.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_down.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_file_browser_icon_surface_folder.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/file_browser_icon_surface_folder.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_download_progress.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/download_progress.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_dialog_scrollbar_track.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_dialog_scrollbar_track.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_play.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/play.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_backgroundhud.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/backgroundhud.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_instagram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_instagram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_horn.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_horn.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_pickup_creator_overlay.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/pickup_creator_overlay.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_run.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_run.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_deagle.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/deagle.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_motor_car.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_motor_car.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_pickup_studio_field_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/pickup_studio_field_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_credits_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_credits_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-nodpi_news_rp_wordmark.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable-nodpi/news_rp_wordmark.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_join.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_join.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_join.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_join.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_bat.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/bat.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_camera.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_camera.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_personagem.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/personagem.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_join.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_join.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_buttoncolor.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_buttoncolor.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-nodpi_logo_supremo.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable-nodpi/logo_supremo.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_bar_hp.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_bar_hp.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_attach_yellow_icon_bg.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/attach_yellow_icon_bg.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_bg_blue.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/bg_blue.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_status_box_sleep.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_status_box_sleep.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_settings_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_settings_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_0.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_0.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_montserrat_alternates_bold.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/montserrat_alternates_bold.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_right_glow.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_right_glow.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_samp_keyboard_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/samp_keyboard_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_brake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_brake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_attach_icon_scale.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/attach_icon_scale.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_camera_butt.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/camera_butt.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_hud_menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/hud_menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_28.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_28.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_server_status_dot_offline.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/server_status_dot_offline.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_youtube.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_youtube.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_action_hub.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_action_hub.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_classic_radar_ring.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_classic_radar_ring.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_roboto_bold.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/roboto_bold.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_vk.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_vk.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_camera.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_camera.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_13.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_13.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_badge_gold.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_badge_gold.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_16.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_16.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_file_browser_secondary_action.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/file_browser_secondary_action.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_8.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_8.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_buttoncolor_yellow.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_buttoncolor_yellow.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_telegram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_telegram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_43.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_43.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_vk.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_vk.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_29.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_29.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_jump.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_jump.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_source_analog_ring.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_source_analog_ring.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_news_image_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_news_image_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_run.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_run.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_divider.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_divider.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_tools_on.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_tools_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_radial_icon_44.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_radial_icon_44.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_classic_radar_inner.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_classic_radar_inner.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_leftbutton_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_leftbutton_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_slot_background.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/slot_background.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_enter_passanger.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/enter_passanger.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_newspaper_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_newspaper_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-v24_helper_ic_dialog_select__0.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable-v24/helper_ic_dialog_select__0.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_source_analog_knob.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_source_analog_knob.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_radial_icon_43.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_radial_icon_43.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_roboto_regular.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/roboto_regular.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_handbrake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_handbrake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_server_badge_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_server_badge_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_dialog_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_dialog_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_switch_track_on.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_switch_track_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_join_doubling.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_join_doubling.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_newspaper_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_newspaper_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_editor_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_editor_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_attach_yellow_icon_bg.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/attach_yellow_icon_bg.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_home_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_home_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_run.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_run.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_home_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_home_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_radial_icon_43.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_radial_icon_43.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_radinho.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/radinho.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_servers_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_servers_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_editor_on.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_editor_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_progress_drawable_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/progress_drawable_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_radial_gps.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_radial_gps.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_attach_icon_rot.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/attach_icon_rot.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_editor_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_editor_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_newspaper_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_newspaper_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_radial_icon_44.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_radial_icon_44.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_camera.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_camera.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_motor_car.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_motor_car.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_faq_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_faq_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_quick_actions.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_quick_actions.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_item_pickup_studio.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/item_pickup_studio.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_placeholder.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_placeholder.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_faq_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_faq_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_status_bandage.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/status_bandage.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_22.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_22.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/xml_data_extraction_rules.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_12.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_12.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_faq_on.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_faq_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_noty_picture_7.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_noty_picture_7.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_bexigacircle.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/bexigacircle.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_files_on.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_files_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_faq_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_faq_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_classic_weapon_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_classic_weapon_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/anim_button_show_alpha.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/anim/button_show_alpha.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_editor_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_editor_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_radial_gps.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_radial_gps.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_horn.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_horn.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_armourprogress.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/armourprogress.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_eat.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/eat.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_icon.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/icon.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_30.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_30.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_sht.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/sht.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_location_pin.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_location_pin.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_9.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_9.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_status_water_bottle.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/status_water_bottle.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_config_value_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_config_value_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_radial_eloc.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_radial_eloc.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_settings_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_settings_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_status_sleep.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/status_sleep.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_roboto_black.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/roboto_black.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_news_badge.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_news_badge.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_dialog_button_positive.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_dialog_button_positive.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_attach_black_round_rect.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/attach_black_round_rect.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_bg__0.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_bg__0.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_jump.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_jump.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_motor_car.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_motor_car.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_pickup_studio_item_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/pickup_studio_item_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_newspaper_on.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_newspaper_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_radial_icon_43.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_radial_icon_43.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_2menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_2menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_item_host_file.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/item_host_file.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_radial_gps.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_radial_gps.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_05.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_05.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_hud_menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/hud_menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_faq_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_faq_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_porta_do_carro.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/porta_do_carro.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_attachedit.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/attachedit.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_accelerate.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_accelerate.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_minigun.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/minigun.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_fragment_workbench.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/fragment_workbench.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_editor_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_editor_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_status_tile_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_status_tile_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_file_browser_icon_surface_file.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/file_browser_icon_surface_file.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_overlay.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_overlay.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_accelerate.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_accelerate.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_25.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_25.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_home_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_home_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_youtube_logo.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/youtube_logo.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_join.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_join.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_samp_keyboard_action.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/samp_keyboard_action.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_server_status_dot_online.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/server_status_dot_online.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_attach_yellow_icon_bg.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/attach_yellow_icon_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_browser_file.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_browser_file.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_noty_picture_27.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_noty_picture_27.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_03.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_03.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_buttoncolor3.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_buttoncolor3.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_connect_samp.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/connect_samp.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_radial_icon_25.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_radial_icon_25.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_ammo_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_ammo_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_34.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_34.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/xml_provider_paths.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/xml/provider_paths.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_news_item.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/news_item.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-nodpi_launcher_initial_bg.jpg.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable-nodpi/launcher_initial_bg.jpg"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_montserrat_regular.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/montserrat_regular.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_discord.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_discord.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_vice_button_active.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/vice_button_active.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_noty_picture_27.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_noty_picture_27.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_lock.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_lock.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_ds_digi.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/ds_digi.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_montserrat_black.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/montserrat_black.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_stat_tile_emphasis.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_stat_tile_emphasis.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_horn.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_horn.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_file_browser_toolbar_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/file_browser_toolbar_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_human.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_human.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_2menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_2menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_donate_button.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_donate_button.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_host_dashboard_subtle_note.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/host_dashboard_subtle_note.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_novaome.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/novaome.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_credits_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_credits_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_fcm_clickable.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_fcm_clickable.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_radial_icon_44.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_radial_icon_44.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_fragment_donate.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/fragment_donate.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_close.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_close.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_host_dashboard_status_badge.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/host_dashboard_status_badge.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_lock.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_lock.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_jump.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_jump.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_servers_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_servers_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_join.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_join.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_armour.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/armour.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_panel_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_panel_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_join.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_join.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_armourcircle.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/armourcircle.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_noty_picture_7.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_noty_picture_7.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_status_box_hp.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_status_box_hp.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_04.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_04.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_horn.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_horn.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_accelerate.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_accelerate.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_radial_icon_25.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_radial_icon_25.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_newspaper_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_newspaper_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_shop_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_shop_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_settings_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_settings_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_btn_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_btn_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_jump.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_jump.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_instagram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_instagram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_38.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_38.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_1.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_1.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_hud_menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/hud_menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_radial.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_radial.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_2menu.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_2menu.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_news_text_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_news_text_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_run.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_run.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_01.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_01.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_youtube.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_youtube.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_fist.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_fist.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_classic_bar_hp.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_classic_bar_hp.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_dialog_input_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_dialog_input_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_telegram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_telegram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_radial_icon_25.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_radial_icon_25.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_caixa_fundo.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/caixa_fundo.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_shop_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_shop_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_file_browser_primary_action.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/file_browser_primary_action.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_button_background.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/button_background.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_ds_digit.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/ds_digit.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_news_card_secondary.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_news_card_secondary.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_shop_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_shop_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_fist.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_fist.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_host_on.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_host_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_host_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_host_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_config_switch_track_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_config_switch_track_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/anim_click.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/anim/click.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_join_doubling.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_join_doubling.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_circlearmas.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/circlearmas.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_accelerate.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_accelerate.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_montserrat_medium.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/montserrat_medium.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_host_dashboard_endpoint_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/host_dashboard_endpoint_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_host_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_host_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_dialog_host_file_create.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/dialog_host_file_create.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_pickup_studio_badge.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/pickup_studio_badge.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_fragment_settings.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/fragment_settings.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_dialog_server_selector.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/dialog_server_selector.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_dialog_add_server.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/dialog_add_server.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_servers_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_servers_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_newspaper_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_newspaper_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_vk.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_vk.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hpcircle.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hpcircle.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_taser.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/taser.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_status_box_armour.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_status_box_armour.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_newspaper_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_newspaper_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_progress_track.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_progress_track.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_field_surface_dark.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_field_surface_dark.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_radial_anim.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_radial_anim.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_files_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_files_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_file_browser_list_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/file_browser_list_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_field_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_field_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_noty_picture_27.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_noty_picture_27.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_avatar_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_avatar_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_celular.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_celular.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_spinner_dropdown_item.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/spinner_dropdown_item.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_muller_regular.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/muller_regular.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_home_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_home_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_fist.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/fist.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_motor_car.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_motor_car.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_30.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_30.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_file_browser_chip_file.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/file_browser_chip_file.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_config_row_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_config_row_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_10.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_10.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_instagram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_instagram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_option_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_option_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_shop_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_shop_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_status_armor.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/status_armor.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_attach_yellow_icon_bg.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/attach_yellow_icon_bg.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_switch_track_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_switch_track_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_40.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_40.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_vice_content_row.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/vice_content_row.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_files_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_files_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_eatcircle.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/eatcircle.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_motor_car.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_motor_car.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_handbrake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_handbrake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_water_graphic.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_water_graphic.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_loading_police_gradient_vertical.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/loading_police_gradient_vertical.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_activity_update.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/activity_update.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_servers_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_servers_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_news.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_news.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_horn.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_horn.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_handbrake.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_handbrake.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_chat_active.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_chat_active.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_need_percent_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_need_percent_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_discord.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_discord.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/animator_reduce_size.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/animator/reduce_size.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_server_select_button.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_server_select_button.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_lock.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_lock.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_2menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_2menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_42.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_42.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_attach_left_button.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/attach_left_button.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_spinner_server_dropdown_item.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/spinner_server_dropdown_item.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_telegram.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_telegram.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_files_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_files_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_editor_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_editor_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_vk.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_vk.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_config_close_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_config_close_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_pickup_studio_primary_button.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/pickup_studio_primary_button.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_6.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_6.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_bar_eat.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_bar_eat.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_online_dot.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_online_dot.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_tela_registro.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/tela_registro.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_35.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_35.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_pickup_studio_secondary_button.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/pickup_studio_secondary_button.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_interactions.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_interactions.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_ds_digii.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/ds_digii.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_wal.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_wal.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_4.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_4.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_news_card_tertiary.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_news_card_tertiary.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_radial_icon_43.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_radial_icon_43.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_15.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_15.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_camera.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_camera.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_host_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_host_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_vice_field.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/vice_field.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_status_circle_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_status_circle_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_camera_butt.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/camera_butt.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/anim_button_show.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/anim/button_show.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_vice_phone_notch.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/vice_phone_notch.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_settings_on.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_settings_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_credits_on.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_credits_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_radial_icon_43.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_radial_icon_43.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_attach_icon_top_bott.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/attach_icon_top_bott.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_fragment_host_files.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/fragment_host_files.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_voip.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_voip.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_vice_phone_frame.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/vice_phone_frame.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_17.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_17.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_shop_on.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_shop_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_source_control_button_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_source_control_button_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_sedecircle.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/sedecircle.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_07.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_07.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_notification.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/notification.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_join_doubling.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_join_doubling.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_status_sandwich.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/status_sandwich.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_newspaper_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_newspaper_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-nodpi_news_rp_logo.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable-nodpi/news_rp_logo.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_faq_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_faq_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-nodpi_loading_police_surrender_bg.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable-nodpi/loading_police_surrender_bg.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_action_secondary.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_action_secondary.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_youtube.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_youtube.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_servers_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_servers_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_montserrat_bold.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/montserrat_bold.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_noty_picture_27.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_noty_picture_27.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_fundo.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/fundo.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_discord.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_discord.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_fragment_host.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/fragment_host.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_37.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_37.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_editor_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_editor_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_home_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_home_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_dialog_item.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/dialog_item.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_stat_tile.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_stat_tile.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_credits_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_credits_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_sleep_graphic.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_sleep_graphic.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_radial_cell.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_radial_cell.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_store_offer_card_selected.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/store_offer_card_selected.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_youtube.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_youtube.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_fragment_faq.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/fragment_faq.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_quick_option_row_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_quick_option_row_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_fist.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_fist.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_camera_butt.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/camera_butt.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_editor_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_editor_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_youtube.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_youtube.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_radial_icon_44.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_radial_icon_44.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_connect_screen.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/connect_screen.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_jump.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_jump.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_spinner_server_item.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/spinner_server_item.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_lock.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_lock.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_radial_inv.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_radial_inv.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_health_graphic.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_health_graphic.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_bg_red.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/bg_red.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_39.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_39.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_33.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_33.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_top_pill_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_top_pill_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_noty_picture_7.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_noty_picture_7.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_join_doubling.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_join_doubling.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_play_button.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_play_button.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_fragment_credits.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/fragment_credits.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_23.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_23.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_dialog_list_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_dialog_list_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_baseline_notifications_24.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_baseline_notifications_24.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_radial_loja.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_radial_loja.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_progress_color.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/progress_color.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_logo_frame.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_logo_frame.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_2.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_2.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_settings_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_settings_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_lock.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_lock.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_layout_keyboard.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/layout_keyboard.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_mka.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/mka.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_classic_money_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_classic_money_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_armor_vest.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_armor_vest.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_logomain.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/logomain.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_tools_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_tools_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_pickup_studio_overlay_scrim.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/pickup_studio_overlay_scrim.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_btn_bg__0.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_btn_bg__0.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_09.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_09.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_chat_hide.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/chat_hide.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_server_item.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/server_item.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_join.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_join.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_badge_outline.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_badge_outline.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_classic_bar_thirst.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_classic_bar_thirst.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_fist.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_fist.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_radial_icon_43.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_radial_icon_43.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_run.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_run.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_config_sidebar_selected.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_config_sidebar_selected.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_config_switch_track_on.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_config_switch_track_on.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-nodpi_home_reference_bg.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable-nodpi/home_reference_bg.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_item_editor_file.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/item_editor_file.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_news_card_primary.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_news_card_primary.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_home_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_home_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_nav_button_idle.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_nav_button_idle.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_radial_gps.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_radial_gps.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_radial.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/radial.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_faq_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_faq_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_dialog_button_negative.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_dialog_button_negative.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_handbrake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_handbrake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_loading_screen.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/loading_screen.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_horn.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_horn.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_files_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_files_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_join_doubling.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_join_doubling.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_camera.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_camera.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/anim_button_click.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/anim/button_click.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_radial_icon_44.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_radial_icon_44.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_2menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_2menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_7.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_7.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_handbrake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_handbrake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_tela_registro.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/tela_registro.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_noty_picture_7.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_noty_picture_7.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_motor_car.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_motor_car.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_42.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_42.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_camera_butt.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/camera_butt.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_radial_icon_25.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_radial_icon_25.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_play_icon_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_play_icon_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_nickname_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_nickname_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_server_group_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_server_group_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_32.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_32.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_attach_top_rounded_yellow.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/attach_top_rounded_yellow.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_host_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_host_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_shop_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_shop_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_shotgun.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/shotgun.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_youtube.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_youtube.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_radial_ajuda.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_radial_ajuda.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_host_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_host_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_shop_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_shop_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_connect_samp_clean.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/connect_samp_clean.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_file_browser_ghost_action.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/file_browser_ghost_action.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_credits_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_credits_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_wallet.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_wallet.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_vehicle_lock_butt.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/vehicle_lock_butt.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_accelerate.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_accelerate.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_roboto_medium.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/roboto_medium.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_panel_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_panel_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_2menu.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_2menu.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_pistol.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/pistol.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_discord.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_discord.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_08.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_08.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_style_spinner.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/style_spinner.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_hud_jump.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_hud_jump.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_status_box_water.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_status_box_water.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_fist.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_fist.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_activity_main.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_brake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_brake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_radial_rg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_radial_rg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_file_browser_row_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/file_browser_row_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_shop_off.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_shop_off.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_telegram.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_telegram.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/anim_button_hide.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/anim/button_hide.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_host_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_host_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_ds_digib.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/ds_digib.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_noty_picture_7.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_noty_picture_7.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_fragment_news.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/fragment_news.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/anim_scale.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/anim/scale.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_server_card_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_server_card_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ak.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ak.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_handbrake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_handbrake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_radial_icon_25.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_radial_icon_25.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_dialog_scrollbar_thumb.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_dialog_scrollbar_thumb.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_credits_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_credits_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_hud_accelerate.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_hud_accelerate.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_config_icon_box.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_config_icon_box.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_close.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_close.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_noty_picture_27.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_noty_picture_27.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_style_spinner.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/style_spinner.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_dialog_surface.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_dialog_surface.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_3.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_3.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_fist.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_fist.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_credits_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_credits_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_file_browser_chip_folder.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/file_browser_chip_folder.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_hud_brake.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_hud_brake.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_down.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_down.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_hud_radial_gps.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_hud_radial_gps.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_cta_gold.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_cta_gold.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_dialog_update_prompt.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/dialog_update_prompt.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_dialog_workbench_prompt.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/dialog_workbench_prompt.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_item_server_selector.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/item_server_selector.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_bar_armour.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_bar_armour.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_14.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_14.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_tela_login.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/tela_login.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/font_montsserat_semibold.ttf.flat",
+        "source": "com.supremo.launcher.app-main-33:/font/montsserat_semibold.ttf"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_hud_menu.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/hud_menu.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_noty_picture_29.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_noty_picture_29.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_main_render_screen.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/main_render_screen.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_clock_small.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_clock_small.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_server_option_default.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_server_option_default.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/xml_network_security_config.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/xml/network_security_config.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-mdpi_ic_radial_icon_25.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-mdpi/ic_radial_icon_25.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_food_graphic.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_food_graphic.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_store_offer_card_default.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/store_offer_card_default.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_caixa_personalizada.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/caixa_personalizada.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_classic_bar_food.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_classic_bar_food.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_action_text_button.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_action_text_button.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_vice_button_outline.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/vice_button_outline.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_37.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_37.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_hero_panel.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_hero_panel.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_attach_icon_left_right.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/attach_icon_left_right.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_45.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_45.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_27.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_27.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_config_panel_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_config_panel_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_line.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/line.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_activity_splash.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/activity_splash.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_discord.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_discord.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_launcher_app_background.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/launcher_app_background.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_vice_launcher_background.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/vice_launcher_background.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_ic_servers_on.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/ic_servers_on.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-hdpi_camera_butt.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-hdpi/camera_butt.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.supremo.launcher.app-main-33:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_hud_weapon_wheel.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_hud_weapon_wheel.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-anydpi-v24_ic_down.xml.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-anydpi-v24/ic_down.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_fragment_home.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_mppyat.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/mppyat.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_weapon_18.webp.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/weapon_18.webp"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_classic_status_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_classic_status_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxhdpi_ic_hud_accelerate.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxhdpi/ic_hud_accelerate.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_samp_keyboard_utility.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/samp_keyboard_utility.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_radialvehicles.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/radialvehicles.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_option_button_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_option_button_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_hud_radial_gps.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_hud_radial_gps.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_browser_folder.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_browser_folder.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/layout_fragment_editor.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/layout/fragment_editor.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_hud_weapon_button_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/hud_weapon_button_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_radial_icon_11.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_radial_icon_11.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xhdpi_ic_discord.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xhdpi/ic_discord.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/animator_regain_size.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/animator/regain_size.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_select_bg.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_select_bg.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_vice_content_row_selected.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/vice_content_row_selected.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_home_server_option_dot_default.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/home_server_option_dot_default.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_gamepad.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_gamepad.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_hud_run.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_hud_run.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_ic_join_doubling.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/ic_join_doubling.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-xxxhdpi_ic_down.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-xxxhdpi/ic_down.png"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable_ic_ping.xml.flat",
+        "source": "com.supremo.launcher.app-main-33:/drawable/ic_ping.xml"
+    },
+    {
+        "merged": "com.supremo.launcher.app-debug-31:/drawable-ldpi_camera_butt.png.flat",
+        "source": "com.supremo.launcher.app-pngs-27:/drawable-ldpi/camera_butt.png"
+    }
+]

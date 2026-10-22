@@ -6,9 +6,29 @@
 #include "../vendor/encoding/encoding.h"
 #include "../settings.h"
 #include "java/jniutil.h"
+#include "../src/ui/SampUiController.h"
 
 #include <cstdio>
 #include <cstring>
+#include <cctype>
+
+namespace {
+constexpr uint8_t kMaxSampWeather = 45;
+
+bool ReadByte(RakNet::BitStream& stream, uint8_t& value, const char* field)
+{
+	if (stream.Read(value)) {
+		return true;
+	}
+	FLog("[NET_VALUE64] malformed field=%s", field ? field : "?");
+	return false;
+}
+
+bool IsValidTime(uint8_t hour, uint8_t minute)
+{
+	return hour <= 23 && minute <= 59;
+}
+}
 
 extern UI* pUI;
 extern CGame *pGame;
@@ -53,6 +73,66 @@ bool ReadJsonBoolField(const char* payload, const char* key, bool fallback)
 	return fallback;
 }
 
+bool IsSafeAuthField(const char* value, size_t length, bool allowSpaces)
+{
+	if (!value || length == 0) {
+		return false;
+	}
+	for (size_t i = 0; i < length; ++i) {
+		const unsigned char ch = static_cast<unsigned char>(value[i]);
+		if (ch < 0x20 || ch == 0x7f || (!allowSpaces &&
+			!(std::isalnum(ch) || ch == '.' || ch == '_' || ch == '-'))) {
+			return false;
+		}
+		if (allowSpaces && (ch == '\r' || ch == '\n' || ch == '\t' || ch == '|')) {
+			return false;
+		}
+	}
+	return true;
+}
+
+void CopySanitizedAuthMessage(char* output, size_t outputSize, const char* input, size_t inputLength)
+{
+	if (!output || outputSize == 0) {
+		return;
+	}
+	const size_t limit = (inputLength < outputSize - 1) ? inputLength : outputSize - 1;
+	size_t out = 0;
+	for (size_t i = 0; i < limit; ++i) {
+		const unsigned char ch = static_cast<unsigned char>(input[i]);
+		if (ch < 0x20 || ch == 0x7f || ch == '|') {
+			output[out++] = ' ';
+		} else {
+			output[out++] = static_cast<char>(ch);
+		}
+	}
+	output[out] = '\0';
+}
+
+bool IsToastSeverity(const char* value, size_t length)
+{
+	return (length == 7 && std::strncmp(value, "success", 7) == 0) ||
+		(length == 7 && std::strncmp(value, "warning", 7) == 0) ||
+		(length == 5 && std::strncmp(value, "error", 5) == 0) ||
+			(length == 4 && std::strncmp(value, "info", 4) == 0);
+}
+
+bool ParseToastDuration(const char* value, size_t length, int* output)
+{
+	if (!value || !output || length == 0 || length > 4) {
+		return false;
+	}
+	int parsed = 0;
+	for (size_t i = 0; i < length; ++i) {
+		if (value[i] < '0' || value[i] > '9') {
+			return false;
+		}
+		parsed = parsed * 10 + (value[i] - '0');
+	}
+	*output = parsed < 1000 ? 1000 : (parsed > 6000 ? 6000 : parsed);
+	return true;
+}
+
 bool TryDispatchAppSyncMessage(const char* message)
 {
 	if (!message || std::strncmp(message, "APP|", 4) != 0) {
@@ -68,16 +148,89 @@ bool TryDispatchAppSyncMessage(const char* message)
 	const size_t eventLen = static_cast<size_t>(payload - eventName);
 	++payload;
 
+	if (eventLen == 5 && std::strncmp(eventName, "toast", 5) == 0) {
+		const char* severity = payload;
+		const char* severityEnd = std::strchr(severity, '|');
+		if (!severityEnd) return true;
+		const char* duration = severityEnd + 1;
+		const char* durationEnd = std::strchr(duration, '|');
+		if (!durationEnd) return true;
+		const char* title = durationEnd + 1;
+		const char* titleEnd = std::strchr(title, '|');
+		if (!titleEnd) return true;
+		const char* detail = titleEnd + 1;
+		const size_t severityLen = static_cast<size_t>(severityEnd - severity);
+		const size_t durationLen = static_cast<size_t>(durationEnd - duration);
+		const size_t titleLen = static_cast<size_t>(titleEnd - title);
+		const size_t detailLen = std::strlen(detail);
+		int durationMs = 2500;
+		if (severityLen == 0 || severityLen > 7 || titleLen == 0 || titleLen > 48 ||
+			detailLen == 0 || detailLen > 160 || !IsToastSeverity(severity, severityLen) ||
+			!ParseToastDuration(duration, durationLen, &durationMs)) {
+			return true;
+		}
+		char safeSeverity[8]{};
+		char safeTitle[49]{};
+		char safeMessage[161]{};
+		std::memcpy(safeSeverity, severity, severityLen);
+		CopySanitizedAuthMessage(safeTitle, sizeof(safeTitle), title, titleLen);
+		CopySanitizedAuthMessage(safeMessage, sizeof(safeMessage), detail, detailLen);
+		if (pJavaWrapper && safeTitle[0] != '\0' && safeMessage[0] != '\0') {
+			pJavaWrapper->ShowToast(safeSeverity, safeTitle, safeMessage, durationMs);
+		}
+		return true;
+	}
+
 	if (eventLen == 4 && std::strncmp(eventName, "lock", 4) == 0) {
 		const bool locked = ReadJsonBoolField(payload, "locked", false);
 		if (pJavaWrapper) {
 			pJavaWrapper->ApplyUiBatch(locked ? "lock|1" : "lock|0");
 		}
-		FLog("[APPSYNC64] event=lock locked=%d payload=%s", locked ? 1 : 0, payload);
+		FLog("[APPSYNC64] event=lock locked=%d", locked ? 1 : 0);
 		return true;
 	}
 
-	return false;
+	// Auth responses are intentionally strict: APP|auth|<request>|<status>|<message>.
+	// Only bounded, credential-free fields are parsed and forwarded.
+	if (eventLen == 4 && std::strncmp(eventName, "auth", 4) == 0) {
+		const char* request = payload;
+		const char* requestEnd = std::strchr(request, '|');
+		if (!requestEnd) return true;
+		const char* status = requestEnd + 1;
+		const char* statusEnd = std::strchr(status, '|');
+		if (!statusEnd) return true;
+		const char* detail = statusEnd + 1;
+		const size_t requestLen = static_cast<size_t>(requestEnd - request);
+		const size_t statusLen = static_cast<size_t>(statusEnd - status);
+		const size_t detailLen = std::strlen(detail);
+		if (requestLen == 0 || requestLen > 16 || statusLen == 0 || statusLen > 16 || detailLen > 160 ||
+			!IsSafeAuthField(request, requestLen, false) ||
+			!IsSafeAuthField(status, statusLen, false) ||
+			(detailLen > 0 && !IsSafeAuthField(detail, detailLen, true))) {
+			return true;
+		}
+
+		char safeDetail[161]{};
+		CopySanitizedAuthMessage(safeDetail, sizeof(safeDetail), detail, detailLen);
+		if (pUI && pUI->chat()) {
+			pUI->chat()->addDebugMessage("[AUTH DEBUG] request=%.*s status=%.*s msg=%s",
+				static_cast<int>(requestLen), request,
+				static_cast<int>(statusLen), status,
+				safeDetail);
+		}
+		if (pJavaWrapper) {
+			char requestValue[17]{};
+			char statusValue[17]{};
+			std::memcpy(requestValue, request, requestLen);
+			std::memcpy(statusValue, status, statusLen);
+			pJavaWrapper->OnAuthState(requestValue, statusValue, safeDetail);
+		}
+		return true;
+	}
+
+	// Every APP control line is consumed, including unknown/malformed events.
+	// This prevents protocol noise from leaking into the visible chat.
+	return true;
 }
 }
 
@@ -119,8 +272,19 @@ void InitGame(RPCParameters* rpcParams)
 	bsInitGame.Read(MyPlayerID);
 	bsInitGame.ReadCompressed(pNetGame->m_pNetSet->bShowNameTags);
 	bsInitGame.Read(pNetGame->m_pNetSet->iShowPlayerMarkers);
-	bsInitGame.Read(pNetGame->m_pNetSet->byteWorldTime_Hour);
-	bsInitGame.Read(pNetGame->m_pNetSet->byteWeather);
+	uint8_t initWorldHour = 0;
+	uint8_t initWeather = 0;
+	if (!ReadByte(bsInitGame, initWorldHour, "init-hour") ||
+		!ReadByte(bsInitGame, initWeather, "init-weather") ||
+		initWorldHour > 23 || initWeather > kMaxSampWeather) {
+		FLog("[NET_VALUE64] rejected init values hour=%u weather=%u",
+			static_cast<unsigned>(initWorldHour), static_cast<unsigned>(initWeather));
+		return;
+	}
+	pNetGame->m_pNetSet->byteWorldTime_Hour = initWorldHour;
+	pNetGame->m_pNetSet->byteWeather = initWeather;
+	pNetGame->m_pNetSet->bReceivedWorldTime = true;
+	pNetGame->m_pNetSet->bReceivedWeather = true;
 	bsInitGame.Read(pNetGame->m_pNetSet->fGravity);
 	bsInitGame.ReadCompressed(bLanMode);
 	bsInitGame.Read(pNetGame->m_pNetSet->iDeathDropMoney);
@@ -196,6 +360,13 @@ void InitGame(RPCParameters* rpcParams)
 		pNetGame->m_bLanMode = true;
 	}
 
+	// Start each server session with a clean chat buffer. The singleton native
+	// chat survives reconnects, so clearing only during construction is too late.
+	if (pUI && pUI->chat()) {
+		pUI->chat()->clearMessages();
+	}
+	SampUiController::ClearChat();
+
 	pNetGame->InitGameLogic();
 	pGame->SetGravity(pNetGame->m_pNetSet->fGravity);
 
@@ -208,6 +379,11 @@ void InitGame(RPCParameters* rpcParams)
 	}
 
 	pGame->SetWorldWeather(pNetGame->m_pNetSet->byteWeather);
+	pGame->EnableClock(false);
+	pGame->SetWorldTime(
+		pNetGame->m_pNetSet->byteWorldTime_Hour,
+		pNetGame->m_pNetSet->byteWorldTime_Minute
+	);
 	pGame->ToggleCJWalk(pNetGame->m_pNetSet->bUseCJWalk);
 
 	Log::addParameter("szHostName", pNetGame->m_szHostName);
@@ -380,26 +556,30 @@ void ClientMessage(RPCParameters *rpcParams)
 	{
 		bsData.Read(szMsg, dwStrLen);
 		szMsg[dwStrLen] = '\0';
-		Log::addParameter("szMsg", szMsg);
-        if (sClientMsgDiagCount <= 240 || strstr(szMsg, "APP[") != nullptr || strstr(szMsg, "AppSync") != nullptr) {
-            FLog("[CLMSG64] n=%u color=%u len=%u msg=%s",
-                 sClientMsgDiagCount,
-                 (unsigned int)dwColor,
-                 (unsigned int)dwStrLen,
-                 szMsg);
-        }
-        if (TryDispatchAppSyncMessage(szMsg)) {
-            return;
-        }
-		if (pUI) pUI->chat()->addClientMessage(Encoding::cp2utf(szMsg), UI::fixcolor(dwColor));
+		const bool isAppSyncMessage = std::strncmp(szMsg, "APP|", 4) == 0;
+		if (!isAppSyncMessage) {
+			Log::addParameter("szMsg", szMsg);
+		}
+		if (!isAppSyncMessage && sClientMsgDiagCount <= 240) {
+			FLog("[CLMSG64] n=%u color=%u len=%u msg=%s",
+				 sClientMsgDiagCount,
+				 (unsigned int)dwColor,
+				 (unsigned int)dwStrLen,
+				 szMsg);
+		}
+		if (TryDispatchAppSyncMessage(szMsg)) {
+			return;
+		}
+		// Keep server ClientMessage hidden; btn_chat remains command-only.
+			return;
 	}
-    else if (sClientMsgDiagCount <= 120 || (sClientMsgDiagCount % 40) == 0) {
-        FLog("[CLMSG64] n=%u oversize len=%u color=%u bits=%d",
-             sClientMsgDiagCount,
-             (unsigned int)dwStrLen,
-             (unsigned int)dwColor,
-             iBitLength);
-    }
+	else if (sClientMsgDiagCount <= 120 || (sClientMsgDiagCount % 40) == 0) {
+		FLog("[CLMSG64] n=%u oversize len=%u color=%u bits=%d",
+			 sClientMsgDiagCount,
+			 (unsigned int)dwStrLen,
+			 (unsigned int)dwColor,
+			 iBitLength);
+	}
 }
 // 0.3.7
 void RequestClass(RPCParameters *rpcParams)
@@ -414,8 +594,11 @@ void RequestClass(RPCParameters *rpcParams)
 	PLAYER_SPAWN_INFO SpawnInfo;
 	CLocalPlayer *pLocalPlayer = pNetGame->GetPlayerPool()->GetLocalPlayer();
 
-	bsData.Read(byteRequestOutcome);
-	bsData.Read((char*)&SpawnInfo, sizeof(PLAYER_SPAWN_INFO));
+	if (!ReadByte(bsData, byteRequestOutcome, "class-outcome") ||
+		!bsData.Read((char*)&SpawnInfo, sizeof(PLAYER_SPAWN_INFO))) {
+		FLog("[SPAWN_FLOW64] malformed class reply");
+		return;
+	}
 
     FLog("[SPAWN_FLOW64] request-class outcome=%u active=%d waiting=%d",
          (unsigned int)byteRequestOutcome,
@@ -454,7 +637,12 @@ void RequestSpawn(RPCParameters *rpcParams)
 	uint8_t byteRequestOutcome = false;
 	CLocalPlayer *pLocalPlayer = pNetGame->GetPlayerPool()->GetLocalPlayer();
 
-	bsData.Read(byteRequestOutcome);
+	if (!ReadByte(bsData, byteRequestOutcome, "spawn-outcome")) {
+		if (pLocalPlayer) {
+			pLocalPlayer->m_bWaitingForSpawnRequestReply = false;
+		}
+		return;
+	}
 	Log::addParameter("byteRequestOutcome", byteRequestOutcome);
     FLog("[SPAWN_FLOW64] request-spawn outcome=%u active=%d waiting=%d cleared=%d",
          (unsigned int)byteRequestOutcome,
@@ -487,17 +675,21 @@ void ToggleClock(RPCParameters *rpcParams)
 	int iBitLength = rpcParams->numberOfBitsOfData;
 
 	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
-	uint8_t byteClock;
+	uint8_t byteClock = 0;
 
-	bsData.Read(byteClock);
+	if (!ReadByte(bsData, byteClock, "clock")) {
+		return;
+	}
 	Log::addParameter("byteClock", byteClock);
 
 	if (byteClock) {
 		pNetGame->m_pNetSet->byteHoldTime = false;
+		pGame->EnableClock(true);
 	}
 	else {
 		pNetGame->m_pNetSet->byteHoldTime = true;
-		pGame->GetWorldTime((int*)&pNetGame->m_pNetSet->byteWorldTime_Hour, 
+		pGame->EnableClock(false);
+		pGame->GetWorldTime((int*)&pNetGame->m_pNetSet->byteWorldTime_Hour,
 			(int*)&pNetGame->m_pNetSet->byteWorldTime_Minute);
 	}
 }
@@ -510,16 +702,23 @@ void SetTimeEx(RPCParameters *rpcParams)
 	int iBitLength = rpcParams->numberOfBitsOfData;
 
 	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
-	uint8_t byteHour;
-	uint8_t byteMinute;
+	uint8_t byteHour = 0;
+	uint8_t byteMinute = 0;
 
-	bsData.Read(byteHour);
-	bsData.Read(byteMinute);
+	if (!ReadByte(bsData, byteHour, "time-hour") ||
+		!ReadByte(bsData, byteMinute, "time-minute") ||
+		!IsValidTime(byteHour, byteMinute)) {
+		FLog("[NET_VALUE64] rejected time hour=%u minute=%u",
+			static_cast<unsigned>(byteHour), static_cast<unsigned>(byteMinute));
+		return;
+	}
 
 	Log::addParameter("byteHour", byteHour);
 	Log::addParameter("byteMinute", byteMinute);
 
+	pGame->EnableClock(false);
 	pGame->SetWorldTime(byteHour, byteMinute);
+	pNetGame->m_pNetSet->bReceivedWorldTime = true;
 	pNetGame->m_pNetSet->byteWorldTime_Hour = byteHour;
 	pNetGame->m_pNetSet->byteWorldTime_Minute = byteMinute;
 }
@@ -532,12 +731,16 @@ void Weather(RPCParameters *rpcParams)
 	int iBitLength = rpcParams->numberOfBitsOfData;
 
 	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
-	uint8_t byteWeather;
-	
-	bsData.Read(byteWeather);
-	
+	uint8_t byteWeather = 0;
+
+	if (!ReadByte(bsData, byteWeather, "weather") || byteWeather > kMaxSampWeather) {
+		FLog("[NET_VALUE64] rejected weather=%u", static_cast<unsigned>(byteWeather));
+		return;
+	}
+
 	Log::addParameter("byteWeather", byteWeather);
 
+	pNetGame->m_pNetSet->bReceivedWeather = true;
 	pNetGame->m_pNetSet->byteWeather = byteWeather;
 	pGame->SetWorldWeather(byteWeather);
 }
@@ -550,12 +753,20 @@ void WorldTime(RPCParameters *rpcParams)
 	int iBitLength = rpcParams->numberOfBitsOfData;
 
 	RakNet::BitStream bsData(Data, (iBitLength / 8) + 1, false);
-	uint8_t byteWorldTIme;
-	bsData.Read(byteWorldTIme);
+	uint8_t byteWorldTIme = 0;
+	if (!ReadByte(bsData, byteWorldTIme, "world-hour") || byteWorldTIme > 23) {
+		FLog("[NET_VALUE64] rejected world hour=%u", static_cast<unsigned>(byteWorldTIme));
+		return;
+	}
 
 	Log::addParameter("byteWorldTIme", byteWorldTIme);
 
+	pNetGame->m_pNetSet->bReceivedWorldTime = true;
 	pNetGame->m_pNetSet->byteWorldTime_Hour = byteWorldTIme;
+	int currentMinute = 0;
+	pGame->GetWorldTime(nullptr, &currentMinute);
+	pGame->EnableClock(false);
+	pGame->SetWorldTime(byteWorldTIme, currentMinute);
 }
 // 0.3.7
 void ConnectionRejected(RPCParameters *rpcParams)
@@ -1328,15 +1539,10 @@ void VehicleParamsEx(RPCParameters* rpcParams)
 
 	pVehicle->ApplyLightState(vehParamsEx.byteLight);
 
-	if (vehParamsEx.byteDoors)
-	{
-		if (vehParamsEx.byteDoors == 1) {
-			pVehicle->SetDoorState(true);
-		}
-	}
-	else {
-		pVehicle->SetDoorState(false);
-	}
+	// byteDoors is the server-authoritative lock state. Apply both branches;
+	// the previous code only recognized exactly 1 and left other non-zero
+	// values stale on the client.
+	pVehicle->SetDoorState(vehParamsEx.byteDoors != 0);
 
 	if (vehParamsEx.byteObjective)
 	{

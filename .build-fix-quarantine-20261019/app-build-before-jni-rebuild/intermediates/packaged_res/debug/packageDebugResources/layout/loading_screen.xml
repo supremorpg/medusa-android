@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <ImageView
+        android:id="@+id/loading_background_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/loading_police_surrender_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/loading_background_dim"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#52000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/loading_background_horizontal_gradient"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/loading_police_gradient_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/loading_background_vertical_gradient"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/loading_police_gradient_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/loading_left_scrim"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="#A9000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/loading_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/loading_divider"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="210dp"
+        android:background="#24FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/loading_brand"
+        android:layout_width="176dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:letterSpacing="0.36"
+            android:text="A NEW ROLEPLAY EXPERIENCE"
+            android:textAllCaps="true"
+            android:textColor="#55FFFFFF"
+            android:textSize="5.8sp" />
+
+        <ImageView
+            android:layout_width="220dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/logo_supremo"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true" />
+
+        <View
+            android:layout_width="48dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="#FFFFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:letterSpacing="0.22"
+            android:text="CONECTANDO"
+            android:textAllCaps="true"
+            android:textColor="#E8FFFFFF"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:letterSpacing="0.18"
+            android:text="SINCRONIA DO SERVIDOR"
+            android:textAllCaps="true"
+            android:textColor="#55FFFFFF"
+            android:textSize="5.5sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loading_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginEnd="42dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/loading_divider"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:letterSpacing="0.34"
+            android:text="ENTRANDO NO MUNDO"
+            android:textAllCaps="true"
+            android:textColor="#F5FFFFFF"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/loading_status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:letterSpacing="0.16"
+            android:text="Sincronizando"
+            android:textAllCaps="true"
+            android:textColor="#FFFFFFFF"
+            android:textSize="9sp" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="14dp"
+            android:indeterminate="true"
+            android:indeterminateTint="#FFFFFFFF"
+            android:progressBackgroundTint="#24FFFFFF" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/vice_content_row"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Clima, horario e dados RP"
+                android:textColor="#E8FFFFFF"
+                android:textSize="8.2sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="SERVIDOR"
+                android:textAllCaps="true"
+                android:textColor="#76FFFFFF"
+                android:textSize="6.2sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/vice_content_row"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="HUD, inventario e streaming"
+                android:textColor="#E8FFFFFF"
+                android:textSize="8.2sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="APK"
+                android:textAllCaps="true"
+                android:textColor="#76FFFFFF"
+                android:textSize="6.2sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="28dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:letterSpacing="0.32"
+        android:text="BUILD 8.4.12 // WORLD SYNC"
+        android:textAllCaps="true"
+        android:textColor="#38FFFFFF"
+        android:textSize="5.5sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

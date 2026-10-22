@@ -9,7 +9,6 @@
 #include "game/SampStreamingApi.h"
 #include "net/netgame.h"
 #include "gui/gui.h"
-#include "jniutil.h"
 
 #include <algorithm>
 #include <cmath>
@@ -78,13 +77,13 @@ bool ApplyNativeMapScanTeleportNow64(float x, float y, float z, int area)
 
 	const uint8_t safeArea = static_cast<uint8_t>(std::clamp(static_cast<int>(area), 0, 255));
 	CVector target(targetX, targetY, targetZ);
-	Xyron::Streaming::WorldStreamRequest streamRequest{};
+	Supremo::Streaming::WorldStreamRequest streamRequest{};
 	streamRequest.areaCode = safeArea;
 	streamRequest.refreshGame = true;
 	streamRequest.reason = "map-scan-teleport";
-	Xyron::Streaming::PrepareWorldAtPoint(target, streamRequest);
+	Supremo::Streaming::PrepareWorldAtPoint(target, streamRequest);
 	WarmKnownArm64CollisionSlotsForPosition(target, safeArea);
-	Xyron::Streaming::PrepareWorldAtPoint(target, streamRequest);
+	Supremo::Streaming::PrepareWorldAtPoint(target, streamRequest);
 	playerPed->SetInterior(safeArea, true);
 
 	if (playerPed->IsInVehicle()) {
@@ -214,17 +213,17 @@ std::string BuildNativeMapScanProbeJson64(float x, float y, float z, int area)
 	CVector streamTarget(targetX, targetY, targetZ < 18.0f ? 18.0f : targetZ);
 
 	auto warmProbeTarget = [&]() {
-		Xyron::Streaming::WorldStreamRequest streamRequest{};
+		Supremo::Streaming::WorldStreamRequest streamRequest{};
 		streamRequest.areaCode = safeAreaInt;
 		streamRequest.refreshGame = true;
 		streamRequest.reason = "map-scan-probe";
-		Xyron::Streaming::PrepareWorldAtPoint(streamTarget, streamRequest);
-		Xyron::Streaming::PrepareWorldAtPoint(streamTarget, streamRequest);
+		Supremo::Streaming::PrepareWorldAtPoint(streamTarget, streamRequest);
+		Supremo::Streaming::PrepareWorldAtPoint(streamTarget, streamRequest);
 	};
 
 	warmProbeTarget();
 	bool forcedFullPass = false;
-	bool collisionLoaded = Xyron::Collision::HasCollisionLoaded(streamTarget, safeAreaInt);
+	bool collisionLoaded = Supremo::Collision::HasCollisionLoaded(streamTarget, safeAreaInt);
 
 	float groundZ = pGame->FindGroundZForCoord(targetX, targetY, targetZ + 500.0f);
 	if (!std::isfinite(groundZ)) {
@@ -363,11 +362,11 @@ bool AppendQueuedMapScanProbeResult64(const char* zoneId, const std::string& nat
 	char dir[1024];
 	std::snprintf(dir, sizeof(dir), "%sSAMP", g_pszStorage);
 	mkdir(dir, 0775);
-	std::snprintf(dir, sizeof(dir), "%sSAMP/xyron_monitor", g_pszStorage);
+	std::snprintf(dir, sizeof(dir), "%sSAMP/supremo_monitor", g_pszStorage);
 	mkdir(dir, 0775);
 
 	char path[1200];
-	std::snprintf(path, sizeof(path), "%sSAMP/xyron_monitor/map_probe_results.jsonl", g_pszStorage);
+	std::snprintf(path, sizeof(path), "%sSAMP/supremo_monitor/map_probe_results.jsonl", g_pszStorage);
 	std::FILE* file = std::fopen(path, "ab");
 	if (!file) {
 		FLog("[MAP_PROBE64] cannot append result path=%s", path);
@@ -444,7 +443,7 @@ extern "C" void ProcessQueuedMapScanProbe64()
 #endif
 
 extern "C" {
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_ui_RadialMenu_sendCommand(JNIEnv* pEnv, jobject thiz, jbyteArray str)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_ui_RadialMenu_sendCommand(JNIEnv* pEnv, jobject thiz, jbyteArray str)
 	{
 		jboolean isCopy = true;
 
@@ -453,7 +452,7 @@ extern "C" {
 
 		std::string szStr((char*)pMsg, length);
 
-		if (Xyron::AppCommand::TrySendAppCommandLine(szStr.c_str())) {
+		if (Supremo::AppCommand::TrySendAppCommandLine(szStr.c_str())) {
 			pEnv->ReleaseByteArrayElements(str, pMsg, JNI_ABORT);
 			return;
 		}
@@ -465,12 +464,12 @@ extern "C" {
 		pEnv->ReleaseByteArrayElements(str, pMsg, JNI_ABORT);
 	}
 
-	JNIEXPORT jboolean JNICALL Java_com_xyron_game_main_SAMP_isNativeGameConnected(JNIEnv* pEnv, jobject thiz)
+	JNIEXPORT jboolean JNICALL Java_com_supremo_launcher_main_SAMP_isNativeGameConnected(JNIEnv* pEnv, jobject thiz)
 	{
 		return (pNetGame && pNetGame->GetGameState() == GAMESTATE_CONNECTED) ? JNI_TRUE : JNI_FALSE;
 	}
 
-	JNIEXPORT jboolean JNICALL Java_com_xyron_game_main_SAMP_isNativeLocalPlayerInVehicle(JNIEnv* pEnv, jobject thiz)
+	JNIEXPORT jboolean JNICALL Java_com_supremo_launcher_main_SAMP_isNativeLocalPlayerInVehicle(JNIEnv* pEnv, jobject thiz)
 	{
 		if (!pNetGame || pNetGame->GetGameState() != GAMESTATE_CONNECTED) {
 			return JNI_FALSE;
@@ -490,7 +489,24 @@ extern "C" {
 		return pPlayerPed->IsInVehicle() ? JNI_TRUE : JNI_FALSE;
 	}
 
-	JNIEXPORT jboolean JNICALL Java_com_xyron_game_main_SAMP_isNativePlayerSpawnReady(JNIEnv* pEnv, jobject thiz)
+	JNIEXPORT jint JNICALL Java_com_supremo_launcher_main_SAMP_getNativeLocalVehicleSubtype(JNIEnv* pEnv, jobject thiz)
+	{
+		if (!pNetGame || pNetGame->GetGameState() != GAMESTATE_CONNECTED) {
+			return 0;
+		}
+
+		CPlayerPool* pPlayerPool = pNetGame->GetPlayerPool();
+		CLocalPlayer* pLocalPlayer = pPlayerPool ? pPlayerPool->GetLocalPlayer() : nullptr;
+		CPlayerPed* pPlayerPed = pLocalPlayer ? pLocalPlayer->GetPlayerPed() : nullptr;
+		if (!pPlayerPed || !pPlayerPed->m_pPed || pPlayerPed->IsDead() || !pPlayerPed->IsInVehicle()) {
+			return 0;
+		}
+
+		CVehicleGTA* vehicle = pPlayerPed->GetGtaVehicle();
+		return vehicle ? static_cast<jint>(GetVehicleSubtype(vehicle)) : 0;
+	}
+
+	JNIEXPORT jboolean JNICALL Java_com_supremo_launcher_main_SAMP_isNativePlayerSpawnReady(JNIEnv* pEnv, jobject thiz)
 	{
 		if (!pNetGame || pNetGame->GetGameState() != GAMESTATE_CONNECTED) {
 			return JNI_FALSE;
@@ -503,19 +519,10 @@ extern "C" {
 
 		CLocalPlayer* pLocalPlayer = pPlayerPool->GetLocalPlayer();
 		CVector spawnPos;
-		static uint32_t s_lastRuntimeSpawnRequestTick = 0;
-		if (pLocalPlayer && !pLocalPlayer->m_bIsActive && !pLocalPlayer->m_bWaitingForSpawnRequestReply &&
+		// RequestSpawn owns cooldown and waiting state; Java polling must not duplicate it.
+		if (pLocalPlayer && !pLocalPlayer->m_bIsActive &&
 			pLocalPlayer->TryGetSpawnPos(spawnPos)) {
-			const uint32_t now = GetTickCount();
-			if (now - s_lastRuntimeSpawnRequestTick >= 1200) {
-				s_lastRuntimeSpawnRequestTick = now;
-				FLog("[SPAWN_FLOW64] runtime-ready requesting spawn pos=%.2f %.2f %.2f",
-					 spawnPos.x,
-					 spawnPos.y,
-					 spawnPos.z);
-				pLocalPlayer->RequestSpawn();
-				pLocalPlayer->m_bWaitingForSpawnRequestReply = true;
-			}
+			pLocalPlayer->RequestSpawn();
 		}
 
 		if (!pLocalPlayer || !pLocalPlayer->m_bIsActive || pLocalPlayer->IsSpectating() ||
@@ -531,7 +538,7 @@ extern "C" {
 		return JNI_TRUE;
 	}
 
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_startVehicleSelfTest(
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_startVehicleSelfTest(
 			JNIEnv* pEnv,
 			jobject thiz,
 			jint durationMs,
@@ -546,7 +553,7 @@ extern "C" {
 				brake == JNI_TRUE);
 	}
 
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_exitVehicleVisualSelfTest(JNIEnv* pEnv, jobject thiz)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_exitVehicleVisualSelfTest(JNIEnv* pEnv, jobject thiz)
 	{
 #if !VER_x32
 		if (!pGame || !pNetGame || pNetGame->GetGameState() != GAMESTATE_CONNECTED) {
@@ -576,7 +583,7 @@ extern "C" {
 #endif
 	}
 
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_runWorldCollisionSelfTest(JNIEnv* pEnv, jobject thiz)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_runWorldCollisionSelfTest(JNIEnv* pEnv, jobject thiz)
 	{
 #if !VER_x32
 		if (!pGame || !pNetGame || pNetGame->GetGameState() != GAMESTATE_CONNECTED) {
@@ -670,7 +677,7 @@ extern "C" {
 #endif
 	}
 
-	JNIEXPORT jboolean JNICALL Java_com_xyron_game_main_SAMP_applyNativeMapScanTeleport(
+	JNIEXPORT jboolean JNICALL Java_com_supremo_launcher_main_SAMP_applyNativeMapScanTeleport(
 			JNIEnv* pEnv,
 			jobject thiz,
 			jfloat x,
@@ -717,7 +724,7 @@ extern "C" {
 #endif
 	}
 
-	JNIEXPORT jstring JNICALL Java_com_xyron_game_main_SAMP_runNativeMapScanProbe(
+	JNIEXPORT jstring JNICALL Java_com_supremo_launcher_main_SAMP_runNativeMapScanProbe(
 			JNIEnv* pEnv,
 			jobject thiz,
 			jfloat x,
@@ -739,7 +746,7 @@ extern "C" {
 #endif
 	}
 
-	JNIEXPORT jboolean JNICALL Java_com_xyron_game_main_SAMP_queueNativeMapScanProbe(
+	JNIEXPORT jboolean JNICALL Java_com_supremo_launcher_main_SAMP_queueNativeMapScanProbe(
 			JNIEnv* pEnv,
 			jobject thiz,
 			jstring zoneId,
@@ -798,7 +805,7 @@ extern "C" {
 }
 
 extern "C" {
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_sendCommandV(JNIEnv* pEnv, jobject thiz, jbyteArray str)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_sendCommandV(JNIEnv* pEnv, jobject thiz, jbyteArray str)
 	{
 		jboolean isCopy = true;
 
@@ -807,7 +814,7 @@ extern "C" {
 
 		std::string szStr((char*)pMsg, length);
 
-		if (Xyron::AppCommand::TrySendAppCommandLine(szStr.c_str())) {
+		if (Supremo::AppCommand::TrySendAppCommandLine(szStr.c_str())) {
 			pEnv->ReleaseByteArrayElements(str, pMsg, JNI_ABORT);
 			return;
 		}
@@ -819,45 +826,45 @@ extern "C" {
 		pEnv->ReleaseByteArrayElements(str, pMsg, JNI_ABORT);
 	}
 
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_requestAppInventory(JNIEnv* pEnv, jobject thiz)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_requestAppInventory(JNIEnv* pEnv, jobject thiz)
 	{
 		(void)pEnv;
 		(void)thiz;
-		Xyron::AppCommand::SendInventoryRequest();
+		Supremo::AppCommand::SendInventoryRequest();
 	}
 }
 extern "C"
 {
 	JNIEXPORT void JNICALL
-	Java_com_xyron_game_main_SAMP_ClickEnterPassengerButton(JNIEnv *env, jobject thiz) 
+	Java_com_supremo_launcher_main_SAMP_ClickEnterPassengerButton(JNIEnv *env, jobject thiz) 
 	{
-		Xyron::Input::PressVehicleAction();
+		Supremo::Input::PressVehicleAction();
 	}
 }
 extern "C"
 {
 	JNIEXPORT void JNICALL
-	Java_com_xyron_game_main_SAMP_ClickLockVehicleButton(JNIEnv *env, jobject thiz) 
+	Java_com_supremo_launcher_main_SAMP_ClickLockVehicleButton(JNIEnv *env, jobject thiz) 
 	{
-		Xyron::Input::PressVehicleLockAction();
+		Supremo::Input::PressVehicleLockAction();
 	}
 }
 
 extern "C"
 {
 	JNIEXPORT void JNICALL
-	Java_com_xyron_game_main_SAMP_setNativeActionButtonState(JNIEnv *env, jobject thiz, jint action, jboolean pressed)
+	Java_com_supremo_launcher_main_SAMP_setNativeActionButtonState(JNIEnv *env, jobject thiz, jint action, jboolean pressed)
 	{
 		switch (action)
 		{
 			case 1:
 				if (pressed) {
-					Xyron::Input::PressVehicleAction();
+					Supremo::Input::PressVehicleAction();
 				}
 				break;
 			case 10:
 				if (pressed) {
-					Xyron::Input::PressCameraAction();
+					Supremo::Input::PressCameraAction();
 				}
 				break;
 			case 2:
@@ -868,7 +875,7 @@ extern "C"
 			case 7:
 			case 8:
 			case 9:
-				Xyron::Input::SetHudActionState(action, pressed == JNI_TRUE);
+				Supremo::Input::SetHudActionState(action, pressed == JNI_TRUE);
 				break;
 			default:
 				break;
@@ -879,43 +886,43 @@ extern "C"
 extern "C"
 {
 	JNIEXPORT void JNICALL
-	Java_com_xyron_game_main_SAMP_setNativeAnalogState(JNIEnv *env, jobject thiz, jint leftRight, jint upDown)
+	Java_com_supremo_launcher_main_SAMP_setNativeAnalogState(JNIEnv *env, jobject thiz, jint leftRight, jint upDown)
 	{
-		Xyron::Input::SetHudAnalogState(leftRight, upDown);
+		Supremo::Input::SetHudAnalogState(leftRight, upDown);
 	}
 }
 
 extern "C"
 {
 	JNIEXPORT void JNICALL
-	Java_com_xyron_game_main_SAMP_addNativeCameraLookDelta(JNIEnv *env, jobject thiz, jfloat deltaX, jfloat deltaY, jint screenWidth, jint screenHeight)
+	Java_com_supremo_launcher_main_SAMP_addNativeCameraLookDelta(JNIEnv *env, jobject thiz, jfloat deltaX, jfloat deltaY, jint screenWidth, jint screenHeight)
 	{
-		Xyron::Input::AddCameraLookDelta(deltaX, deltaY, screenWidth, screenHeight);
+		Supremo::Input::AddCameraLookDelta(deltaX, deltaY, screenWidth, screenHeight);
 	}
 }
 
 extern "C"
 {
 	JNIEXPORT void JNICALL
-	Java_com_xyron_game_main_SAMP_resetNativeSourceControlState(JNIEnv *env, jobject thiz)
+	Java_com_supremo_launcher_main_SAMP_resetNativeSourceControlState(JNIEnv *env, jobject thiz)
 	{
-		Xyron::Input::ResetHudControls();
+		Supremo::Input::ResetHudControls();
 	}
 }
 
 extern "C" {
-	JNIEXPORT void JNICALL Java_com_xyron_game_main_SAMP_onClickButton(JNIEnv* pEnv, jobject thiz, jint action)
+	JNIEXPORT void JNICALL Java_com_supremo_launcher_main_SAMP_onClickButton(JNIEnv* pEnv, jobject thiz, jint action)
 	{
 		switch(action) 
 		{
 			case 1: // Y
 			{
-				Xyron::Input::PressSourceButton(Xyron::Input::SourceButton::Yes);
+				Supremo::Input::PressSourceButton(Supremo::Input::SourceButton::Yes);
 				break;
 			}
 			case 2: // F
 			{
-				Xyron::Input::PressSourceButton(Xyron::Input::SourceButton::SecondaryAttack);
+				Supremo::Input::PressSourceButton(Supremo::Input::SourceButton::SecondaryAttack);
 				break;
 			}
 		}
@@ -925,31 +932,34 @@ extern "C" {
 extern "C"
 {
 	JNIEXPORT void JNICALL
-	Java_com_xyron_game_main_SAMP_MostrarChat(JNIEnv *env, jobject thiz) 
+	Java_com_supremo_launcher_main_SAMP_MostrarChat(JNIEnv *env, jobject thiz)
 	{
-		if (pUI) {
-			pUI->chat()->setVisible(true);
-			Mchat = true;
+		// Server chat is intentionally command-only in the launcher HUD.  Do not
+		// expose the native message feed; AbrirChatBotao handles keyboard input.
+		if (pUI && pUI->chat()) {
+			pUI->chat()->setVisible(false);
 		}
+		Mchat = false;
 	}
 }
 
 extern "C"
 {
 	JNIEXPORT void JNICALL
-	Java_com_xyron_game_main_SAMP_AbrirChatBotao(JNIEnv *env, jobject thiz)
+	Java_com_supremo_launcher_main_SAMP_AbrirChatBotao(JNIEnv *env, jobject thiz)
 	{
-		if (pUI) {
-			pUI->chat()->setVisible(true);
+		// Keep the server feed hidden while retaining the native keyboard bridge.
+		if (pUI && pUI->chat()) {
+			pUI->chat()->setVisible(false);
 			if (pUI->keyboard()) {
 				pUI->keyboard()->show(pUI->chat());
 			}
-			Mchat = true;
 		}
+		Mchat = false;
 	}
 
 	JNIEXPORT void JNICALL
-	Java_com_xyron_game_main_SAMP_OcultarChatBotao(JNIEnv *env, jobject thiz)
+	Java_com_supremo_launcher_main_SAMP_OcultarChatBotao(JNIEnv *env, jobject thiz)
 	{
 		if (pUI) {
 			pUI->chat()->setVisible(false);
@@ -958,7 +968,7 @@ extern "C"
 	}
 
 	JNIEXPORT void JNICALL
-	Java_com_xyron_game_main_SAMP_togglePlayer(JNIEnv *env, jobject thiz, jint toggle)
+	Java_com_supremo_launcher_main_SAMP_togglePlayer(JNIEnv *env, jobject thiz, jint toggle)
 	{
 		if (pGame && pGame->FindPlayerPed()) {
 			pGame->FindPlayerPed()->TogglePlayerControllable(toggle != 0);

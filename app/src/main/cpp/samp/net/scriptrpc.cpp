@@ -20,7 +20,7 @@ static uint8_t ResolveScriptedPlayerArea64(CPlayerPed* playerPed)
 	int32 area = CGame::currArea;
 	if (playerPed && playerPed->m_pPed) {
 		area = playerPed->m_pPed->m_nAreaCode;
-		return Xyron::Streaming::ResolveEffectiveWorldArea(playerPed->m_pPed->GetPosition(), area);
+		return Supremo::Streaming::ResolveEffectiveWorldArea(playerPed->m_pPed->GetPosition(), area);
 	}
 	if (area < 0 || area > 255) {
 		return static_cast<uint8_t>(AREA_CODE_NORMAL_WORLD);
@@ -55,19 +55,19 @@ static CVector WarmupScriptedPlayerPosition64(CPlayerPed* playerPed, const CVect
 	CVector outPos = pos;
 	const uint8_t area = ResolveScriptedPlayerArea64(playerPed);
 	const CVector zeroVelocity(0.0f, 0.0f, 0.0f);
-	Xyron::Streaming::ForceStreamingEnabled(reason ? reason : "scripted-pos-warmup64");
-	Xyron::Streaming::RequestSceneObjectsAroundPlayer(pos, zeroVelocity);
+	Supremo::Streaming::ForceStreamingEnabled(reason ? reason : "scripted-pos-warmup64");
+	Supremo::Streaming::RequestSceneObjectsAroundPlayer(pos, zeroVelocity);
 
 	int samples = 0;
 	auto requestAt = [&](const CVector& sample, bool loadScene) {
 		++samples;
-		Xyron::Streaming::WorldStreamRequest request{};
+		Supremo::Streaming::WorldStreamRequest request{};
 		request.areaCode = area;
 		request.streamingFlags = STREAMING_DEFAULT;
 		request.loadScene = loadScene;
 		request.refreshGame = true;
 		request.reason = reason ? reason : "scripted-pos-warmup64";
-		Xyron::Streaming::PrepareWorldAtPoint(sample, request);
+		Supremo::Streaming::PrepareWorldAtPoint(sample, request);
 	};
 
 	auto requestCross = [&](float radius, bool loadScene) {
@@ -87,14 +87,14 @@ static CVector WarmupScriptedPlayerPosition64(CPlayerPed* playerPed, const CVect
 	const float radii[] = { 12.0f, 28.0f, 56.0f };
 	for (int i = 0; i < 3; ++i) {
 		requestCross(radii[i], i == 0);
-		Xyron::Streaming::LoadAllRequestedModels(false);
+		Supremo::Streaming::LoadAllRequestedModels(false);
 	}
-	Xyron::Collision::LoadCollision(pos, false);
-	Xyron::Collision::EnsureCollisionInMemory(pos);
+	Supremo::Collision::LoadCollision(pos, false);
+	Supremo::Collision::EnsureCollisionInMemory(pos);
 	RequestArm64WorldCollisionForPosition(pos, area, true);
-	Xyron::Streaming::LoadAllRequestedModels(false);
-	Xyron::Collision::LoadCollision(pos, false);
-	Xyron::Collision::EnsureCollisionInMemory(pos);
+	Supremo::Streaming::LoadAllRequestedModels(false);
+	Supremo::Collision::LoadCollision(pos, false);
+	Supremo::Collision::EnsureCollisionInMemory(pos);
 	RequestArm64WorldCollisionForPosition(pos, area, true);
 
 	const float afterGround = pGame->FindGroundZForCoord(pos.x, pos.y, pos.z + 4.0f);
@@ -151,7 +151,7 @@ static CVector WarmupScriptedPlayerPosition64(CPlayerPed* playerPed, const CVect
 		     spawnSurfaceOk ? spawnSurfaceModel : -1,
 		     nativeGroundLift ? 1 : 0,
 		     GetTickCount() - startTick,
-		     Xyron::Streaming::IsStreamingDisabled() ? 1 : 0);
+		     Supremo::Streaming::IsStreamingDisabled() ? 1 : 0);
 	}
 
 	return outPos;
@@ -1720,14 +1720,14 @@ void ScrSetPlayerPos(RPCParameters* rpcParams)
 #else
     // Prime stream/collision around server authoritative position instead
     // of using post-spawn teleport corrections.
-    Xyron::Streaming::WorldStreamRequest request{};
+    Supremo::Streaming::WorldStreamRequest request{};
     request.areaCode = localPed->m_pPed->m_nAreaCode;
     request.addModels = false;
     request.addLods = false;
     request.refreshGame = true;
     request.reason = "set-pos-32";
-    Xyron::Streaming::PrepareWorldAtPoint(vecPos, request);
-    Xyron::Streaming::LoadAllRequestedModels(false);
+    Supremo::Streaming::PrepareWorldAtPoint(vecPos, request);
+    Supremo::Streaming::LoadAllRequestedModels(false);
 #endif
 
     if(localPed->m_pPed->IsInVehicle())
@@ -2347,7 +2347,7 @@ void ScrSetActorPos(RPCParameters* rpcParams)
 
 	CActor* pActor = pActorPool->GetAt(ActorID);
 	if (pActor) {
-		Xyron::Collision::RequestCollision(vecPos, pActor->m_pPed->m_nAreaCode);
+		Supremo::Collision::RequestCollision(vecPos, pActor->m_pPed->m_nAreaCode);
 		pActor->m_pPed->SetPosn(vecPos.x, vecPos.y, vecPos.z);
 		pActor->m_pPed->UpdateRW();
 		pActor->m_pPed->UpdateRwFrame();

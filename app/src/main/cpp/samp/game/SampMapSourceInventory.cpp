@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <vector>
 
-namespace Xyron::MapSource {
+namespace Supremo::MapSource {
 namespace {
 
 constexpr size_t kProbeReadLimit = 4096;

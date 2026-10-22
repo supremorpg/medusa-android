@@ -40,7 +40,7 @@ bool CVehiclePool::New(NEW_VEHICLE* new_veh)
 
     // Force preloading and locking Shamal (519) in memory when spawned by the server
     if (new_veh->iVehicleType == 519 || new_veh->iVehicleType == 560) {
-        Xyron::Streaming::TryLoadModel(new_veh->iVehicleType);
+        Supremo::Streaming::TryLoadModel(new_veh->iVehicleType);
         CBaseModelInfo* modelInfo = CModelInfo::GetModelInfo(new_veh->iVehicleType);
         if (modelInfo) {
             modelInfo->m_nRefCount = 999;
@@ -133,7 +133,7 @@ void CVehiclePool::AssignSpecialParamsToVehicle(VEHICLEID VehicleID, uint8_t byt
                 pVehicle->m_bSpecialMarkerEnabled = false;
             }
 
-            pVehicle->SetDoorState(byteDoorsLocked);
+            pVehicle->SetDoorState(byteDoorsLocked != 0);
         }
     }
 }

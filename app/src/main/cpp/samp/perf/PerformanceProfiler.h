@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace Xyron::Perf {
+namespace Supremo::Perf {
 
 enum class Zone : uint8_t {
     Frame = 0,
@@ -59,4 +59,4 @@ private:
     uint64_t m_startNs;
 };
 
-} // namespace Xyron::Perf
+} // namespace Supremo::Perf

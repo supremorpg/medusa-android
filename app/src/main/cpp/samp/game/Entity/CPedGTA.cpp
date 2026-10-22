@@ -9,7 +9,7 @@
 #include "game/GTASAEngineApi.h"
 
 #if !VER_x32
-extern "C" void XyronRememberLocalVehicleForRender64(CVehicleGTA* vehicle);
+extern "C" void SupremoRememberLocalVehicleForRender64(CVehicleGTA* vehicle);
 #endif
 
 void CPedGTA::GetBonePosition(RwV3d *posn, uint32 boneTag, bool bCalledFromCamera) {
@@ -167,7 +167,7 @@ void CPedGTA::GiveWeapon(int iWeaponID, int iAmmo)
 
     if (iModelID == -1 || iModelID == 350 || iModelID == 365) return;
 
-    if (!Xyron::Streaming::TryLoadModel(iModelID))
+    if (!Supremo::Streaming::TryLoadModel(iModelID))
         return;
 
     GTASAEngineApi::GivePedWeapon(this, iWeaponID, iAmmo);
@@ -230,7 +230,7 @@ void CPedGTA::RemoveFromVehicle()
         if (!oldVehicle->pDriver && oldVehicle->GetStatus() == STATUS_PLAYER) {
             oldVehicle->SetStatus(STATUS_ABANDONED);
         }
-        if (!oldVehicle->m_pRwObject && Xyron::Streaming::IsModelLoaded(oldVehicle->m_nModelIndex)) {
+        if (!oldVehicle->m_pRwObject && Supremo::Streaming::IsModelLoaded(oldVehicle->m_nModelIndex)) {
             oldVehicle->CreateRwObject();
         }
         if (oldVehicle->m_pRwObject) {
@@ -238,7 +238,7 @@ void CPedGTA::RemoveFromVehicle()
             oldVehicle->UpdateRwFrame();
         }
 #if !VER_x32
-        XyronRememberLocalVehicleForRender64(oldVehicle);
+        SupremoRememberLocalVehicleForRender64(oldVehicle);
 #endif
     }
 

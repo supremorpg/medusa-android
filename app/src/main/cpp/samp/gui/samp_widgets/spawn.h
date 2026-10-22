@@ -1,5 +1,11 @@
 #pragma once
 
+#include "../imguirenderer.h"
+#include "../widget.h"
+#include "../widgets/label.h"
+#include "../widgets/layout.h"
+#include "../widgets/button.h"
+
 class Spawn : public Layout
 {
 public:

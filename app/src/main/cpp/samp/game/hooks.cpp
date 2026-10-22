@@ -3,6 +3,9 @@
 #include "../vendor/armhook/patch.h"
 #include "game.h"
 #include "../net/netgame.h"
+#include "../net/localplayer.h"
+#include "Widgets/TouchInterface.h"
+#include "Widgets/WidgetGta.h"
 #include "../gui/gui.h"
 #include "Textures/TextureDatabase.h"
 #include "Textures/TextureDatabaseEntry.h"
@@ -22,7 +25,6 @@
 #include "util.h"
 #include "util/CUtil.h"
 #include "Coronas.h"
-#include "multitouch.h"
 #include "SampStreamingApi.h"
 #include "SampCollisionApi.h"
 #include "References.h"
@@ -30,7 +32,6 @@
 #include "game/Animation/AnimManager.h"
 #include "SampFileLoaderApi.h"
 #include "Renderer.h"
-#include "CrossHair.h"
 #include "World.h"
 #include "GTASAEngineApi.h"
 #include "GTASAEngineNativeHookBindings.h"
@@ -84,8 +85,12 @@ static void RestoreWorld3DRenderState64(const char* stage)
     RwRenderStateSet(rwRENDERSTATEZTESTENABLE, RWRSTATE(TRUE));
     RwRenderStateSet(rwRENDERSTATEZWRITEENABLE, RWRSTATE(TRUE));
     RwRenderStateSet(rwRENDERSTATEVERTEXALPHAENABLE, RWRSTATE(FALSE));
+    RwRenderStateSet(rwRENDERSTATESRCBLEND, RWRSTATE(rwBLENDSRCALPHA));
+    RwRenderStateSet(rwRENDERSTATEDESTBLEND, RWRSTATE(rwBLENDINVSRCALPHA));
+    RwRenderStateSet(rwRENDERSTATEFOGENABLE, RWRSTATE(FALSE));
     RwRenderStateSet(rwRENDERSTATETEXTURERASTER, RWRSTATE(NULL));
     RwRenderStateSet(rwRENDERSTATECULLMODE, RWRSTATE(rwCULLMODECULLBACK));
+    glDisable(GL_SCISSOR_TEST);
 
     static uint32_t s_lastWorldStateLogTick = 0;
     const uint32_t now = GetTickCount();
@@ -119,8 +124,15 @@ static void ClearWorldTextureRasterState64(const char* stage)
 
 static void SuppressNativeLoadingDuringGameplay64(const char* stage)
 {
-    if (!IsSampRuntimeActive64()) {
+    if (!IsSampConnectedGameplay64() || !IsLocalPlayerHudReady()) {
         return;
+    }
+
+    static bool s_abiDiagnosticLogged = false;
+    if (!s_abiDiagnosticLogged) {
+        s_abiDiagnosticLogged = true;
+        FLog("[LOAD_SUPPRESS64] native loading ABI offsets enabled only after connected/spawn-ready stage=%s base=%p",
+             stage ? stage : "?", reinterpret_cast<void*>(g_libGTASA));
     }
 
     static uint32_t s_lastPriorityLogTick = 0;
@@ -138,6 +150,8 @@ static void SuppressNativeLoadingDuringGameplay64(const char* stage)
     }
 
 #if !VER_x32
+    // These offsets are intentionally isolated and unchanged; validate their
+    // ABI at runtime before writing so unsupported game builds are untouched.
     static constexpr uintptr_t kLoadingBoolGlobals64[] = {
         0xC20ED8, // CLoadingScreen::m_bActive
         0xC20EF0, // CLoadingScreen::m_bFading
@@ -170,7 +184,7 @@ static uint8_t NormalizeLocalExteriorArea64(CPlayerPed* localPed, const CVector&
     }
 
     const uint8_t rawArea = static_cast<uint8_t>(localPed->m_pPed->m_nAreaCode);
-    const uint8_t effectiveArea = Xyron::Streaming::ResolveEffectiveWorldArea(pos, rawArea);
+    const uint8_t effectiveArea = Supremo::Streaming::ResolveEffectiveWorldArea(pos, rawArea);
     if (rawArea == effectiveArea) {
         return effectiveArea;
     }
@@ -211,6 +225,13 @@ static TextureWarmupRequest64 gTextureWarmupQueue64[kTextureWarmupQueueCapacity6
 static uint32_t gTextureWarmupRead64 = 0;
 static uint32_t gTextureWarmupWrite64 = 0;
 static uint32_t gTextureWarmupDropped64 = 0;
+
+extern "C" void ResetTextureWarmupQueue64()
+{
+    gTextureWarmupRead64 = 0;
+    gTextureWarmupWrite64 = 0;
+    gTextureWarmupDropped64 = 0;
+}
 
 static bool IsWorldTextureDatabase64(const TextureDatabaseRuntime* database)
 {
@@ -608,7 +629,7 @@ static bool PrepareVehicleForRender64(CVehicleGTA* vehicle)
 {
     if (!vehicle ||
         vehicle->m_nModelIndex >= CModelInfo::NUM_MODEL_INFOS ||
-        !Xyron::Streaming::IsModelLoaded(vehicle->m_nModelIndex)) {
+        !Supremo::Streaming::IsModelLoaded(vehicle->m_nModelIndex)) {
         return false;
     }
 
@@ -676,7 +697,7 @@ static bool IsLocalVehicleRenderRefreshActive64(uint32_t now = GetTickCount())
     return until != 0 && static_cast<int32_t>(until - now) > 0;
 }
 
-extern "C" void XyronRememberLocalVehicleForRender64(CVehicleGTA* vehicle)
+extern "C" void SupremoRememberLocalVehicleForRender64(CVehicleGTA* vehicle)
 {
     VEHICLEID vehicleId = INVALID_VEHICLE_ID;
     if (!IsSampVehicleAlive64(vehicle, &vehicleId)) {
@@ -953,19 +974,19 @@ static void RepairNearbyVehiclesForRender64(const char* stage)
             continue;
         }
 
-        Xyron::Streaming::MarkModelDontRemoveInLoadScene(modelId);
-        if (!Xyron::Streaming::IsModelLoaded(modelId)) {
+        Supremo::Streaming::MarkModelDontRemoveInLoadScene(modelId);
+        if (!Supremo::Streaming::IsModelLoaded(modelId)) {
             // First try a fast synchronous load (TryLoadModel handles priority internally)
-            const bool fastLoaded = Xyron::Streaming::TryLoadModel(modelId);
+            const bool fastLoaded = Supremo::Streaming::TryLoadModel(modelId);
             if (!fastLoaded) {
                 // Fallback: queue a priority request and process the load queue now
-                Xyron::Streaming::RequestModel(modelId,
+                Supremo::Streaming::RequestModel(modelId,
                     STREAMING_DONTREMOVE_IN_LOADSCENE | STREAMING_PRIORITY_REQUEST);
-                Xyron::Streaming::LoadAllRequestedModels(true);
+                Supremo::Streaming::LoadAllRequestedModels(true);
             }
             ++requested;
             // Even after a forced load attempt, re-check before trying to prepare
-            if (!Xyron::Streaming::IsModelLoaded(modelId)) {
+            if (!Supremo::Streaming::IsModelLoaded(modelId)) {
                 continue;
             }
         }
@@ -1002,7 +1023,7 @@ static void RepairNearbyVehiclesForRender64(const char* stage)
 }
 #endif
 
-extern "C" void XyronRequestVehicleRenderRefresh64()
+extern "C" void SupremoRequestVehicleRenderRefresh64()
 {
 #if !VER_x32
     const uint32_t now = GetTickCount();
@@ -1018,11 +1039,11 @@ extern "C" void XyronRequestVehicleRenderRefresh64()
     if (vehicle) {
         modelId = static_cast<int>(vehicle->m_nModelIndex);
         if (modelId >= 0 && modelId < CModelInfo::NUM_MODEL_INFOS) {
-            Xyron::Streaming::MarkModelDontRemoveInLoadScene(modelId);
-            if (!Xyron::Streaming::IsModelLoaded(modelId)) {
-                Xyron::Streaming::RequestModel(modelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
+            Supremo::Streaming::MarkModelDontRemoveInLoadScene(modelId);
+            if (!Supremo::Streaming::IsModelLoaded(modelId)) {
+                Supremo::Streaming::RequestModel(modelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
             }
-            modelLoaded = Xyron::Streaming::IsModelLoaded(modelId);
+            modelLoaded = Supremo::Streaming::IsModelLoaded(modelId);
         }
 
         if (PrepareVehicleForRender64(vehicle)) {
@@ -1097,19 +1118,38 @@ void RenderEffects() {
     //DebugModules::Render3D();
 }
 
-/*void MainLoop();
-void(*Render2dStuff)();
+void (*Render2dStuffNative)();
+
 void Render2dStuff_hook()
 {
-    Render2dStuff();
-    if(pNetGame)
+    // Keep the native pass authoritative for loading, connecting, chat and
+    // radar. Gameplay HUD visibility is controlled by the existing HUD state;
+    // readiness must not suppress the entire engine 2D pass.
+    if (Render2dStuffNative) {
+        Render2dStuffNative();
+    }
+
+#if !VER_x32
+    // The installed hook is the active 2D path; drain queued texture marks
+    // only after the native pass has established the render context.
+    ProcessTextureWarmupQueue64();
+#endif
+
+    if (pNetGame)
     {
         CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
-        if(pTextDrawPool) pTextDrawPool->Draw();
+        if (pTextDrawPool) pTextDrawPool->Draw();
     }
-    if (pUI) pUI->render();
-    return;
-}*/
+
+    if (pUI && pUI->renderer()) {
+        pUI->render();
+    }
+
+#if !VER_x32
+    RestoreWorld3DRenderState64("render2d-hook-after-ui");
+#endif
+}
+
 void Render2dStuff()
 {
     SuppressNativeLoadingDuringGameplay64("render2d-begin");
@@ -1142,14 +1182,6 @@ void Render2dStuff()
     } else {
         GTASAEngineApi::SetEmuGamma(false);
     }
-
-    if(pNetGame)
-    {
-        CTextDrawPool* pTextDrawPool = pNetGame->GetTextDrawPool();
-        if(pTextDrawPool) pTextDrawPool->Draw();
-    }
-
-    if (pUI) pUI->render();
 
     SuppressNativeLoadingDuringGameplay64("render2d-end");
 #if !VER_x32
@@ -1855,6 +1887,12 @@ static void DispatchOriginalAndroidTouchEvent(int type, int num, int posX, int p
 
 void AND_TouchEvent_hook(int type, int num, int posX, int posY)
 {
+    if (g_bDirectTouchConsumed) {
+        g_bDirectTouchConsumed = false;
+        DispatchOriginalAndroidTouchEvent(1, 0, 0, 0);
+        return;
+    }
+
     // imgui
     //bool bRet = pUI->OnTouchEvent(type, num, posX, posY);
 
@@ -1873,7 +1911,10 @@ void AND_TouchEvent_hook(int type, int num, int posX, int posY)
         return;
     }
 
-    if (pUI != nullptr)
+    // Java's direct bridge dispatches the widget tree and selectable textdraws.
+    // Once it has been observed, this hook forwards only the remaining stock
+    // game input so chat/textdraw events cannot be delivered twice.
+    if (!g_bNativeImGuiTouchBridgeSeen && pUI != nullptr)
     {
         switch (type)
         {
@@ -2278,84 +2319,21 @@ static void RepairWorldRwObjectsAroundPlayer64(const CVector& pos, uint8_t playe
 void (*CRenderer_PreRender)();
 void CRenderer_PreRender_hook()
 {
-#if !VER_x32
-    SuppressNativeLoadingDuringGameplay64("pre-render-begin");
-    SanitizeRendererLists64("pre-before");
-#endif
-
+    // Forward directly to the stock renderer.  The previous ARM64 wrapper
+    // compacted renderer lists and rewrote vehicle/world RW state around the
+    // player during every render pass, which could produce missing geometry
+    // and a second inconsistent world after a camera gesture.
     if (CRenderer_PreRender) {
         CRenderer_PreRender();
     }
-
-#if !VER_x32
-    const char* vehicleRefreshStage = IsLocalVehicleRenderRefreshActive64() ? "settings-refresh" : "pre-after";
-    EnsureLocalVehicleQueuedForRender64(vehicleRefreshStage);
-    RepairNearbyVehiclesForRender64(vehicleRefreshStage);
-    if (pGame && pNetGame && pNetGame->GetGameState() == GAMESTATE_CONNECTED &&
-        pGame->FindPlayerPed() && pGame->FindPlayerPed()->m_pPed) {
-        CPedGTA* ped = pGame->FindPlayerPed()->m_pPed;
-        RepairWorldRwObjectsAroundPlayer64(
-            ped->GetPosition(),
-            static_cast<uint8_t>(ped->m_nAreaCode),
-            true);
-    }
-    SanitizeRendererLists64("pre-after");
-#endif
 }
 
-void CRenderer_RenderEverythingBarRoads_hook() {
-
-#if !VER_x32
-    SuppressNativeLoadingDuringGameplay64("bar-roads-begin");
-    RestoreWorld3DRenderState64("bar-roads-before-native");
-    if (kArm64ManualWorldRenderEnabled) {
-        CullNearbyLodWorldEntities64();
+void CRenderer_RenderEverythingBarRoads_hook()
+{
+    // Do not add a second world-render pass after the native renderer.
+    if (CRenderer_RenderEverythingBarRoads) {
+        CRenderer_RenderEverythingBarRoads();
     }
-#endif
-
-    CRenderer_RenderEverythingBarRoads();
-
-#if !VER_x32
-    RestoreWorld3DRenderState64("bar-roads-after-native");
-#endif
-
-#if !VER_x32
-    if (kArm64DirectRenderFallbackEnabled) {
-        RenderTrackedLocalVehicleMainPass64(IsLocalVehicleRenderRefreshActive64() ? "settings-refresh-bar-roads" : "bar-roads");
-    }
-    if (kArm64ManualWorldRenderEnabled) {
-        RenderNearbyStaticWorldEntities64(false);
-    }
-    LogRendererLists64("bar-roads");
-#endif
-    if (pGame && pGame->FindPlayerPed() && pGame->FindPlayerPed()->m_pPed) {
-        LogWatchedWorldMatricesAroundPlayerABI(pGame->FindPlayerPed()->m_pPed->GetPosition());
-    }
-
-#if !VER_x32
-    if (kArm64DirectRenderFallbackEnabled && pNetGame) {
-        CObjectPool* pObjectPool = pNetGame->GetObjectPool();
-        if (pObjectPool) {
-            for (OBJECTID i = 0; i < MAX_OBJECTS; i++) {
-                CObject* pObject = pObjectPool->GetAt(i);
-                if (pObject && pObject->m_bForceRender && pObject->m_pEntity) {
-                    if (pObject->HasVisiblePlaceholderMaterialText()) {
-                        static uint32_t s_lastFallbackPlaceholderSkipLogTick = 0;
-                        const uint32_t now = GetTickCount();
-                        if (now - s_lastFallbackPlaceholderSkipLogTick >= 2000u) {
-                            s_lastFallbackPlaceholderSkipLogTick = now;
-                            FLog("[OBJ_PLACEHOLDER64] skipped fallback Loading material-text object id=%u model=%d",
-                                 i,
-                                 pObject->m_pEntity->m_nModelIndex);
-                        }
-                        continue;
-                    }
-                    RenderEntity(pObject->m_pEntity);
-                }
-            }
-        }
-    }
-#endif
 }
 
 void (*CRenderer_RenderRoads)();
@@ -2383,14 +2361,12 @@ void CRenderer_RenderRoads_hook()
 }
 
 #include "CFPSFix.h"
-#include "ES2VertexBuffer.h"
 #include "RQ_Commands.h"
 #include "Pickups.h"
 #include "TimeCycle.h"
 #include "game/Pipelines/CustomCar/CustomCarEnvMapPipeline.h"
 #include "game/Pipelines/CustomBuilding/CustomBuildingDNPipeline.h"
 #include "COcclusion.h"
-#include "RealTimeShadowManager.h"
 #include "game/Widgets/WidgetGta.h"
 
 CFPSFix g_fps;
@@ -3992,7 +3968,7 @@ static bool ProbeEntityVerticalFallback64(CEntityGTA* entity,
     }
 
     const int modelId = entity->m_nModelIndex;
-    if (!Xyron::Streaming::IsValidResourceId(modelId)) {
+    if (!Supremo::Streaming::IsValidResourceId(modelId)) {
         ++result.badModel;
         return false;
     }
@@ -4154,7 +4130,7 @@ static void ProbeWorldPoolVerticalFallback64(TPool* pool,
         }
 
         const int modelId = entity->m_nModelIndex;
-        if (!Xyron::Streaming::IsValidResourceId(modelId)) {
+        if (!Supremo::Streaming::IsValidResourceId(modelId)) {
             ++result.badModel;
             continue;
         }
@@ -4222,7 +4198,7 @@ static void LogVerticalHoleCandidatesPool64(const char* poolName,
         }
 
         const int modelId = entity->m_nModelIndex;
-        if (!Xyron::Streaming::IsValidResourceId(modelId) || IsTempVehicleComponentModel64(modelId)) {
+        if (!Supremo::Streaming::IsValidResourceId(modelId) || IsTempVehicleComponentModel64(modelId)) {
             continue;
         }
 
@@ -4731,7 +4707,7 @@ static void TraceLocalPedJumpPhysics64(const char* tag, CPlayerPed* localPed, CP
     }
 
     CPedGTA* ped = localPed->m_pPed;
-    const bool jumpDown = Xyron::Input::IsJumpDown();
+    const bool jumpDown = Supremo::Input::IsJumpDown();
     const bool waterActive = IsLocalPedWaterActive64(localPed);
     const bool downwardPull = physical->m_vecMoveSpeed.z < -0.035f;
     const bool blocked =
@@ -4822,7 +4798,7 @@ static bool IsLocalPedJumpInputActive64(CPlayerPed* localPed, CPhysical* physica
 {
     const bool active =
         IsLocalPedJumpPhysical64(localPed, physical) &&
-        Xyron::Input::IsJumpDown();
+        Supremo::Input::IsJumpDown();
 
     if (active) {
         TraceLocalPedJumpPhysics64("jump-input", localPed, physical, false);
@@ -4860,7 +4836,7 @@ static bool StabilizeLocalPedWaterJump64(CPlayerPed* localPed, CPhysical* physic
     ped->bHeadStuckInCollision = false;
     ped->bStuckUnderCar = false;
 
-    const bool jumpDown = Xyron::Input::IsJumpDown();
+    const bool jumpDown = Supremo::Input::IsJumpDown();
     if (jumpDown || physical->m_vecMoveSpeed.z < -0.035f) {
         TraceLocalPedJumpPhysics64("water-jump", localPed, physical, true);
     }
@@ -5634,8 +5610,8 @@ static void EnsureArm64StreamingMemoryBudget(const char* reason)
     static bool s_loggedOnce = false;
     static uint32_t s_lastLogTick = 0;
 
-    const Xyron::Streaming::StreamingMemoryBudgetResult budget =
-        Xyron::Streaming::ApplyMemoryBudget(
+    const Supremo::Streaming::StreamingMemoryBudgetResult budget =
+        Supremo::Streaming::ApplyMemoryBudget(
             kArm64StreamingMemoryBudget,
             kArm64StreamingMemoryHardBudget);
 
@@ -6058,7 +6034,7 @@ static void LogWatchedWorldEntities64(const char* poolName, TPool* pool, const C
               IsLodWorldModel64(modelInfo) ? 1 : 0,
               entity->m_pRwObject ? 1 : 0,
               modelInfo && modelInfo->m_pRwObject ? 1 : 0,
-              Xyron::Streaming::IsModelLoaded(entity->m_nModelIndex) ? 1 : 0,
+              Supremo::Streaming::IsModelLoaded(entity->m_nModelIndex) ? 1 : 0,
               entity->m_bIsVisible ? 1 : 0,
               entity->m_nFlags);
         FLog("[WORLD_BBOX64] pool=%s slot=%d model=%d name=%s col=%d colSlot=%u colFlags=0x%02X colVol=%d colActive=%d data=%d ownCol=%d road=%d miFlags=0x%04X sph=%u box=%u line=%u tri=%u shTri=%d local={%.2f %.2f %.2f -> %.2f %.2f %.2f} world={%.2f %.2f %.2f -> %.2f %.2f %.2f}",
@@ -6148,7 +6124,7 @@ static void ScanWorldEntityPool64(
         }
 
         const bool hasModelInfo = modelInfo != nullptr;
-        const bool loaded = Xyron::Streaming::IsValidResourceId(modelId) && Xyron::Streaming::IsModelLoaded(modelId);
+        const bool loaded = Supremo::Streaming::IsValidResourceId(modelId) && Supremo::Streaming::IsModelLoaded(modelId);
         const bool entityRw = entity->m_pRwObject != nullptr;
         const bool modelRw = modelInfo && modelInfo->m_pRwObject;
         const bool hasCollision = modelInfo && modelInfo->m_pColModel;
@@ -6220,7 +6196,7 @@ static void LogStaticWorldPoolsAroundPlayer64(const CVector& pos)
          buildingDiag.used, buildingDiag.near, buildingDiag.noEntityRw, buildingDiag.notLoaded, buildingDiag.noModelInfo, buildingDiag.noModelRw, buildingDiag.invisible, buildingDiag.noCollision,
          objectDiag.used, objectDiag.near, objectDiag.noEntityRw, objectDiag.notLoaded, objectDiag.noModelInfo, objectDiag.noModelRw, objectDiag.invisible, objectDiag.noCollision,
          dummyDiag.used, dummyDiag.near, dummyDiag.noEntityRw, dummyDiag.notLoaded, dummyDiag.noModelInfo, dummyDiag.noModelRw, dummyDiag.invisible, dummyDiag.noCollision,
-         Xyron::Streaming::IsStreamingDisabled() ? 1 : 0);
+         Supremo::Streaming::IsStreamingDisabled() ? 1 : 0);
 
     for (int i = 0; i < sampleCount; ++i) {
         const WorldEntitySample64& sample = samples[i];
@@ -6651,13 +6627,13 @@ static void RenderStaticWorldPool64(
         }
 
         const int modelId = entity->m_nModelIndex;
-        if (!Xyron::Streaming::IsValidResourceId(modelId) || !entity->m_pRwObject) {
+        if (!Supremo::Streaming::IsValidResourceId(modelId) || !entity->m_pRwObject) {
             ++stats.skippedState;
             continue;
         }
 
         CBaseModelInfo* modelInfo = CModelInfo::GetModelInfo(modelId);
-        if (!modelInfo || !modelInfo->m_pRwObject || !Xyron::Streaming::IsModelLoaded(modelId)) {
+        if (!modelInfo || !modelInfo->m_pRwObject || !Supremo::Streaming::IsModelLoaded(modelId)) {
             ++stats.skippedState;
             continue;
         }
@@ -6707,7 +6683,7 @@ static int CullNearbyLodWorldPool64(TPool* pool, const CVector& playerPos, const
         }
 
         const int modelId = entity->m_nModelIndex;
-        if (!Xyron::Streaming::IsValidResourceId(modelId)) {
+        if (!Supremo::Streaming::IsValidResourceId(modelId)) {
             continue;
         }
 
@@ -7148,7 +7124,7 @@ static bool IsRendererEntitySafe64(CEntityGTA* entity,
         return false;
     }
 
-    if (!Xyron::Streaming::IsModelLoaded(modelId)) {
+    if (!Supremo::Streaming::IsModelLoaded(modelId)) {
         if (outReason) *outReason = "stream";
         return false;
     }
@@ -7398,7 +7374,7 @@ static void RequestNearbyWorldCollisionAreas64(const CVector& sample, uint8_t pl
     CollectNearbyCollisionAreas64(GetObjectPoolGta(), sample, 160.0f, stats);
     CollectNearbyCollisionAreas64(GetDummyPool(), sample, 160.0f, stats);
     for (int i = 0; i < stats.areaCount; ++i) {
-        Xyron::Streaming::WorldStreamRequest streamRequest{};
+        Supremo::Streaming::WorldStreamRequest streamRequest{};
         streamRequest.areaCode = static_cast<int32>(stats.areas[i]);
         streamRequest.streamingFlags = STREAMING_DEFAULT;
         streamRequest.addModels = false;
@@ -7409,7 +7385,7 @@ static void RequestNearbyWorldCollisionAreas64(const CVector& sample, uint8_t pl
         streamRequest.ensureIpls = false;
         streamRequest.loadSceneCollision = false;
         streamRequest.reason = "nearby-area-collision";
-        Xyron::Streaming::PrepareWorldAtPoint(sample, streamRequest);
+        Supremo::Streaming::PrepareWorldAtPoint(sample, streamRequest);
     }
 
     const uint32_t now = GetTickCount();
@@ -7484,7 +7460,7 @@ static void NormalizeNearbyWorldObjectAreas64(const CVector& playerPos, uint8_t 
 
         ++scanned;
         const int modelId = entity->m_nModelIndex;
-        if (!Xyron::Streaming::IsValidResourceId(modelId)) {
+        if (!Supremo::Streaming::IsValidResourceId(modelId)) {
             continue;
         }
 
@@ -7657,7 +7633,7 @@ static void CollectWorldRwRepairCandidates64(
         }
 
         const int modelId = entity->m_nModelIndex;
-        if (!Xyron::Streaming::IsValidResourceId(modelId)) {
+        if (!Supremo::Streaming::IsValidResourceId(modelId)) {
             continue;
         }
         if (IsTempVehicleComponentModel64(modelId)) {
@@ -7671,7 +7647,7 @@ static void CollectWorldRwRepairCandidates64(
         }
 
         if (IsUnstableBreakableWorldProp64(modelId, modelInfo)) {
-            const bool modelLoaded = Xyron::Streaming::IsModelLoaded(modelId);
+            const bool modelLoaded = Supremo::Streaming::IsModelLoaded(modelId);
             const bool modelHasRw = modelInfo->m_pRwObject != nullptr;
             const bool entityHasRw = entity->m_pRwObject != nullptr;
             PreserveBreakableWorldPropCollision64(entity);
@@ -7680,7 +7656,7 @@ static void CollectWorldRwRepairCandidates64(
                 ++stats.unhidden;
             }
             if (!modelLoaded || !modelHasRw) {
-                Xyron::Streaming::RequestModel(modelId, STREAMING_DEFAULT);
+                Supremo::Streaming::RequestModel(modelId, STREAMING_DEFAULT);
                 ++stats.requested;
             }
             continue;
@@ -7696,12 +7672,12 @@ static void CollectWorldRwRepairCandidates64(
             continue;
         }
 
-        const bool modelLoaded = Xyron::Streaming::IsModelLoaded(modelId);
+        const bool modelLoaded = Supremo::Streaming::IsModelLoaded(modelId);
         const bool modelHasRw = modelInfo->m_pRwObject != nullptr;
         const bool entityHasRw = entity->m_pRwObject != nullptr;
 
         if (criticalBallysModel) {
-            Xyron::Streaming::MarkModelDontRemoveInLoadScene(modelId);
+            Supremo::Streaming::MarkModelDontRemoveInLoadScene(modelId);
             entity->m_bDontStream = false;
             if (!entity->m_bIsVisible && ShouldRestoreWorldEntityVisibility64(entity, modelInfo)) {
                 entity->m_bIsVisible = true;
@@ -7718,7 +7694,7 @@ static void CollectWorldRwRepairCandidates64(
             }
 
             if (!modelLoaded || !modelHasRw) {
-                Xyron::Streaming::RequestModel(modelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
+                Supremo::Streaming::RequestModel(modelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
                 ++stats.requested;
             }
 
@@ -7734,7 +7710,7 @@ static void CollectWorldRwRepairCandidates64(
         }
 
         if (!modelLoaded || !modelHasRw) {
-            Xyron::Streaming::RequestModel(modelId, STREAMING_DEFAULT);
+            Supremo::Streaming::RequestModel(modelId, STREAMING_DEFAULT);
             ++stats.requested;
         }
 
@@ -7789,7 +7765,7 @@ static void RepairWorldRwObjectsAroundPlayer64(const CVector& pos, uint8_t playe
     CollectWorldRwRepairCandidates64("O", GetObjectPoolGta(), pos, kRepairRadius, playerArea, candidates, candidateCount, kMaxCandidates, stats, logCandidates);
 
     if (stats.requested > 0) {
-        Xyron::Streaming::LoadAllRequestedModels(false);
+        Supremo::Streaming::LoadAllRequestedModels(false);
     }
 
     for (int i = 0; i < candidateCount; ++i) {
@@ -7799,7 +7775,7 @@ static void RepairWorldRwObjectsAroundPlayer64(const CVector& pos, uint8_t playe
         }
 
         const int modelId = entity->m_nModelIndex;
-        if (!Xyron::Streaming::IsValidResourceId(modelId) || !Xyron::Streaming::IsModelLoaded(modelId)) {
+        if (!Supremo::Streaming::IsValidResourceId(modelId) || !Supremo::Streaming::IsModelLoaded(modelId)) {
             continue;
         }
 
@@ -7843,8 +7819,8 @@ static void RepairWorldRwObjectsAroundPlayer64(const CVector& pos, uint8_t playe
              stats.rwAttempts,
              stats.rwRestored,
              stats.failed,
-             Xyron::Streaming::MemoryUsed(),
-             Xyron::Streaming::MemoryAvailable());
+             Supremo::Streaming::MemoryUsed(),
+             Supremo::Streaming::MemoryAvailable());
     }
 #endif
 }
@@ -7875,14 +7851,14 @@ static void MaintainWorldObjectStreaming64()
     }
     s_lastMaintainTick = now;
 
-    Xyron::Streaming::EnableStreamingIfDisabled();
+    Supremo::Streaming::EnableStreamingIfDisabled();
     EnsureArm64StreamingMemoryBudget("maintain-world");
     CRenderer::ms_bRenderOutsideTunnels = true;
     CRenderer::m_loadingPriority = false;
 
     if (now - s_lastSceneRequestTick >= 900u || speedSq > 9.0f) {
         s_lastSceneRequestTick = now;
-        Xyron::Streaming::RequestSceneObjectsAroundPlayer(playerPos, playerVel);
+        Supremo::Streaming::RequestSceneObjectsAroundPlayer(playerPos, playerVel);
     }
 
     const uint8_t playerArea = NormalizeLocalExteriorArea64(localPed, playerPos, "maintain-world");
@@ -8191,40 +8167,40 @@ static void RequestCollisionSample64(const CVector& sample, uint8_t area)
         streamSample.z = 18.0f;
     }
 
-    Xyron::Streaming::WorldStreamRequest streamRequest{};
+    Supremo::Streaming::WorldStreamRequest streamRequest{};
     streamRequest.areaCode = static_cast<int32>(area);
     streamRequest.streamingFlags = STREAMING_DEFAULT;
     streamRequest.reason = "collision-sample";
-    Xyron::Streaming::PrepareWorldAtPoint(streamSample, streamRequest);
+    Supremo::Streaming::PrepareWorldAtPoint(streamSample, streamRequest);
 }
 
 static void RetainWatchedColSlot64(int32 slot, int32 modelId, const char* modelName, const CVector& pos)
 {
     static bool s_retainedColSlots64[256]{};
-    Xyron::Collision::ColSlotInfo slotInfo{};
-    if (slot <= 0 || slot >= 256 || !Xyron::Collision::ReadSlotInfo(slot, slotInfo) || slotInfo.empty) {
+    Supremo::Collision::ColSlotInfo slotInfo{};
+    if (slot <= 0 || slot >= 256 || !Supremo::Collision::ReadSlotInfo(slot, slotInfo) || slotInfo.empty) {
         return;
     }
 
     const uint16 beforeRef = slotInfo.refCount;
     const bool firstRetain = !s_retainedColSlots64[slot];
     if (firstRetain) {
-        Xyron::Collision::AddRef(slot);
+        Supremo::Collision::AddRef(slot);
         s_retainedColSlots64[slot] = true;
     }
 
-    const int32 colModelId = Xyron::Streaming::ColModelIdFromSlot(slot);
-    if (Xyron::Streaming::IsValidResourceId(colModelId)) {
-        Xyron::Streaming::MarkModelDontRemoveInLoadScene(colModelId);
-        Xyron::Streaming::RequestModel(colModelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
+    const int32 colModelId = Supremo::Streaming::ColModelIdFromSlot(slot);
+    if (Supremo::Streaming::IsValidResourceId(colModelId)) {
+        Supremo::Streaming::MarkModelDontRemoveInLoadScene(colModelId);
+        Supremo::Streaming::RequestModel(colModelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
     }
 
     if (!firstRetain) {
         return;
     }
 
-    Xyron::Collision::ColSlotInfo afterInfo{};
-    if (!Xyron::Collision::ReadSlotInfo(slot, afterInfo) || afterInfo.empty) {
+    Supremo::Collision::ColSlotInfo afterInfo{};
+    if (!Supremo::Collision::ReadSlotInfo(slot, afterInfo) || afterInfo.empty) {
         afterInfo = slotInfo;
     }
 
@@ -8249,13 +8225,13 @@ static void RetainWatchedColSlot64(int32 slot, int32 modelId, const char* modelN
 
 static void LogColSlot64(const char* label, int32 slot)
 {
-    Xyron::Collision::ColSlotInfo slotInfo{};
-    if (!Xyron::Collision::ReadSlotInfo(slot, slotInfo)) {
+    Supremo::Collision::ColSlotInfo slotInfo{};
+    if (!Supremo::Collision::ReadSlotInfo(slot, slotInfo)) {
         FLog("[COL_SLOT64] label=%s slot=%d size=%d valid=0 onlyBB=%d",
              label ? label : "?",
              slot,
              slotInfo.poolSize,
-             Xyron::Collision::OnlyBoundingBoxes() ? 1 : 0);
+             Supremo::Collision::OnlyBoundingBoxes() ? 1 : 0);
         return;
     }
 
@@ -8264,10 +8240,10 @@ static void LogColSlot64(const char* label, int32 slot)
     uint32_t cdPosn = 0;
     uint32_t cdSize = 0;
     int16_t nextOnCd = -1;
-    const int32 colModelId = Xyron::Streaming::ColModelIdFromSlot(slot);
-    if (Xyron::Streaming::IsValidResourceId(colModelId)) {
-        const Xyron::Streaming::ModelStreamDiagnostic streamInfo =
-            Xyron::Streaming::ReadModelDiagnostic(colModelId);
+    const int32 colModelId = Supremo::Streaming::ColModelIdFromSlot(slot);
+    if (Supremo::Streaming::IsValidResourceId(colModelId)) {
+        const Supremo::Streaming::ModelStreamDiagnostic streamInfo =
+            Supremo::Streaming::ReadModelDiagnostic(colModelId);
         loadState = streamInfo.loadState;
         imgId = streamInfo.imgId;
         cdPosn = streamInfo.cdPosn;
@@ -8279,7 +8255,7 @@ static void LogColSlot64(const char* label, int32 slot)
          label ? label : "?",
          slot,
          slotInfo.empty ? 1 : 0,
-         Xyron::Collision::OnlyBoundingBoxes() ? 1 : 0,
+         Supremo::Collision::OnlyBoundingBoxes() ? 1 : 0,
          slotInfo.empty ? 0.0f : slotInfo.areaLeft,
          slotInfo.empty ? 0.0f : slotInfo.areaBottom,
          slotInfo.empty ? 0.0f : slotInfo.areaRight,
@@ -8356,25 +8332,25 @@ struct AirportColSlots64 {
 
 static int32 FindColSlotByStreamingCd64(uint32_t cdPosn, uint32_t cdSize)
 {
-    const int32 poolSize = Xyron::Collision::PoolSize();
+    const int32 poolSize = Supremo::Collision::PoolSize();
     if (poolSize <= 0) {
         return -1;
     }
 
     const int32 maxSlot = std::min<int32>(poolSize, 256);
     for (int32 slot = 1; slot < maxSlot; ++slot) {
-        Xyron::Collision::ColSlotInfo slotInfo{};
-        if (!Xyron::Collision::ReadSlotInfo(slot, slotInfo) || slotInfo.empty) {
+        Supremo::Collision::ColSlotInfo slotInfo{};
+        if (!Supremo::Collision::ReadSlotInfo(slot, slotInfo) || slotInfo.empty) {
             continue;
         }
 
-        const int32 colModelId = Xyron::Streaming::ColModelIdFromSlot(slot);
-        if (!Xyron::Streaming::IsValidResourceId(colModelId)) {
+        const int32 colModelId = Supremo::Streaming::ColModelIdFromSlot(slot);
+        if (!Supremo::Streaming::IsValidResourceId(colModelId)) {
             continue;
         }
 
-        const Xyron::Streaming::ModelStreamDiagnostic streamInfo =
-            Xyron::Streaming::ReadModelDiagnostic(colModelId);
+        const Supremo::Streaming::ModelStreamDiagnostic streamInfo =
+            Supremo::Streaming::ReadModelDiagnostic(colModelId);
         if (streamInfo.cdPosn == cdPosn && streamInfo.cdSize == cdSize) {
             return slot;
         }
@@ -8385,7 +8361,7 @@ static int32 FindColSlotByStreamingCd64(uint32_t cdPosn, uint32_t cdSize)
 
 static bool IsValidCachedColSlot64(int32 slot)
 {
-    return slot > 0 && slot < 256 && Xyron::Collision::IsValidSlot(slot);
+    return slot > 0 && slot < 256 && Supremo::Collision::IsValidSlot(slot);
 }
 
 static int32 ResolveColSlotByStreamingCd64(uint32_t cdPosn, uint32_t cdSize, int32 fallbackSlot)
@@ -8421,8 +8397,8 @@ static AirportColSlots64& GetAirportColSlots64()
         s_slots.las3 = ResolveColSlotByStreamingCd64(116841, 17, 176);
         s_slots.las4 = ResolveColSlotByStreamingCd64(116858, 38, 177);
         s_slots.las5 = ResolveColSlotByStreamingCd64(116896, 47, 178);
-        s_slots.laxref = Xyron::Collision::FindSlot("laxref");
-        s_slots.laxrefdocks = Xyron::Collision::FindSlot("laxrefdocks");
+        s_slots.laxref = Supremo::Collision::FindSlot("laxref");
+        s_slots.laxrefdocks = Supremo::Collision::FindSlot("laxrefdocks");
         s_slots.lawn1 = FindColSlotByStreamingCd64(131864, 34);
         s_slots.lawn3 = FindColSlotByStreamingCd64(131937, 40);
         s_slots.law1 = FindColSlotByStreamingCd64(134177, 55);
@@ -9103,8 +9079,8 @@ static void IncludeKnownModelIndexesForColSlot64(int32 slot)
 
     for (int i = 0; i < count; ++i) {
         const int32 modelId = modelIds[i];
-        if (Xyron::Streaming::IsValidResourceId(modelId)) {
-            Xyron::Collision::IncludeModelIndex(slot, modelId);
+        if (Supremo::Streaming::IsValidResourceId(modelId)) {
+            Supremo::Collision::IncludeModelIndex(slot, modelId);
         }
     }
 }
@@ -9123,20 +9099,20 @@ static void LogCollisionStoreSlots64(const CVector& pos, uint32_t now)
     }
     s_lastColSlotLogTick = now;
 
-    const int32 vegasS = Xyron::Collision::FindSlot("vegasS");
-    const int32 vegasE = Xyron::Collision::FindSlot("vegasE");
-    const int32 vegasW = Xyron::Collision::FindSlot("vegasW");
-    const int32 vegasN = Xyron::Collision::FindSlot("vegasN");
-    const int32 vegaxref = Xyron::Collision::FindSlot("vegaxref");
-    const int32 ballys01 = Xyron::Collision::FindSlot("ballys01");
-    const int32 vgseroads = Xyron::Collision::FindSlot("vgseroads");
+    const int32 vegasS = Supremo::Collision::FindSlot("vegasS");
+    const int32 vegasE = Supremo::Collision::FindSlot("vegasE");
+    const int32 vegasW = Supremo::Collision::FindSlot("vegasW");
+    const int32 vegasN = Supremo::Collision::FindSlot("vegasN");
+    const int32 vegaxref = Supremo::Collision::FindSlot("vegaxref");
+    const int32 ballys01 = Supremo::Collision::FindSlot("ballys01");
+    const int32 vgseroads = Supremo::Collision::FindSlot("vgseroads");
 
-    const bool loadedPlayer = Xyron::Collision::HasCollisionLoaded(pos, AREA_CODE_NORMAL_WORLD);
+    const bool loadedPlayer = Supremo::Collision::HasCollisionLoaded(pos, AREA_CODE_NORMAL_WORLD);
     FLog("[COL_SLOT_FIND64] pos=%.2f %.2f %.2f onlyBB=%d loaded=%d vegas={S:%d,E:%d,W:%d,N:%d,xref:%d} names={ballys01:%d,vgseroads:%d}",
          pos.x,
          pos.y,
          pos.z,
-         Xyron::Collision::OnlyBoundingBoxes() ? 1 : 0,
+         Supremo::Collision::OnlyBoundingBoxes() ? 1 : 0,
          loadedPlayer ? 1 : 0,
          vegasS,
          vegasE,
@@ -9182,7 +9158,7 @@ static void LogAirportColSlots64(const CVector& pos, uint32_t now)
          pos.x,
          pos.y,
          pos.z,
-         Xyron::Collision::OnlyBoundingBoxes() ? 1 : 0,
+         Supremo::Collision::OnlyBoundingBoxes() ? 1 : 0,
          slots.las1,
          slots.las2,
          slots.las3,
@@ -9859,11 +9835,11 @@ static void MarkNearbyColSlotReload64(NearbyWorldCollisionStats64& stats, int32 
 
 static void RemoveStreamingModelNative64(int32 modelId)
 {
-    if (!Xyron::Streaming::IsValidResourceId(modelId)) {
+    if (!Supremo::Streaming::IsValidResourceId(modelId)) {
         return;
     }
 
-    Xyron::Streaming::RemoveModelFromNativeStreaming(modelId);
+    Supremo::Streaming::RemoveModelFromNativeStreaming(modelId);
 }
 
 static void ReloadPendingNearbyColSlots64(NearbyWorldCollisionStats64& stats,
@@ -9876,7 +9852,7 @@ static void ReloadPendingNearbyColSlots64(NearbyWorldCollisionStats64& stats,
     }
 
     static uint32_t s_lastColSlotReloadTick64[256]{};
-    const int32 poolSize = Xyron::Collision::PoolSize();
+    const int32 poolSize = Supremo::Collision::PoolSize();
     if (poolSize <= 0) {
         return;
     }
@@ -9892,18 +9868,18 @@ static void ReloadPendingNearbyColSlots64(NearbyWorldCollisionStats64& stats,
             continue;
         }
 
-        Xyron::Collision::ColSlotInfo slotInfo{};
-        if (!Xyron::Collision::ReadSlotInfo(slot, slotInfo) || slotInfo.empty) {
+        Supremo::Collision::ColSlotInfo slotInfo{};
+        if (!Supremo::Collision::ReadSlotInfo(slot, slotInfo) || slotInfo.empty) {
             continue;
         }
 
-        const int32 colModelId = Xyron::Streaming::ColModelIdFromSlot(slot);
-        if (!Xyron::Streaming::IsValidResourceId(colModelId)) {
+        const int32 colModelId = Supremo::Streaming::ColModelIdFromSlot(slot);
+        if (!Supremo::Streaming::IsValidResourceId(colModelId)) {
             continue;
         }
 
-        const Xyron::Streaming::ModelStreamDiagnostic beforeInfo =
-            Xyron::Streaming::ReadModelDiagnostic(colModelId);
+        const Supremo::Streaming::ModelStreamDiagnostic beforeInfo =
+            Supremo::Streaming::ReadModelDiagnostic(colModelId);
         const uint8_t beforeState = beforeInfo.loadState;
         const uint8_t beforeFlags = beforeInfo.flags;
         const uint8_t beforeImg = beforeInfo.imgId;
@@ -9918,10 +9894,10 @@ static void ReloadPendingNearbyColSlots64(NearbyWorldCollisionStats64& stats,
         const int16_t beforeEnd = slotInfo.modelIdEnd;
         const char* knownSlotName = GetKnownColSlotName64(slot);
 
-        Xyron::Streaming::MarkModelDontRemoveInLoadScene(colModelId);
-        Xyron::Streaming::RequestModel(colModelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
+        Supremo::Streaming::MarkModelDontRemoveInLoadScene(colModelId);
+        Supremo::Streaming::RequestModel(colModelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
         IncludeKnownModelIndexesForColSlot64(slot);
-        Xyron::Streaming::WorldStreamRequest streamRequest{};
+        Supremo::Streaming::WorldStreamRequest streamRequest{};
         streamRequest.areaCode = AREA_CODE_NORMAL_WORLD;
         streamRequest.streamingFlags = STREAMING_DONTREMOVE_IN_LOADSCENE;
         streamRequest.addModels = false;
@@ -9931,13 +9907,13 @@ static void ReloadPendingNearbyColSlots64(NearbyWorldCollisionStats64& stats,
         streamRequest.ensureIpls = false;
         streamRequest.loadSceneCollision = false;
         streamRequest.reason = "col-slot-reload";
-        Xyron::Streaming::PrepareWorldAtPoint(pos, streamRequest);
+        Supremo::Streaming::PrepareWorldAtPoint(pos, streamRequest);
         if (knownSlotName) {
             const bool needsLoad = !beforeLoaded || !beforeActive || beforeState == LOADSTATE_NOT_LOADED;
             if (needsLoad) {
-                Xyron::Collision::LoadCol(slot, knownSlotName);
+                Supremo::Collision::LoadCol(slot, knownSlotName);
             }
-            Xyron::Streaming::PrepareWorldAtPoint(pos, streamRequest);
+            Supremo::Streaming::PrepareWorldAtPoint(pos, streamRequest);
             FLog("[COL_SLOT_LOAD64] mode=%s slot=%d name=%s colModelId=%d nonDestructive=1 needsLoad=%d pos=%.2f %.2f %.2f",
                  immediate ? "spawn" : "runtime",
                  slot,
@@ -9950,8 +9926,8 @@ static void ReloadPendingNearbyColSlots64(NearbyWorldCollisionStats64& stats,
         }
         ++stats.reloadRequested;
         s_lastColSlotReloadTick64[slot] = now;
-        const Xyron::Streaming::ModelStreamDiagnostic afterInfo =
-            Xyron::Streaming::ReadModelDiagnostic(colModelId);
+        const Supremo::Streaming::ModelStreamDiagnostic afterInfo =
+            Supremo::Streaming::ReadModelDiagnostic(colModelId);
 
         FLog("[COL_SLOT_RELOAD64] mode=%s slot=%d,%s colModelId=%d nonDestructive=1 state=%u->%u flags=0x%02X active=%d required=%d ref=%u range=%d-%d cd={img:%u,pos:%u,size:%u,next:%d} pos=%.2f %.2f %.2f",
              immediate ? "spawn" : "runtime",
@@ -9998,12 +9974,12 @@ static void WarmupActualNearbyCollision64(const CVector& pos,
                                : static_cast<int32>(playerArea);
     CVector sample(pos.x, pos.y, pos.z < 18.0f ? 18.0f : pos.z);
 
-    Xyron::Streaming::WorldStreamRequest streamRequest{};
+    Supremo::Streaming::WorldStreamRequest streamRequest{};
     streamRequest.areaCode = areaCode;
     streamRequest.streamingFlags = STREAMING_DEFAULT;
     streamRequest.reason = immediate ? "nearby-collision-spawn" : "nearby-collision-runtime";
-    Xyron::Streaming::PrepareWorldAtPoint(sample, streamRequest);
-    Xyron::Streaming::LoadAllRequestedModels(false);
+    Supremo::Streaming::PrepareWorldAtPoint(sample, streamRequest);
+    Supremo::Streaming::LoadAllRequestedModels(false);
 
     const bool needsFullColPass = stats.reloadRequested > 0 ||
                                   (stats.missingData > 0 && stats.alreadyData == 0);
@@ -10013,13 +9989,13 @@ static void WarmupActualNearbyCollision64(const CVector& pos,
          s_lastLoadAllCollisionTick64 == 0 ||
          now - s_lastLoadAllCollisionTick64 >= 4500)) {
         s_lastLoadAllCollisionTick64 = now;
-        Xyron::Collision::LoadAllCollision();
+        Supremo::Collision::LoadAllCollision();
         didLoadAllCollision = true;
     }
 
-    Xyron::Streaming::PrepareWorldAtPoint(sample, streamRequest);
-    Xyron::Streaming::LoadAllRequestedModels(false);
-    Xyron::Streaming::PrepareWorldAtPoint(sample, streamRequest);
+    Supremo::Streaming::PrepareWorldAtPoint(sample, streamRequest);
+    Supremo::Streaming::LoadAllRequestedModels(false);
+    Supremo::Streaming::PrepareWorldAtPoint(sample, streamRequest);
 
     const bool warmLogImportant =
         didLoadAllCollision ||
@@ -10044,9 +10020,9 @@ static void WarmupActualNearbyCollision64(const CVector& pos,
              stats.alreadyData,
              stats.reloadRequested,
              didLoadAllCollision ? 1 : 0,
-             Xyron::Collision::OnlyBoundingBoxes() ? 1 : 0,
-             Xyron::Streaming::MemoryUsed(),
-             Xyron::Streaming::MemoryAvailable());
+             Supremo::Collision::OnlyBoundingBoxes() ? 1 : 0,
+             Supremo::Streaming::MemoryUsed(),
+             Supremo::Streaming::MemoryAvailable());
     }
 }
 
@@ -11643,9 +11619,9 @@ static void StoreNearbyWorldCollisionLog64(NearbyWorldCollisionLog64 logs[],
     log.worldMax = worldMax;
     CopyModelName64(log.modelName, modelInfo);
 
-    Xyron::Collision::ColSlotInfo slotInfo{};
+    Supremo::Collision::ColSlotInfo slotInfo{};
     if (colModel->m_nColSlot > 0 &&
-        Xyron::Collision::ReadSlotInfo(colModel->m_nColSlot, slotInfo) &&
+        Supremo::Collision::ReadSlotInfo(colModel->m_nColSlot, slotInfo) &&
         !slotInfo.empty) {
         log.colModelStart = slotInfo.modelIdStart;
         log.colModelEnd = slotInfo.modelIdEnd;
@@ -11656,15 +11632,15 @@ static void StoreNearbyWorldCollisionLog64(NearbyWorldCollisionLog64 logs[],
         log.colSlotName[sizeof(log.colSlotName) - 1] = '\0';
     }
 
-    const int32 colResourceId = Xyron::Streaming::ColModelIdFromSlot(colModel->m_nColSlot);
-    if (Xyron::Streaming::IsValidResourceId(colResourceId)) {
-        log.colLoadState = Xyron::Streaming::ReadModelDiagnostic(colResourceId).loadState;
+    const int32 colResourceId = Supremo::Streaming::ColModelIdFromSlot(colModel->m_nColSlot);
+    if (Supremo::Streaming::IsValidResourceId(colResourceId)) {
+        log.colLoadState = Supremo::Streaming::ReadModelDiagnostic(colResourceId).loadState;
     }
 
-    const int32 expectedResourceId = log.expectedColSlot ? Xyron::Streaming::ColModelIdFromSlot(log.expectedColSlot) : -1;
-    if (Xyron::Streaming::IsValidResourceId(expectedResourceId)) {
-        const Xyron::Streaming::ModelStreamDiagnostic expectedInfo =
-            Xyron::Streaming::ReadModelDiagnostic(expectedResourceId);
+    const int32 expectedResourceId = log.expectedColSlot ? Supremo::Streaming::ColModelIdFromSlot(log.expectedColSlot) : -1;
+    if (Supremo::Streaming::IsValidResourceId(expectedResourceId)) {
+        const Supremo::Streaming::ModelStreamDiagnostic expectedInfo =
+            Supremo::Streaming::ReadModelDiagnostic(expectedResourceId);
         log.expectedColLoadState = expectedInfo.loadState;
         log.expectedColImgId = expectedInfo.imgId;
         log.expectedColCdPosn = expectedInfo.cdPosn;
@@ -11720,7 +11696,7 @@ static void RequestMissingNearbyWorldCollisionPool64(const char* poolName,
         }
 
         const int modelId = entity->m_nModelIndex;
-        if (!Xyron::Streaming::IsValidResourceId(modelId)) {
+        if (!Supremo::Streaming::IsValidResourceId(modelId)) {
             ++stats.badModel;
             continue;
         }
@@ -11797,13 +11773,13 @@ static void RequestMissingNearbyWorldCollisionPool64(const char* poolName,
         }
 
         if (protectEntity) {
-            Xyron::Streaming::MarkModelDontRemoveInLoadScene(modelId);
-            if (!Xyron::Streaming::IsModelLoaded(modelId) || !modelInfo->m_pRwObject) {
-                Xyron::Streaming::RequestModel(modelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
+            Supremo::Streaming::MarkModelDontRemoveInLoadScene(modelId);
+            if (!Supremo::Streaming::IsModelLoaded(modelId) || !modelInfo->m_pRwObject) {
+                Supremo::Streaming::RequestModel(modelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
                 ++stats.keptModel;
             }
-        } else if (!Xyron::Streaming::IsModelLoaded(modelId) || !modelInfo->m_pRwObject) {
-            Xyron::Streaming::RequestModel(modelId, STREAMING_DEFAULT);
+        } else if (!Supremo::Streaming::IsModelLoaded(modelId) || !modelInfo->m_pRwObject) {
+            Supremo::Streaming::RequestModel(modelId, STREAMING_DEFAULT);
             ++stats.requested;
         }
 
@@ -11837,15 +11813,15 @@ static void RequestMissingNearbyWorldCollisionPool64(const char* poolName,
         }
 
         auto touchColSlot = [&](int32 slot, bool hinted) {
-            Xyron::Collision::ColSlotInfo slotInfo{};
+            Supremo::Collision::ColSlotInfo slotInfo{};
             if (slot <= 0 ||
                 slot >= 256 ||
-                !Xyron::Collision::ReadSlotInfo(slot, slotInfo) ||
+                !Supremo::Collision::ReadSlotInfo(slot, slotInfo) ||
                 slotInfo.empty) {
                 return;
             }
 
-            Xyron::Collision::IncludeModelIndex(slot, modelId);
+            Supremo::Collision::IncludeModelIndex(slot, modelId);
             if (protectEntity) {
                 RetainWatchedColSlot64(slot, modelId, modelName, playerPos);
                 ++stats.retainedSlots;
@@ -11854,11 +11830,11 @@ static void RequestMissingNearbyWorldCollisionPool64(const char* poolName,
                 ++stats.hintedSlots;
             }
 
-            const int32 colModelId = Xyron::Streaming::ColModelIdFromSlot(slot);
-            if (protectEntity && Xyron::Streaming::IsValidResourceId(colModelId)) {
-                Xyron::Streaming::MarkModelDontRemoveInLoadScene(colModelId);
-                if (!Xyron::Streaming::IsModelLoaded(colModelId)) {
-                    Xyron::Streaming::RequestModel(colModelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
+            const int32 colModelId = Supremo::Streaming::ColModelIdFromSlot(slot);
+            if (protectEntity && Supremo::Streaming::IsValidResourceId(colModelId)) {
+                Supremo::Streaming::MarkModelDontRemoveInLoadScene(colModelId);
+                if (!Supremo::Streaming::IsModelLoaded(colModelId)) {
+                    Supremo::Streaming::RequestModel(colModelId, STREAMING_DONTREMOVE_IN_LOADSCENE);
                 }
             }
         };
@@ -11914,7 +11890,7 @@ static void RequestMissingNearbyWorldCollisionPool64(const char* poolName,
         }
         RequestEntityCollisionSamples64(entity, colModel, playerPos, playerArea);
         if (immediate) {
-            Xyron::Streaming::LoadAllRequestedModels(false);
+            Supremo::Streaming::LoadAllRequestedModels(false);
         }
         if (((criticalSurface && !colModel->m_pColData &&
               EnsureSyntheticSurfaceColData64(entity, modelInfo, colModel, playerPos, "near-request")) ||
@@ -12086,9 +12062,9 @@ static void RequestMissingNearbyWorldCollision64(const CVector& pos,
              stats.reloadPending,
              stats.reloadRequested,
              stats.reloadThrottled,
-             Xyron::Streaming::MemoryUsed(),
-             Xyron::Streaming::MemoryAvailable(),
-             Xyron::Collision::OnlyBoundingBoxes() ? 1 : 0);
+             Supremo::Streaming::MemoryUsed(),
+             Supremo::Streaming::MemoryAvailable(),
+             Supremo::Collision::OnlyBoundingBoxes() ? 1 : 0);
     }
 }
 
@@ -12111,34 +12087,34 @@ extern "C" void WarmKnownArm64CollisionSlotsForPosition(const CVector& pos, uint
         return;
     }
 
-    if (Xyron::Collision::PoolSize() <= 0) {
+    if (Supremo::Collision::PoolSize() <= 0) {
         return;
     }
 
-    Xyron::Streaming::WorldStreamRequest streamRequest{};
+    Supremo::Streaming::WorldStreamRequest streamRequest{};
     streamRequest.areaCode = static_cast<int32>(area);
     streamRequest.streamingFlags = STREAMING_DEFAULT;
     streamRequest.reason = "known-col-slots";
-    Xyron::Streaming::PrepareWorldAtPoint(pos, streamRequest);
+    Supremo::Streaming::PrepareWorldAtPoint(pos, streamRequest);
     RequestNearbyWorldCollisionAreas64(pos, area);
 
     AirportColSlots64& slots = GetAirportColSlots64();
     auto warmSlot = [&](int32 slot, const char* name) {
-        Xyron::Collision::ColSlotInfo slotInfo{};
+        Supremo::Collision::ColSlotInfo slotInfo{};
         if (slot <= 0 ||
             slot >= 256 ||
             !name ||
-            !Xyron::Collision::ReadSlotInfo(slot, slotInfo) ||
+            !Supremo::Collision::ReadSlotInfo(slot, slotInfo) ||
             slotInfo.empty) {
             return;
         }
         IncludeKnownModelIndexesForColSlot64(slot);
-        const int32 colModelId = Xyron::Streaming::ColModelIdFromSlot(slot);
+        const int32 colModelId = Supremo::Streaming::ColModelIdFromSlot(slot);
         const bool loaded =
-            Xyron::Streaming::IsValidResourceId(colModelId) &&
-            Xyron::Streaming::IsModelLoaded(colModelId);
+            Supremo::Streaming::IsValidResourceId(colModelId) &&
+            Supremo::Streaming::IsModelLoaded(colModelId);
         if (!loaded || !slotInfo.active) {
-            Xyron::Collision::LoadCol(slot, name);
+            Supremo::Collision::LoadCol(slot, name);
         }
     };
 
@@ -12153,7 +12129,7 @@ extern "C" void WarmKnownArm64CollisionSlotsForPosition(const CVector& pos, uint
         warmSlot(slots.las5, "las_5");
     }
 
-    Xyron::Streaming::PrepareWorldAtPoint(pos, streamRequest);
+    Supremo::Streaming::PrepareWorldAtPoint(pos, streamRequest);
 #else
     (void)pos;
     (void)area;
@@ -12200,7 +12176,7 @@ static void RequestMissingWatchedCollisionPool64(const char* poolName,
         char modelName[22]{};
         CopyModelName64(modelName, modelInfo);
         if (colModel->m_nColSlot > 0 && colModel->m_nColSlot < 256) {
-            Xyron::Collision::IncludeModelIndex(colModel->m_nColSlot, entity->m_nModelIndex);
+            Supremo::Collision::IncludeModelIndex(colModel->m_nColSlot, entity->m_nModelIndex);
             RetainWatchedColSlot64(colModel->m_nColSlot, entity->m_nModelIndex, modelName, playerPos);
         }
 
@@ -12214,13 +12190,13 @@ static void RequestMissingWatchedCollisionPool64(const char* poolName,
         }
 
         ++missing;
-        if (Xyron::Streaming::IsValidResourceId(entity->m_nModelIndex)) {
-            Xyron::Streaming::MarkModelDontRemoveInLoadScene(entity->m_nModelIndex);
-            Xyron::Streaming::RequestModel(entity->m_nModelIndex, STREAMING_DONTREMOVE_IN_LOADSCENE);
+        if (Supremo::Streaming::IsValidResourceId(entity->m_nModelIndex)) {
+            Supremo::Streaming::MarkModelDontRemoveInLoadScene(entity->m_nModelIndex);
+            Supremo::Streaming::RequestModel(entity->m_nModelIndex, STREAMING_DONTREMOVE_IN_LOADSCENE);
         }
 
         RequestEntityCollisionSamples64(entity, colModel, playerPos, playerArea);
-        Xyron::Streaming::LoadAllRequestedModels(false);
+        Supremo::Streaming::LoadAllRequestedModels(false);
 
         const CVector center = GetEntityColWorldCenter64(entity, colModel);
         const CVector playerInside = ClampPointToEntityColBounds64(
@@ -12280,14 +12256,14 @@ static void RequestMissingWatchedEntityCollision64(const CVector& pos, uint8_t p
 
     if (missing > 0 && !s_triedLoadAllCollision) {
         s_triedLoadAllCollision = true;
-        Xyron::Collision::LoadAllCollision();
+        Supremo::Collision::LoadAllCollision();
         FLog("[COL_LOADALL64] requested because watched models still miss colData pos=%.2f %.2f %.2f checked=%d missing=%d onlyBB=%d",
              pos.x,
              pos.y,
              pos.z,
              checked,
              missing,
-             Xyron::Collision::OnlyBoundingBoxes() ? 1 : 0);
+             Supremo::Collision::OnlyBoundingBoxes() ? 1 : 0);
     }
 
     if ((requested > 0 || missing > 0) && now - s_lastSummaryTick >= 3200) {
@@ -12656,7 +12632,7 @@ static void CollectDirectVerticalCandidatesFromPool64(TPool* pool,
 
         const int modelId = entity->m_nModelIndex;
         if (modelId < 0 ||
-            !Xyron::Streaming::IsValidResourceId(modelId) ||
+            !Supremo::Streaming::IsValidResourceId(modelId) ||
             IsTempVehicleComponentModel64(modelId)) {
             continue;
         }
@@ -13078,7 +13054,7 @@ static void MaintainCollisionResidency64()
         return;
     }
 
-    if (Xyron::Streaming::EnableStreamingIfDisabled()) {
+    if (Supremo::Streaming::EnableStreamingIfDisabled()) {
         FLog("[COL_ROOT64] streaming was disabled, forcing enable");
     } else if (!s_loggedStreamingState) {
         s_loggedStreamingState = true;
@@ -13179,7 +13155,7 @@ static void MaintainCollisionResidency64()
             streamSample.z = 18.0f;
         }
 
-        Xyron::Streaming::WorldStreamRequest streamRequest{};
+        Supremo::Streaming::WorldStreamRequest streamRequest{};
         streamRequest.areaCode = static_cast<int32>(effectivePlayerArea);
         streamRequest.streamingFlags = STREAMING_DEFAULT;
         streamRequest.setCollisionRequired = false;
@@ -13188,7 +13164,7 @@ static void MaintainCollisionResidency64()
         streamRequest.ensureIpls = false;
         streamRequest.loadSceneCollision = true;
         streamRequest.reason = "collision-residency";
-        Xyron::Streaming::PrepareWorldAtPoint(streamSample, streamRequest);
+        Supremo::Streaming::PrepareWorldAtPoint(streamSample, streamRequest);
 #if !VER_x32
         RequestNearbyWorldCollisionAreas64(streamSample, effectivePlayerArea);
 #endif
@@ -13223,7 +13199,7 @@ static void MaintainCollisionResidency64()
     if (now - s_lastBaseTick >= baseIntervalMs) {
         s_lastBaseTick = now;
         requestCross(pos, inVehicle ? 24.0f : 16.0f, false);
-        Xyron::Streaming::LoadAllRequestedModels(false);
+        Supremo::Streaming::LoadAllRequestedModels(false);
     }
 
     const float speedSq = vel.x * vel.x + vel.y * vel.y + vel.z * vel.z;
@@ -13322,7 +13298,7 @@ static void MaintainCollisionResidency64()
     const bool nearActiveSampObject = IsNearActiveSampObject64(pos, 8.0f, 8.0f);
 
     static uint32_t s_lastJumpPressTick = 0;
-    if (Xyron::Input::IsJumpDown()) {
+    if (Supremo::Input::IsJumpDown()) {
         s_lastJumpPressTick = now;
     }
     const bool isJumpingRecently = (now - s_lastJumpPressTick < 2000u);
@@ -13409,7 +13385,7 @@ static void MaintainCollisionResidency64()
     if (smallCollisionGap && now - s_lastSupportTick >= 220) {
         s_lastSupportTick = now;
         requestCross(pos, 28.0f, true);
-        Xyron::Streaming::LoadAllRequestedModels(false);
+        Supremo::Streaming::LoadAllRequestedModels(false);
         FLog("[COL_FALL64] support-disabled gap pos=%.2f %.2f %.2f safe=%.2f %.2f %.2f expected=%.2f vel=%.3f %.3f %.3f vertical={hit:%d,z:%.2f,model:%d,%s}",
              pos.x,
              pos.y,
@@ -13438,7 +13414,7 @@ static void MaintainCollisionResidency64()
         s_lastElevatedRecoverTick = now;
         s_lastElevatedAnchorTick = now;
         requestCross(s_elevatedAnchor, 32.0f, true);
-        Xyron::Streaming::LoadAllRequestedModels(false);
+        Supremo::Streaming::LoadAllRequestedModels(false);
         FLog("[COL_ELEV64] skipped anchor teleport old=%.2f %.2f %.2f ground=%.2f native=%.2f high={hit:%d,z:%.2f,model:%d,%s,area:%u,use:%d} anchor=%.2f %.2f %.2f",
              pos.x, pos.y, pos.z,
              groundZ,
@@ -13464,7 +13440,7 @@ static void MaintainCollisionResidency64()
             pos.y + vel.y * (inVehicle ? 18.0f : 11.0f),
             pos.z + vel.z * (inVehicle ? 8.0f : 5.0f));
         requestCross(ahead, inVehicle ? 32.0f : 24.0f, false);
-        Xyron::Streaming::LoadAllRequestedModels(false);
+        Supremo::Streaming::LoadAllRequestedModels(false);
     }
 
     const bool severeBelowKnownGround =
@@ -13478,7 +13454,7 @@ static void MaintainCollisionResidency64()
         !supportedByTargetedHighProbe;
     if (severeDrop && now - s_lastRescueTick >= 900) {
         requestCross(pos, inVehicle ? 48.0f : 38.0f, true);
-        Xyron::Streaming::LoadAllRequestedModels(false);
+        Supremo::Streaming::LoadAllRequestedModels(false);
 
         s_lastRescueTick = now;
 #if !VER_x32
@@ -13582,14 +13558,19 @@ static void MaintainCollisionResidency64()
 void (*CCamera_Process)(CCamera* camera) = nullptr;
 void CCamera_Process_hook(CCamera* camera)
 {
-    if (Xyron::Input::IsSourceCameraLookRequested() || Xyron::Input::IsSourceCameraLookActive()) {
-        if (camera) {
-            Xyron::Input::ApplySourceCameraLook();
+    if ((Supremo::Input::IsSourceCameraLookRequested() || Supremo::Input::IsSourceCameraLookActive()) && camera) {
+        if (camera->m_nActiveCam >= 3) {
+            // Script/cinematic cameras own processing once active; do not leave
+            // the native camera process suppressed by source-camera mode.
+            Supremo::Input::ResetSourceCameraLook();
+        } else {
+            Supremo::Input::ApplySourceCameraLook();
+            return;
         }
-    } else {
-        if (CCamera_Process) {
-            CCamera_Process(camera);
-        }
+    }
+
+    if (CCamera_Process) {
+        CCamera_Process(camera);
     }
 }
 
@@ -13597,22 +13578,24 @@ void CGame_Process_hook()
 {
     if(pGame->bIsGameExiting)return;
 
-    Xyron::Input::RestoreCameraMatrixForGameplay();
+    Supremo::Input::RestoreCameraMatrixForGameplay();
 
 #if !VER_x32
+    // Preserve queued map-scan work and streaming recovery from the existing
+    // process path; these calls are distinct from native CGame::Process.
     SuppressNativeLoadingDuringGameplay64("game-process-begin");
     EnsureArm64StreamingMemoryBudget("game-process");
-    Xyron::Streaming::EnableStreamingIfDisabled();
+    Supremo::Streaming::EnableStreamingIfDisabled();
     ProcessQueuedMapScanTeleport64();
     ProcessQueuedMapScanProbe64();
 #endif
 
+    // Keep the native process order intact.  Loading-screen state is owned by
+    // the game/network state machine; do not clear its globals from this hook.
     MainLoop();
 #if !VER_x32
     SuppressNativeLoadingDuringGameplay64("game-process-before-camera");
 #endif
-    // We do not call ApplySourceCameraLook() here because it is called at the end
-    // of CCamera::Process (which executes during CGame_Process) to avoid tremor.
     CGame_Process();
 #if !VER_x32
     SuppressNativeLoadingDuringGameplay64("game-process-after-native");
@@ -13642,11 +13625,13 @@ void CGame_Process_hook()
         }
     }
 
+#if !VER_x32
     MaintainWorldObjectStreaming64();
     MaintainCollisionResidency64();
     if (pGame && pGame->FindPlayerPed() && pGame->FindPlayerPed()->m_pPed) {
         LogWatchedWorldMatricesAroundPlayerABI(pGame->FindPlayerPed()->m_pPed->GetPosition());
     }
+#endif
 
     CGame::ProcessMainThreadTasks();
 }
@@ -13918,7 +13903,7 @@ void InjectHooks()
     CVehicleGTA::InjectHooks(); //
     CMatrixLink::InjectHooks(); //
     CMatrixLinkList::InjectHooks(); //
-    Xyron::Streaming::InstallStreamingHooks();
+    Supremo::Streaming::InstallStreamingHooks();
     CPlaceable::InjectHooks(); //
     CMatrix::InjectHooks(); //
     CCollision::InjectHooks(); //
@@ -13956,11 +13941,11 @@ void InjectHooks()
     CVehicleModelInfo::InjectHooks();
     //CPathFind::InjectHooks();
     CSprite2d::InjectHooks();
-    Xyron::FileLoader::InstallHooks();
+    Supremo::FileLoader::InstallHooks();
     //CShadows::InjectHooks();
     CPickups::InjectHooks();
     CRenderer::InjectHooks();
-    Xyron::Streaming::InstallStreamingInfoHooks();
+    Supremo::Streaming::InstallStreamingInfoHooks();
     TextureDatabase::InjectHooks();
     TextureDatabaseEntry::InjectHooks();
     TextureDatabaseRuntime::InjectHooks();
@@ -14020,12 +14005,19 @@ void SetUpGLHooks();
 void InstallHooks()
 {
     //SetUpGLHooks();
-    GTASAEngineApi::InstallRender2dHookNative(reinterpret_cast<uintptr_t>(&Render2dStuff));
-    SampUiController::InstallNativePatches();
-    GTASAEngineApi::InstallHudDrawRadarHook(&CHud_DrawRadar_hook, &CHud_DrawRadar);
-    GTASAEngineApi::InstallRenderEffectsHookNative(reinterpret_cast<uintptr_t>(&RenderEffects));
-    GTASAEngineApi::InstallAndroidTouchEventHookNative(reinterpret_cast<uintptr_t>(&AND_TouchEvent_hook),
-                                                       reinterpret_cast<void**>(&AND_TouchEvent));
+    // Preserve the engine's complete Render2dStuff pass, then append the
+    // SA-MP textdraw/chat layer once.  InlineHook supplies the original
+    // trampoline; Redirect would replace the stock radar/touch pass.
+    CHook::InlineHook("_Z13Render2dStuffv",
+                      reinterpret_cast<void*>(&Render2dStuff_hook),
+                      reinterpret_cast<void**>(&Render2dStuffNative));
+
+    // Capture the stock Android touch entry point so the NV event path can
+    // forward gameplay touches to the original native widgets.  The custom
+    // camera/touch pipeline remains disabled for the vanilla mobile baseline.
+    GTASAEngineApi::InstallAndroidTouchEventHookNative(
+        reinterpret_cast<uintptr_t>(&AND_TouchEvent_hook),
+        reinterpret_cast<void**>(&AND_TouchEvent));
 
     GTASAEngineApi::InstallHudColourHooksNative(reinterpret_cast<uintptr_t>(&CHudColours__GetIntColour),
                                                 reinterpret_cast<uintptr_t>(&CRadar__GetRadarTraceColor));

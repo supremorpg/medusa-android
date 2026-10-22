@@ -1,0 +1,19 @@
+/opt/homebrew/Cellar/openjdk@17/17.0.20.1/libexec/openjdk.jdk/Contents/Home/bin/java \
+  --class-path \
+  /Users/manoel/.gradle/caches/modules-2/files-2.1/com.google.prefab/cli/2.1.0/aa32fec809c44fa531f01dcfb739b5b3304d3050/cli-2.1.0-all.jar \
+  com.google.prefab.cli.AppKt \
+  --build-system \
+  cmake \
+  --platform \
+  android \
+  --abi \
+  armeabi-v7a \
+  --os-version \
+  21 \
+  --stl \
+  c++_static \
+  --ndk-version \
+  26 \
+  --output \
+  /var/folders/fr/n9_9g3w52hlcj8b3f6hgrsk00000gn/T/agp-prefab-staging708331959572117898/staged-cli-output \
+  /Users/manoel/.gradle/caches/transforms-4/5262df61db466c35c8b7255dde350619/transformed/jetified-shadowhook-1.0.9/prefab

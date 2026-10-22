@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.supremo.launcher.app-mergeDebugResources-29:/values-watch-v21/values-watch-v21.xml",
+            "map": [
+                {
+                    "source": "/Users/manoel/.gradle/caches/transforms-4/eb38e250ed1cd370eb4658ffb5f0cf45/transformed/appcompat-1.2.0/res/values-watch-v21/values-watch-v21.xml",
+                    "from": {
+                        "startLines": "2,6,10",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,271,499",
+                        "endLines": "5,9,13",
+                        "endColumns": "12,12,12",
+                        "endOffsets": "266,494,724"
+                    }
+                }
+            ]
+        }
+    ]
+}

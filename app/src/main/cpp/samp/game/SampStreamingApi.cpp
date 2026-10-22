@@ -3,11 +3,13 @@
 #include "GTASAEngineStreamingBindings.h"
 #include "Enums/eAreaCodes.h"
 
+extern void FLog(const char* fmt, ...);
+
 #include <cstring>
 #include <cmath>
 #include <sys/stat.h>
 
-namespace Xyron::Streaming {
+namespace Supremo::Streaming {
 namespace {
 
 void CopyArchiveName(char* dst, size_t dstSize, const char* src)

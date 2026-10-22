@@ -1,5 +1,18 @@
 #pragma once
 
+#include <cstdint>
+#include "../game/Core/Vector.h"
+#include "../game/Core/Quaternion.h"
+class CPlayerPed;
+class CVehicle;
+
+typedef unsigned short PLAYERID;
+typedef unsigned short VEHICLEID;
+
+#ifndef INVALID_VEHICLE_ID
+#define INVALID_VEHICLE_ID 0xFFFF
+#endif
+
 #define SPECTATE_TYPE_NONE						0
 #define SPECTATE_TYPE_PLAYER					1
 #define SPECTATE_TYPE_VEHICLE					2
@@ -176,6 +189,7 @@ public:
 	void ResetAllSyncAttributes();
 
 	void ToggleSpectating(bool bToggle);
+	void StopSpectatingWithoutSpawn();
 	void ProcessSpectating();
 	bool IsSpectating() { return m_bIsSpectating; }
 	bool IsInRCMode() { return m_bInRCMode; };
@@ -219,7 +233,7 @@ public:
 	void SendNextClass();
 	void SendSpawn();
 	void RequestClass(int iClass);
-	void RequestSpawn();
+	bool RequestSpawn();
 	void ProcessClassSelection();
 
 	void SendStatsUpdate();
@@ -259,7 +273,6 @@ public:
 
 	bool ProcessUnoccupiedSync(VEHICLEID vehicleId, CVehicle *pVehicle);
 
-    void MaybeSendExitVehicle();
     void MaybeSendEnterVehicle();
 
     bool				m_bPassengerDriveByMode;
@@ -283,6 +296,8 @@ private:
 	bool				m_bClearedToSpawn;
 	bool				m_bInRCMode;
     bool				m_bHasSpawnInfo;
+	bool				m_bSpawnInProgress;
+	uint32_t		m_dwLastSpawnTick;
 	uint32_t			m_dwAnimation;
 	bool				m_bSpawnDialogShowed;
 	uint8_t				m_byteCurrentWeapon;

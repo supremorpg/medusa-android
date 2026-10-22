@@ -3,7 +3,7 @@
 #include "GTASAEngineApi.h"
 #include "StreamingInfo.h"
 
-namespace Xyron::Streaming {
+namespace Supremo::Streaming {
 
 using WorldStreamRequest = GTASAEngineApi::WorldStreamRequest;
 using WorldStreamStatus = GTASAEngineApi::WorldStreamStatus;

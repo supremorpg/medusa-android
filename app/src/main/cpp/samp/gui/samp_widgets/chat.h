@@ -11,6 +11,7 @@ public:
 	void addInfoMessage(const std::string& format, ...);
 	void addDebugMessage(const std::string& format, ...);
 	void addClientMessage(const std::string& message, const ImColor& color);
+	void clearMessages();
 
 	virtual void draw(ImGuiRenderer* renderer) override;
 

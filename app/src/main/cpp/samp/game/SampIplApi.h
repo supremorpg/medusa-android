@@ -2,7 +2,7 @@
 
 #include "common.h"
 
-namespace Xyron::Ipl {
+namespace Supremo::Ipl {
 
 void AddNeededAtPosition(const CVector& pos);
 void LoadAtPosition(const CVector& pos, bool avoidPlayerVehicleMovingDirection);

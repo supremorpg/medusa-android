@@ -9,7 +9,7 @@ extern CGame* pGame;
 // 0.3.7
 CActor::CActor(int iSkin, float fX, float fY, float fZ, float fAngle)
 {
-    if (!Xyron::Streaming::TryLoadModel(iSkin))
+    if (!Supremo::Streaming::TryLoadModel(iSkin))
         throw std::runtime_error("Model not loaded");
 
     if (!IsValidPedModel(iSkin))
@@ -23,7 +23,7 @@ CActor::CActor(int iSkin, float fX, float fY, float fZ, float fAngle)
 
     ForceTargetRotation(fAngle);
     CVector pos(fX, fY, fZ);
-    Xyron::Collision::RequestCollision(pos, m_pPed->m_nAreaCode);
+    Supremo::Collision::RequestCollision(pos, m_pPed->m_nAreaCode);
     m_pPed->SetPosn(pos);
     m_pPed->bDontRender = false;
     m_pPed->m_bIsVisible = true;
@@ -45,7 +45,7 @@ CActor::~CActor()
     m_pPed = nullptr;
     m_dwGTAId = 0;
 
-    Xyron::Streaming::RemoveModelIfNoRefs(modelId);
+    Supremo::Streaming::RemoveModelIfNoRefs(modelId);
 }
 void CActor::ForceTargetRotation(float fRotation)
 {

@@ -24,9 +24,9 @@ extern char* g_pszStorage;
 #define ARRAY_SIZE(a) ( sizeof((a)) / sizeof(*(a)) )
 #endif
 
-#define SAMP_VERSION	"0.3.7-R4"
+#define SAMP_VERSION	"SUPREMO-LAUNCHER"
 
-#define SAMP_ARCHIVE_PATH "/Android/data/com.xyron.game/samp.data"
+#define SAMP_ARCHIVE_PATH "/Android/data/com.supremo.launcher/samp.data"
 #define FONT_NAME "arial_bold.ttf"
 
 #define RAKSAMP_CLIENT
@@ -35,6 +35,10 @@ extern char* g_pszStorage;
 extern uintptr_t g_libGTASA;
 
 extern JavaVM* javaVM;
+extern bool g_bNativeImGuiTouchBridgeSeen;
+extern bool g_bDirectTouchConsumed;
+
+bool IsLocalPlayerHudReady();
 
 uint32_t GetTickCount();
 void LogVoice(const char* fmt, ...);

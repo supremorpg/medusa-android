@@ -90,15 +90,15 @@ bool ShouldForceRenderObject(const CVector& pos)
 
 void EnsureObjectModelLoaded(int modelId)
 {
-    if (!Xyron::Streaming::IsValidResourceId(modelId) || !CModelInfo::GetModelInfo(modelId)) {
+    if (!Supremo::Streaming::IsValidResourceId(modelId) || !CModelInfo::GetModelInfo(modelId)) {
         return;
     }
 
-    if (!Xyron::Streaming::IsModelLoaded(modelId)) {
+    if (!Supremo::Streaming::IsModelLoaded(modelId)) {
         FLog("[OBJ_FIX64] requesting model %d before object create", modelId);
-        if (!Xyron::Streaming::TryLoadModel(modelId)) {
+        if (!Supremo::Streaming::TryLoadModel(modelId)) {
             FLog("[OBJ_FIX64] failed to stream model %d (object may miss texture/collision)", modelId);
-        } else if (!Xyron::Streaming::IsModelLoaded(modelId)) {
+        } else if (!Supremo::Streaming::IsModelLoaded(modelId)) {
             FLog("[OBJ_FIX64] model %d still not loaded after stream try", modelId);
         }
     }
@@ -149,7 +149,7 @@ bool HasSafeObjectCollision(const CPhysical* entity)
     }
 
     const int modelId = entity->m_nModelIndex;
-    if (!Xyron::Streaming::IsValidResourceId(modelId)) {
+    if (!Supremo::Streaming::IsValidResourceId(modelId)) {
         return false;
     }
 
@@ -182,7 +182,7 @@ void RefreshObjectCollision(CPhysical* entity, const CVector& pos, bool forceStr
 
     if (forceStreaming) {
         const int modelId = entity->m_nModelIndex;
-        if (Xyron::Streaming::IsValidResourceId(modelId)) {
+        if (Supremo::Streaming::IsValidResourceId(modelId)) {
             EnsureObjectModelLoaded(modelId);
         }
         if (!entity->m_pRwObject) {
@@ -197,7 +197,7 @@ void RefreshObjectCollision(CPhysical* entity, const CVector& pos, bool forceStr
     entity->m_bRemoveFromWorld = false;
     entity->m_bDontStream = true;
 
-    Xyron::Streaming::WorldStreamRequest streamRequest{};
+    Supremo::Streaming::WorldStreamRequest streamRequest{};
     streamRequest.areaCode = entity->m_nAreaCode;
     streamRequest.streamingFlags = STREAMING_DEFAULT;
     streamRequest.addModels = forceStreaming;
@@ -207,7 +207,7 @@ void RefreshObjectCollision(CPhysical* entity, const CVector& pos, bool forceStr
     streamRequest.ensureIpls = forceStreaming;
     streamRequest.loadSceneCollision = forceStreaming;
     streamRequest.reason = forceStreaming ? "object-refresh-force" : "object-refresh";
-    Xyron::Streaming::PrepareWorldAtPoint(pos, streamRequest);
+    Supremo::Streaming::PrepareWorldAtPoint(pos, streamRequest);
 
     const bool safeCollision = HasSafeObjectCollision(entity);
     SetObjectCollisionParticipation(entity, safeCollision);
@@ -219,7 +219,7 @@ void RefreshObjectCollision(CPhysical* entity, const CVector& pos, bool forceStr
             CBaseModelInfo* modelInfo = nullptr;
             CColModel* colModel = nullptr;
             CCollisionData* colData = nullptr;
-            if (Xyron::Streaming::IsValidResourceId(entity->m_nModelIndex)) {
+            if (Supremo::Streaming::IsValidResourceId(entity->m_nModelIndex)) {
                 modelInfo = CModelInfo::GetModelInfo(entity->m_nModelIndex);
                 colModel = modelInfo ? modelInfo->m_pColModel : nullptr;
                 colData = colModel ? colModel->m_pColData : nullptr;
@@ -435,7 +435,7 @@ CObject::~CObject()
     if(m_pEntity) {
         const int modelId = m_pEntity->m_nModelIndex;
         ScriptCommand(&destroy_object, m_dwGTAId);
-        Xyron::Streaming::RemoveModelIfNoRefs(modelId);
+        Supremo::Streaming::RemoveModelIfNoRefs(modelId);
     }
 
 	for (int i = 0; i < 16; i++)
@@ -493,12 +493,12 @@ bool CObject::EnsureEntityAvailable(const char* reason, bool forceRecreate)
     ++m_byteEntityRecoverAttempts;
 
     EnsureObjectModelLoaded(m_iModel);
-    Xyron::Streaming::WorldStreamRequest recoverRequest{};
+    Supremo::Streaming::WorldStreamRequest recoverRequest{};
     recoverRequest.areaCode = AREA_CODE_NORMAL_WORLD;
     recoverRequest.streamingFlags = STREAMING_DEFAULT;
     recoverRequest.refreshGame = true;
     recoverRequest.reason = "object-entity-recover";
-    Xyron::Streaming::PrepareWorldAtPoint(m_vecLastKnownPos, recoverRequest);
+    Supremo::Streaming::PrepareWorldAtPoint(m_vecLastKnownPos, recoverRequest);
 
     const bool mustRecreate = forceRecreate || m_dwGTAId == 0 || m_byteEntityRecoverAttempts >= 3;
     if (!mustRecreate) {
@@ -579,7 +579,7 @@ void CObject::EnsureCollisionState(uint16_t objectId, const char* reason, bool f
     if (needsRepair) {
         RefreshObjectCollision(m_pEntity, pos);
     } else {
-        Xyron::Streaming::WorldStreamRequest streamRequest{};
+        Supremo::Streaming::WorldStreamRequest streamRequest{};
         streamRequest.areaCode = m_pEntity->m_nAreaCode;
         streamRequest.streamingFlags = STREAMING_DEFAULT;
         streamRequest.addModels = false;
@@ -589,17 +589,17 @@ void CObject::EnsureCollisionState(uint16_t objectId, const char* reason, bool f
         streamRequest.ensureIpls = false;
         streamRequest.loadSceneCollision = false;
         streamRequest.reason = "object-collision-keepalive";
-        Xyron::Streaming::PrepareWorldAtPoint(pos, streamRequest);
+        Supremo::Streaming::PrepareWorldAtPoint(pos, streamRequest);
     }
 
     if ((forceLog || needsRepair) && now - m_dwLastHeavyRecoverTick >= 1800) {
         m_dwLastHeavyRecoverTick = now;
-        Xyron::Streaming::WorldStreamRequest streamRequest{};
+        Supremo::Streaming::WorldStreamRequest streamRequest{};
         streamRequest.areaCode = m_pEntity->m_nAreaCode;
         streamRequest.streamingFlags = STREAMING_DEFAULT;
         streamRequest.refreshGame = true;
         streamRequest.reason = "object-collision-heavy";
-        Xyron::Streaming::PrepareWorldAtPoint(pos, streamRequest);
+        Supremo::Streaming::PrepareWorldAtPoint(pos, streamRequest);
     }
 
     if (forceLog || needsRepair) {

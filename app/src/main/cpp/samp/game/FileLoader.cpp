@@ -202,7 +202,7 @@ int32 CFileLoader::LoadObject(const char* line) {
 
     mi->SetModelName(modelName);
 
-    const char* db = IsSampCustomObjectModel(modelId) ? "samp" : Xyron::Streaming::GetModelCDName(modelId);
+    const char* db = IsSampCustomObjectModel(modelId) ? "samp" : Supremo::Streaming::GetModelCDName(modelId);
     mi->SetTexDictionary(texName, db);
 
     SetAtomicModelInfoFlags(mi, parsedFlags);

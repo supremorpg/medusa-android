@@ -1,164 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/auth_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/tela_registro"
-    android:textAlignment="viewStart">
+    android:background="@drawable/fundo_login"
+    android:clipToPadding="false"
+    android:padding="24dp">
 
-    <!-- BLOCO DO LOGIN CENTRALIZADO VERTICALMENTE E ALINHADO À ESQUERDA -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bloco_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="55dp"
-        android:padding="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B8000B12" />
 
-        <!-- TÍTULO -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
 
-        <TextView
-            android:id="@+id/textView18"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@font/montserrat_regular"
-            android:text="E-Mail"
-            android:textColor="#F0F0F0"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/caixa_usuario" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp">
 
-        <EditText
-            android:id="@+id/caixa_email"
-            android:layout_width="180dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/caixa_personalizada"
-            android:inputType="text|textEmailAddress"
-            android:paddingStart="5sp"
-            android:paddingTop="5sp"
-            android:textColor="#FDFDFD"
-            android:textSize="11sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView18" />
+            <LinearLayout
+                android:id="@+id/auth_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/auth_panel_background"
+                android:elevation="10dp"
+                android:maxWidth="440dp"
+                android:orientation="vertical">
 
-        <!-- SUBTÍTULO -->
+                <TextView
+                    android:id="@+id/auth_brand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:letterSpacing="0.08"
+                    android:text="SUPREMO"
+                    android:textColor="#78D64B"
+                    android:textSize="12sp" />
 
-        <!-- LABEL USUÁRIO -->
+                <TextView
+                    android:id="@+id/auth_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Entrar no servidor"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
-        <!-- CAMPO USUÁRIO -->
+                <TextView
+                    android:id="@+id/auth_subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Acesse sua conta para continuar sua jornada."
+                    android:textColor="#B8C5CE"
+                    android:textSize="13sp" />
 
-        <!-- LABEL SENHA -->
+                <LinearLayout
+                    android:id="@+id/auth_fields"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical">
 
-        <!-- CAMPO SENHA -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="USUÁRIO"
+                        android:textColor="#C5D0D7"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
 
-        <!-- ESQUECI A SENHA -->
+                    <EditText
+                        android:id="@+id/auth_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="7dp"
+                        android:background="@drawable/auth_field_background"
+                        android:hint="Seu usuário"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLength="24"
+                        android:singleLine="true"
+                        android:textColor="#FFFFFFFF"
+                        android:textColorHint="#78909C"
+                        android:textSize="14sp" />
 
-        <!-- BOTÃO LOGAR -->
+                    <TextView
+                        android:id="@+id/auth_email_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="E-MAIL"
+                        android:textColor="#C5D0D7"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="REGISTRO"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                    <EditText
+                        android:id="@+id/auth_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="7dp"
+                        android:background="@drawable/auth_field_background"
+                        android:hint="voce@exemplo.com"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="96"
+                        android:singleLine="true"
+                        android:textColor="#FFFFFFFF"
+                        android:textColorHint="#78909C"
+                        android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="-4dp"
-            android:fontFamily="@font/montserrat_regular"
-            android:text="Preencha os dados para registrar"
-            android:textColor="#4DDF2C"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="SENHA"
+                        android:textColor="#C5D0D7"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/montserrat_regular"
-            android:text="Usuário"
-            android:textColor="#F0F0F0"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView3" />
+                    <EditText
+                        android:id="@+id/auth_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="7dp"
+                        android:background="@drawable/auth_field_background"
+                        android:hint="Sua senha"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword"
+                        android:maxLength="64"
+                        android:singleLine="true"
+                        android:textColor="#FFFFFFFF"
+                        android:textColorHint="#78909C"
+                        android:textSize="14sp" />
 
-        <EditText
-            android:id="@+id/caixa_usuario"
-            android:layout_width="180dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/caixa_personalizada"
-            android:inputType="text"
-            android:paddingStart="5sp"
-            android:paddingTop="5sp"
-            android:textColor="#FDFDFD"
-            android:textSize="11sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView4" />
+                    <EditText
+                        android:id="@+id/auth_password_confirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/auth_field_background"
+                        android:hint="Confirme sua senha"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword"
+                        android:maxLength="64"
+                        android:singleLine="true"
+                        android:textColor="#FFFFFFFF"
+                        android:textColorHint="#78909C"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@font/montserrat_regular"
-            android:text="Senha"
-            android:textColor="#F0F0F0"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/caixa_email" />
+                <TextView
+                    android:id="@+id/auth_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:visibility="gone"
+                    android:textColor="#FFB9C7D0"
+                    android:textSize="12sp" />
 
-        <EditText
-            android:id="@+id/caixa_senhareg"
-            android:layout_width="180dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/caixa_personalizada"
-            android:inputType="text"
-            android:paddingStart="5sp"
-            android:paddingTop="5sp"
-            android:textColor="#FDFDFD"
-            android:textSize="11sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView5" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="18dp">
 
-        <Button
-            android:id="@+id/botao_registrar"
-            android:layout_width="180dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/button_background"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="REGISTRAR"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/caixa_senhareg" />
+                    <Button
+                        android:id="@+id/auth_submit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/auth_primary_button"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:text="ENTRAR"
+                        android:textAllCaps="true"
+                        android:textColor="#101A14"
+                        android:textSize="13sp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <ProgressBar
+                        android:id="@+id/auth_progress"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:indeterminateTint="#101A14"
+                        android:visibility="gone" />
+                </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/auth_toggle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:gravity="center"
+                    android:text="Ainda não tem conta?  Criar conta"
+                    android:textColor="#78D64B"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/auth_close"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:gravity="center"
+                    android:text="FECHAR"
+                    android:textColor="#81909A"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

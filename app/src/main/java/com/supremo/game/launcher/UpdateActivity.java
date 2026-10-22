@@ -1,0 +1,462 @@
+package com.supremo.launcher.launcher;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.net.Uri;
+import android.opengl.GLSurfaceView;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.content.pm.ActivityInfo;  // ADICIONADO IMPORTAÃ‡ÃƒO CORRETA
+
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.FileProvider;
+
+//import com.supremo.launcher.BuildConfig;
+import com.supremo.launcher.R;
+import com.supremo.launcher.launcher.util.ButtonAnimator;
+import com.supremo.launcher.launcher.util.DataVariantPreferences;
+
+import java.io.File;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
+public class UpdateActivity extends SampActivity {
+    public static final String EXTRA_FORCE_REINSTALL_DATA = "force_reinstall_data";
+    private static final String DATA_VARIANT_FULL = DataVariantPreferences.DATA_VARIANT_FULL;
+
+    public Messenger mMessenger = new Messenger(new IncomingHandler());
+    public Messenger mService;
+    boolean isBind = false;
+    boolean isBindingService = false;
+    private UpdateMode mUpdateMode = UpdateMode.Undefined;
+    public int mGpuType;
+    private String mSelectedDataVariantId = DATA_VARIANT_FULL;
+    private boolean mForceReinstallData;
+
+    private File mGameApk;
+
+    boolean mIsStartingUpdate = false;
+    boolean mPendingStartUpdate = false;
+    boolean mStartMessageSent = false;
+
+    public enum UpdateMode {
+        Undefined,
+        GameDataUpdate
+    }
+
+    public enum GameStatus {
+        Unknown,
+        GameUpdateRequired,
+        UpdateRequired,
+        Updated
+    }
+
+    public enum UpdateStatus {
+        Undefined,
+        CheckUpdate,
+        CheckFiles,
+        DownloadGame,
+        DownloadGameData,
+        SourceUnavailable,
+        DataDownloadFailed,
+        DataValidationFailed
+    }
+
+    public enum eGPUType {
+        DXT,
+        PVR,
+        ETC
+    }
+
+    public void changeTheme(boolean theme) {
+        if(theme)  {
+            findViewById(R.id.main_layout).setBackgroundResource(R.drawable.bg_blue);
+            ((ProgressBar)findViewById(R.id.download_progress)).setProgressDrawable(getResources().getDrawable(R.drawable.download_progress_blue));
+            ((View)findViewById(R.id.view_blue)).setVisibility(View.VISIBLE);
+        }
+        else {
+            findViewById(R.id.main_layout).setBackgroundResource(R.drawable.bg_red);
+            ((ProgressBar)findViewById(R.id.download_progress)).setProgressDrawable(getResources().getDrawable(R.drawable.download_progress));
+            ((View)findViewById(R.id.view_red)).setVisibility(View.VISIBLE);
+        }
+    }
+
+    class IncomingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 4) {
+                UpdateActivity.UpdateStatus valueOf = UpdateActivity.UpdateStatus.valueOf(msg.getData().getString("status", ""));
+                if (valueOf == UpdateStatus.DownloadGameData) {
+                    ((TextView)findViewById(R.id.installation_text)).setText("Atualizando a data do jogo...");
+                    Log.d("x1y2z", "statusname = " + valueOf);
+                    long j = msg.getData().getLong("total");
+                    long j2 = msg.getData().getLong("current");
+                    ((TextView) findViewById(R.id.fileName)).setText(msg.getData().getString("filename"));
+                    ((TextView) findViewById(R.id.fileCount)).setText(j2/1048576 + "MB/" + j/1048576+"MB");
+                    ProgressBar progressBar = findViewById(R.id.download_progress);
+                    progressBar.setIndeterminate(false);
+                    Log.d("UpdateActivity", (int) (j/1048576) + "/" + (int) (j2/1048576));
+                    progressBar.setMax((int) (j/1048576));
+                    progressBar.setProgress((int) (j2/1048576));
+
+                    ((TextView) findViewById(R.id.fileProgressPercent)).setText(j2*100/(j+1) + "%");
+                } else if (valueOf == UpdateActivity.UpdateStatus.CheckUpdate) {
+                    Log.d("x1y2z", "statusname = " + valueOf);
+                    long j = msg.getData().getLong("total");
+                    long j2 = msg.getData().getLong("current");
+                    ((TextView) findViewById(R.id.fileName)).setText(msg.getData().getString("filename"));
+                    ProgressBar progressBar = (ProgressBar) UpdateActivity.this.findViewById(R.id.download_progress);
+                    progressBar.setMax((int) (j/1048576));
+                    progressBar.setProgress((int) (j2/1048576));
+                } else if (valueOf == UpdateStatus.DownloadGame) {
+                    ((TextView)findViewById(R.id.installation_text)).setText("Atualizando o jogo...");
+                    Log.d("x1y2z", "statusname = " + valueOf);
+                    long j = msg.getData().getLong("total");
+                    long j2 = msg.getData().getLong("current");
+                    ((TextView) findViewById(R.id.fileName)).setText(msg.getData().getString("filename"));
+                    ((TextView) findViewById(R.id.fileCount)).setText(msg.getData().getLong("currentfile") + "/" + msg.getData().getLong("totalfiles"));
+                    ProgressBar progressBar = (ProgressBar) UpdateActivity.this.findViewById(R.id.download_progress);
+                    progressBar.setIndeterminate(false);
+                    progressBar.setMax((int) (j/1048576));
+                    progressBar.setProgress((int) (j2/1048576));
+                } else if (valueOf == UpdateStatus.SourceUnavailable) {
+                    ((TextView)findViewById(R.id.installation_text)).setText("Fonte de download indisponivel");
+                    ((TextView)findViewById(R.id.fileName)).setText("Nao foi possivel acessar os arquivos do jogo agora.");
+                    ((TextView)findViewById(R.id.fileCount)).setText("Revise o update_sources.json ou tente novamente depois.");
+                    ((TextView)findViewById(R.id.fileProgressPercent)).setText("");
+                    ProgressBar progressBar = (ProgressBar) UpdateActivity.this.findViewById(R.id.download_progress);
+                    progressBar.setIndeterminate(false);
+                    progressBar.setProgress(0);
+                    Toast.makeText(UpdateActivity.this, "Nao consegui acessar a fonte dos arquivos. Tente novamente.", Toast.LENGTH_LONG).show();
+                    showRetryAction();
+                } else if (valueOf == UpdateStatus.DataDownloadFailed) {
+                    ((TextView)findViewById(R.id.installation_text)).setText("Download da data incompleto");
+                    ((TextView)findViewById(R.id.fileName)).setText(msg.getData().getString("reason", "Um ou mais arquivos nao puderam ser baixados."));
+                    ((TextView)findViewById(R.id.fileCount)).setText("Toque em voltar e tente baixar novamente.");
+                    ((TextView)findViewById(R.id.fileProgressPercent)).setText("");
+                    ProgressBar progressBar = (ProgressBar) UpdateActivity.this.findViewById(R.id.download_progress);
+                    progressBar.setIndeterminate(false);
+                    progressBar.setProgress(0);
+                    Toast.makeText(UpdateActivity.this, "O download nao terminou. Nenhuma data incompleta sera iniciada.", Toast.LENGTH_LONG).show();
+                    showRetryAction();
+                } else if (valueOf == UpdateStatus.DataValidationFailed) {
+                    ((TextView)findViewById(R.id.installation_text)).setText("Arquivos do jogo incompletos");
+                    ((TextView)findViewById(R.id.fileName)).setText(msg.getData().getString("reason", "Faltam arquivos obrigatorios do jogo."));
+                    ((TextView)findViewById(R.id.fileCount)).setText("A fonte nao contem todos os arquivos exigidos pelo jogo.");
+                    ((TextView)findViewById(R.id.fileProgressPercent)).setText("");
+                    ProgressBar progressBar = (ProgressBar) UpdateActivity.this.findViewById(R.id.download_progress);
+                    progressBar.setIndeterminate(false);
+                    progressBar.setProgress(0);
+                    Toast.makeText(UpdateActivity.this, "A data baixada nao atende aos requisitos do jogo.", Toast.LENGTH_LONG).show();
+                    showRetryAction();
+                }else if (!mIsStartingUpdate) {
+                    Message obtain2 = Message.obtain((Handler) null, 1);
+                    obtain2.replyTo = UpdateActivity.this.mMessenger;
+                    try {
+                        UpdateActivity.this.mService.send(obtain2);
+                    } catch (RemoteException e6) {
+                        e6.printStackTrace();
+                    }
+                    mIsStartingUpdate = true;
+                }
+            }
+            else if(msg.what == 2)
+            {
+                Intent intent;
+                Log.d("x1y2z", "UpdateService.UPDATE_GAME_DATA");
+                //resetProgress(true, 100, 100);
+                if (msg.getData().getBoolean("status", false)) {
+                    if (msg.getData().getBoolean("dataReady", false)) {
+                        setResult(RESULT_OK);
+                        finish();
+                        return;
+                    }
+                    String string3 = msg.getData().getString("apkPath", "");
+                    if (string3.length() > 0) {
+                        mGameApk = new File(string3);
+                    }
+                    if (mGameApk != null && mGameApk.exists()) {
+                        requestInstallGame();
+                        return;
+                    }
+                }
+                Log.e("UpdateActivity", "APK update completed without an installable APK.");
+                showRetryAction();
+            }
+            else if (msg.what == 1) {
+                Log.i("UpdateActivity", "UpdateService.UPDATE_GAME");
+                ((TextView)findViewById(R.id.installation_text)).setText("Instalando...");
+                ProgressBar progressBar = (ProgressBar) UpdateActivity.this.findViewById(R.id.download_progress);
+                progressBar.setIndeterminate(true);
+                String string = msg.getData().getString("apkPath", "");
+                if (msg.getData().getBoolean("status", false)) {
+                    if (string.length() > 0) {
+                        mGameApk = new File(string);
+                    }
+                    Message obtain = Message.obtain((Handler) null, 2);
+                    obtain.replyTo = UpdateActivity.this.mMessenger;
+                    try {
+                        mService.send(obtain);
+                    } catch (RemoteException e5) {
+                        e5.printStackTrace();
+                    }
+                } else {
+                    Log.d("UpdateActivity", "Error update game");
+                    ((TextView)findViewById(R.id.installation_text)).setText("Atualizacao falhou");
+                    showRetryAction();
+                }
+            }
+        }
+    }
+
+    void requestInstallGame()
+    {
+        Log.d("x1y2z", "request install game");
+
+        Uri contentUri1 = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", mGameApk);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, contentUri1);
+        intent.setDataAndType(contentUri1, "application/vnd.android.package-archive");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivityForResult(intent, 1001);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i("UpdateActivity", "onActivityResult -> code quest: " + resultCode + ", resultCode: " + data);
+        if (requestCode == 1001) {
+            if (mGameApk != null && mGameApk.exists()) {
+                mGameApk.delete();
+            }
+            // APK installation has a separate result contract; only game-data
+            // completion is driven by the dataReady message above.
+            setResult(resultCode == RESULT_CANCELED ? RESULT_CANCELED : RESULT_OK);
+            finish();
+        }
+    }
+
+    private void readUpdateMode() {
+        mSelectedDataVariantId = DATA_VARIANT_FULL;
+        String modeName = getIntent().getStringExtra("mode");
+        mForceReinstallData = getIntent() != null
+                && getIntent().getBooleanExtra(EXTRA_FORCE_REINSTALL_DATA, false);
+        if (modeName == null || modeName.length() == 0) {
+            mUpdateMode = UpdateMode.Undefined;
+            return;
+        }
+
+        try {
+            mUpdateMode = UpdateMode.valueOf(modeName);
+        } catch (IllegalArgumentException ignored) {
+            mUpdateMode = UpdateMode.Undefined;
+        }
+    }
+
+    private void setupDataVariantChooser() {
+        View progressPanel = findViewById(R.id.update_progress_panel);
+        mPendingStartUpdate = mUpdateMode == UpdateMode.GameDataUpdate;
+        mStartMessageSent = false;
+        mIsStartingUpdate = false;
+        progressPanel.setVisibility(View.VISIBLE);
+        if (mPendingStartUpdate) {
+            startDataVariantUpdate(DATA_VARIANT_FULL, false);
+        }
+    }
+
+    private void resetUpdateFailureState() {
+        mPendingStartUpdate = false;
+        mStartMessageSent = false;
+        mIsStartingUpdate = false;
+        View retryButton = findViewById(R.id.retry_update_button);
+        if (retryButton != null) {
+            retryButton.setVisibility(View.GONE);
+        }
+        ProgressBar progressBar = findViewById(R.id.download_progress);
+        if (progressBar != null) {
+            progressBar.setIndeterminate(false);
+            progressBar.setProgress(0);
+        }
+    }
+
+    private void showRetryAction() {
+        View retryButton = findViewById(com.supremo.launcher.R.id.retry_update_button);
+        if (retryButton == null) {
+            return;
+        }
+        retryButton.setVisibility(View.VISIBLE);
+        retryButton.setOnTouchListener(new ButtonAnimator(this, retryButton));
+        retryButton.setOnClickListener(v -> {
+            retryButton.setVisibility(View.GONE);
+            startDataVariantUpdate(DATA_VARIANT_FULL, false);
+        });
+    }
+
+    private void startDataVariantUpdate(String variantId, boolean saveSelection) {
+        String normalizedVariantId = DataVariantPreferences.normalizeVariantId(variantId);
+        if (!DataVariantPreferences.isSupportedVariantId(normalizedVariantId)) {
+            normalizedVariantId = DATA_VARIANT_FULL;
+        }
+
+        mSelectedDataVariantId = normalizedVariantId;
+        if (saveSelection) {
+            DataVariantPreferences.saveSelectedVariantId(this, normalizedVariantId);
+        }
+
+        mPendingStartUpdate = true;
+        mStartMessageSent = false;
+        mIsStartingUpdate = false;
+        View retryButton = findViewById(R.id.retry_update_button);
+        if (retryButton != null) {
+            retryButton.setVisibility(View.GONE);
+        }
+
+        findViewById(R.id.update_progress_panel).setVisibility(View.VISIBLE);
+        ((TextView)findViewById(R.id.installation_text)).setText("Preparando os arquivos do jogo...");
+        ((TextView)findViewById(R.id.fileName)).setText("Conectando ao Hugging Face");
+        ((TextView)findViewById(R.id.fileCount)).setText("");
+        ((TextView)findViewById(R.id.fileProgressPercent)).setText("");
+        ((ProgressBar)findViewById(R.id.download_progress)).setIndeterminate(true);
+
+        requestGameDataUpdateStart();
+    }
+
+    private void requestGameDataUpdateStart() {
+        if (!mPendingStartUpdate || mStartMessageSent || mGpuType == 0) {
+            return;
+        }
+
+        if (mService == null) {
+            if (!isBindingService) {
+                isBindingService = true;
+                bindService(new Intent(UpdateActivity.this, UpdateService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+            }
+            return;
+        }
+
+        sendGameDataUpdateStart();
+    }
+
+    private void sendGameDataUpdateStart() {
+        if (!mPendingStartUpdate || mStartMessageSent || mService == null || mGpuType == 0) {
+            return;
+        }
+
+        Message obtain = Message.obtain((Handler) null, 7);
+        obtain.getData().putInt("gputype", mGpuType);
+        obtain.getData().putString("data_mode", DATA_VARIANT_FULL);
+        obtain.getData().putBoolean(EXTRA_FORCE_REINSTALL_DATA, mForceReinstallData);
+        obtain.replyTo = mMessenger;
+        try {
+            mService.send(obtain);
+            mStartMessageSent = true;
+            mPendingStartUpdate = false;
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_update);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // ForÃ§ar orientaÃ§Ã£o para paisagem
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        readUpdateMode();
+        setupDataVariantChooser();
+
+        boolean theme = mPref.getBoolean("theme", false);
+        changeTheme(theme);
+
+        GLSurfaceView.Renderer mGlRenderer = new GLSurfaceView.Renderer() {
+            @Override
+            public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
+                eGPUType egputype;
+                String glGetString = gl10.glGetString(GL10.GL_EXTENSIONS);
+                String glGetString2 = glGetString == null ? "" : glGetString;
+                if (glGetString2.contains("GL_IMG_texture_compression_pvrtc")) {
+                    egputype = eGPUType.PVR;
+                    mGpuType = 3;
+                } else if (glGetString2.contains("GL_EXT_texture_compression_dxt1") || glGetString2.contains("GL_EXT_texture_compression_s3tc") || glGetString2.contains("GL_AMD_compressed_ATC_texture")) {
+                    egputype = eGPUType.DXT;
+                    mGpuType = 1;
+                } else {
+                    egputype = eGPUType.ETC;
+                    mGpuType = 2;
+                }
+                Log.e("x1y2z", "GPU name: " + glGetString);
+                Log.e("x1y2z", "GPU type: " + egputype.name());
+
+                if (mUpdateMode == UpdateMode.GameDataUpdate) {
+                    requestGameDataUpdateStart();
+                }
+            }
+
+            @Override
+            public void onSurfaceChanged(GL10 gl10, int i, int i1) {
+
+            }
+
+            @Override
+            public void onDrawFrame(GL10 gl10) {
+
+            }
+        };
+
+        ConstraintLayout gpuLayout = findViewById(R.id.gpu);
+        GLSurfaceView mGlSurfaceView = new GLSurfaceView(this);
+        mGlSurfaceView.setRenderer(mGlRenderer);
+        gpuLayout.addView(mGlSurfaceView);
+    }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mService = new Messenger(iBinder);
+            isBindingService = false;
+            isBind = true;
+            sendGameDataUpdateStart();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mService = null;
+            isBind = false;
+            isBindingService = false;
+            if (!isFinishing()) {
+                mPendingStartUpdate = true;
+                mStartMessageSent = false;
+            }
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (isBind) {
+            unbindService(serviceConnection);
+            isBind = false;
+        }
+    }
+}
